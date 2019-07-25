@@ -1,0 +1,2 @@
+C:/Users/takeshi/source/repos/andreeasandulescu/RTS_Game_Engine/Include/glm/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/takeshi/source/repos/andreeasandulescu/RTS_Game_Engine/Include/glm/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir

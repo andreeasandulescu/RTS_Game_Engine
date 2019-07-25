@@ -31,9 +31,9 @@ std::string readTextFile(std::string filePath)
 int main()
 {
 	float vertices[] = {
-	-0.5f, -0.5f, 0.0f,
-	0.5f, -0.5f, 0.0f,
-	0.0f, 0.5f, 0.0f
+	5.0f, 0.0f, 5.0f,
+	5.0f, 0.0f, -5.0f,
+	-5.0f, 0.0f, -5.0f
 	};
 
 	Engine engine = {};
@@ -140,7 +140,10 @@ int main()
 
 	//render loop
 	while (!glfwWindowShouldClose(engine.window))
-	{
+	{		
+		//update engine time:
+		engine.Update();
+
 		//check for user input
 		processInput(engine.window);
 
@@ -152,7 +155,15 @@ int main()
 		// 4. draw the object
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
+		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+		 
+		glm::mat4 view_mat = engine.camera.getViewMatrix(); 
+		glm::mat4 projection = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
+		glm::mat4 transform = projection * view_mat;
+
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
 
 		// check and call events and swap the buffers
 		glfwSwapBuffers(engine.window);

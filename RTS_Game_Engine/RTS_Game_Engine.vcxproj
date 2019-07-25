@@ -136,11 +136,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Source\Camera.cpp" />
     <ClCompile Include="..\Source\Engine.cpp" />
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\Camera.h" />
     <ClInclude Include="..\Include\Engine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -15,6 +15,9 @@ int Engine::Init()
 		return -1;
 	}
 
+	// cursor does not leave window:
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	this->window = window;
 
 	///// !!!!!! In order for any OpenGL commands to work, a context must be current  !!!!!!!
@@ -26,7 +29,33 @@ int Engine::Init()
 		return -1;
 	}
 
+	// create world camera:
+	this->camera = Camera();
+
 	return 0;
+}
+
+int Engine::Update()
+{
+	// calculate time between two updated (frames)
+	double currentTime = glfwGetTime();
+	this->frameDelta = currentTime - this->lastFrameTime;
+	this->lastFrameTime = currentTime;
+
+	// update camera:
+	double xpos;
+	double ypos;
+	glfwGetCursorPos(window, &xpos, &ypos);
+
+	this->camera.mouse_callback(window, xpos, ypos);
+	return 0;
+}
+
+
+
+float Engine::getFrameDelta()
+{
+	return this->frameDelta;
 }
 
 int Engine::Stop()
