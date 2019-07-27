@@ -46,8 +46,8 @@ int Engine::Update()
 	double xpos;
 	double ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
-
 	this->camera.mouse_callback(window, xpos, ypos);
+	this->camera.key_callback(window);
 	return 0;
 }
 

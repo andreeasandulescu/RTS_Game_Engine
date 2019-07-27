@@ -24,13 +24,15 @@ void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
-	printf("%f %f\n", yaw, pitch);
-
-
 	cameraFront = cameraFront + cameraUp * yoffset;
 	cameraFront = cameraFront + glm::normalize(glm::cross(cameraFront, cameraUp)) * xoffset;
 	cameraFront = glm::normalize(cameraFront);
 
+	
+}
+
+void Camera::key_callback(GLFWwindow* window)
+{
 	float cameraSpeed = 0.1f; // adjust accordingly
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		cameraPos += cameraSpeed * cameraFront;

@@ -18,6 +18,7 @@ public:
 	glm::mat4 getViewMatrix(glm::vec3 target);
 	glm::mat4 getViewMatrix();
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	void key_callback(GLFWwindow* window);
 
 	Camera();
 	~Camera();
