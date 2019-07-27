@@ -12,23 +12,15 @@ glm::mat4 Camera::getViewMatrix()
 	return glm::lookAt(this->cameraPos, this->cameraPos + this->cameraFront, this->cameraUp);
 }
 
-void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void Camera::move_cursor(double xoffset, double yoffset)
 {
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
-	lastX = xpos;
-	lastY = ypos;
-
 	float sensitivity = 0.004f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
+	float xos = sensitivity * (float)xoffset;
+	float yos = sensitivity * (float)yoffset;
 
-	cameraFront = cameraFront + cameraUp * yoffset;
-	cameraFront = cameraFront + glm::normalize(glm::cross(cameraFront, cameraUp)) * xoffset;
+	cameraFront = cameraFront + cameraUp * yos;
+	cameraFront = cameraFront + glm::normalize(glm::cross(cameraFront, cameraUp)) * xos;
 	cameraFront = glm::normalize(cameraFront);
-
-	
 }
 
 void Camera::key_callback(GLFWwindow* window)
@@ -42,6 +34,14 @@ void Camera::key_callback(GLFWwindow* window)
 		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
+void Camera::receiveMessage(Message *m) {
+	printf(m->messageString.c_str());
+	CursorMessage* cm = (CursorMessage*)m;
+	move_cursor(cm->xoffset, cm->yoffset);
+
+	delete m;
 }
 
 Camera::Camera() {
@@ -60,6 +60,7 @@ Camera::Camera() {
 	yaw = 0;
 	pitch = 0;
 }
+
 
 Camera::~Camera()
 {

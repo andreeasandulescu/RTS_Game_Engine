@@ -150,6 +150,7 @@
     <ClInclude Include="..\Include\InputManager.h" />
     <ClInclude Include="..\Include\Message.h" />
     <ClInclude Include="..\Include\MessageBus.h" />
+    <ClInclude Include="..\Include\MessageReceiver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

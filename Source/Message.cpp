@@ -15,3 +15,20 @@ Message::Message(std::string messageString)
 	Message::globalIds++;
 	this->messageString = messageString;
 }
+
+CursorMessage::CursorMessage(float xoffset, float yoffset, float lastX, float lastY) {
+	this->xoffset = xoffset;
+	this->yoffset = yoffset;
+	this->lastX = lastX;
+	this->lastY = lastY;
+
+	char msgName[100];
+	sprintf_s(msgName, "Mouse offset: [%f,%f] coords: [%f,%f].\n",
+		this->xoffset,
+		this->yoffset,
+		this->lastX,
+		this->lastY
+	);
+
+	this->messageString = std::string(msgName);
+}

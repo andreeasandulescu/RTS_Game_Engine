@@ -36,7 +36,7 @@ int main()
 	-5.0f, 0.0f, -5.0f
 	};
 
-	Engine engine = {};
+	Engine engine;
 	engine.Init();
 
 	//vertex shader
