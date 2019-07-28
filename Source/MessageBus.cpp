@@ -31,18 +31,22 @@ void MessageBus::sendMessages() {
 		messageQueueLock.lock();
 		Message *m = this->messageQueue.front();
 		messageQueueSize = this->messageQueue.size();
+		if (messageQueue.size() > 10) {
+			printf("Queue flooding: %d", messageQueue.size());
+		}
 		messageQueueLock.unlock();
 
 		// send message to all subscribers:
 		std::vector<MessageReceiver*>::iterator it;
 		for (it = this->messageReceivers.begin(); it != this->messageReceivers.end(); ++it) {
 			MessageReceiver *receiver = *it;
-			receiver->receiveMessage(m);
+			receiver->receiveMessage(m->clone());
 		}
 
 		// remove last message
 		messageQueueLock.lock();
 		this->messageQueue.pop();
+		delete m;
 		messageQueueSize--;
 		messageQueueLock.unlock();
 	}

@@ -23,7 +23,6 @@ public:
 	glm::mat4 getViewMatrix(glm::vec3 target);
 	glm::mat4 getViewMatrix();
 	void move_cursor(double xoffset, double yoffset);
-	void key_callback(GLFWwindow* window);
 	void receiveMessage(Message *m);
 
 	Camera();

@@ -23,24 +23,39 @@ void Camera::move_cursor(double xoffset, double yoffset)
 	cameraFront = glm::normalize(cameraFront);
 }
 
-void Camera::key_callback(GLFWwindow* window)
-{
-	float cameraSpeed = 0.1f; // adjust accordingly
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPos += cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPos -= cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-}
 
 void Camera::receiveMessage(Message *m) {
-	printf(m->messageString.c_str());
-	CursorMessage* cm = (CursorMessage*)m;
-	move_cursor(cm->xoffset, cm->yoffset);
+	CursorMessage *cm;
+	KeysMessage* km;
 
+	if (m->messageType == MessageType::cursor) {
+		cm = (CursorMessage*)m;
+		move_cursor(cm->xoffset, cm->yoffset);
+	}
+	else if (m->messageType == MessageType::keyspressed) {
+		km = (KeysMessage*)m;
+		
+		// iterate through pressed keys and change camera positions:
+		for (std::vector<unsigned int>::iterator it = km->pressedKeys.begin(); it != km->pressedKeys.end(); ++it) {
+			float cameraSpeed = 0.1f; // adjust accordingly
+			switch (*it) {
+				case GLFW_KEY_W:
+					cameraPos += cameraSpeed * cameraFront;
+					break;
+				case GLFW_KEY_S:
+					cameraPos -= cameraSpeed * cameraFront;
+					break;
+				case GLFW_KEY_A:
+					cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+					break;
+				case GLFW_KEY_D:
+					cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+					break;
+				default:
+					break;
+			}	
+		}
+	}
 	delete m;
 }
 

@@ -1,5 +1,7 @@
 #include <InputManager.h>
 
+
+
 void InputManager::listening() {
 	// poll for mouse movement
 	double xpos, ypos;
@@ -15,7 +17,20 @@ void InputManager::listening() {
 		CursorMessage *m = new CursorMessage(xoffset, yoffset, lastX, lastY);
 		this->messageBus->addMessage(m);
 
-		// change this to increase/decrease mouse sample rate:
+		// poll for keys:
+		KeysMessage* keysMessage = new KeysMessage();
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+			keysMessage->pressedKeys.push_back(GLFW_KEY_W);
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+			keysMessage->pressedKeys.push_back(GLFW_KEY_S);
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+			keysMessage->pressedKeys.push_back(GLFW_KEY_A);
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+			keysMessage->pressedKeys.push_back(GLFW_KEY_D);
+
+		this->messageBus->addMessage(keysMessage);
+
+		// change this to increase/decrease mouse/keys sample rate:
 		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 }
