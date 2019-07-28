@@ -139,11 +139,15 @@
     <ClCompile Include="..\Source\Camera.cpp" />
     <ClCompile Include="..\Source\Engine.cpp" />
     <ClCompile Include="..\Source\glad.c" />
+    <ClCompile Include="..\Source\Mesh.cpp" />
+    <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h" />
     <ClInclude Include="..\Include\Engine.h" />
+    <ClInclude Include="..\Include\Mesh.h" />
+    <ClInclude Include="..\Include\Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

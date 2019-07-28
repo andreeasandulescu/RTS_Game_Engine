@@ -1,4 +1,7 @@
 #include "Engine.h"
+#include "Shader.h"
+#include "Mesh.h"
+
 #include <string>
 #include <fstream>
 #include <streambuf>
@@ -27,11 +30,11 @@ std::string readTextFile(std::string filePath)
 	return str;
 }
 
-
 int main()
 {
-	float vertices[] = {
-	5.0f, 0.0f, 5.0f,
+
+	float triangleVertArr[] = {
+	10.0f, 0.0f, 5.0f,
 	5.0f, 0.0f, -5.0f,
 	-5.0f, 0.0f, -5.0f
 	};
@@ -39,97 +42,87 @@ int main()
 	Engine engine = {};
 	engine.Init();
 
-	//vertex shader
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	Shader shader("..\\Resources\\Shaders\\VertexShader.vs", "..\\Resources\\Shaders\\FragmentShader.fs");
+	
+	std::vector<Vertex> triangleVertices;
+	std::vector<Vertex> axisVertices;
+	std::vector<Vertex> planeVertices;
+	std::vector<unsigned int> planeIndices{};
 
-	std::string vertexFileText = readTextFile(std::string("..\\Resources\\Shaders\\VertexShader.vs"));
-	if (vertexFileText.length() == 0)
+	//triangle
+	for (int i = 0; i < 7; i+=3)
 	{
-		printf("(readTextFile): Unable to read file vertexshader\n");
-	}
-
-	const char* vertexFileTextPtr = vertexFileText.c_str();
-
-	glShaderSource(vertexShader, 1, &vertexFileTextPtr, NULL);
-	glCompileShader(vertexShader);
-
-	//check for errors
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog <<
-			std::endl;
+		glm::vec3 pos = glm::vec3(triangleVertArr[i], triangleVertArr[i + 1], triangleVertArr[i + 2]);
+		Vertex auxVertex{ pos, glm::vec3(0.0f), glm::vec3(0.0f),  glm::vec3(1.0f, 0.5f, 0.2f) };
+		triangleVertices.push_back(auxVertex);
 	}
 	
-	std::cout << "VertexShader compiled successfully!\n";
-
-	//fragment shader
-	unsigned int fragmentShader;
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	std::string fragmentFileText = readTextFile(std::string("..\\Resources\\Shaders\\FragmentShader.fs"));
-	if (fragmentFileText.length() == 0)
-	{
-		printf("(readTextFile): Unable to read file fragmentshader\n");
-	}
-
-	const char* fragmentFileTextPtr = fragmentFileText.c_str();
-
-	glShaderSource(fragmentShader, 1, &fragmentFileTextPtr, NULL);
-	glCompileShader(fragmentShader);
-
-	//check for errors
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog <<
-			std::endl;
-	}
-
-	std::cout << "FragmentShader compiled successfully!\n";
+	std::vector<unsigned int> triangleIndices{0, 1, 2};
+	Mesh triangle(triangleVertices, triangleIndices);
 
 
-	//shader program object
-	unsigned int shaderProgram = glCreateProgram();
-
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADERS::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	std::cout << "Shaders sucessfully linked!\n";
+	//axis
+	glm::vec3 colors[] = { glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f) };
 	
+	for (int i = 0; i < 3; i++)
+	{
+		Vertex auxVertex { colors[i] * 7.0f, glm::vec3(0.0f), glm::vec3(0.0f),  colors[i] };
+		axisVertices.push_back(auxVertex);
+		Vertex origVertex{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), colors[i] };
+		axisVertices.push_back(origVertex);
+	}
 
-	//delete shaders objects
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	Mesh coordSystem(axisVertices, std::vector<unsigned int>{0, 1, 2, 3, 4, 5});
 
 
-	unsigned int VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	//plane
+	glm::vec3 pos = glm::vec3(5.0f, 0.0f, 5.0f);
 
-	// 1. bind Vertex Array Object
-	glBindVertexArray(VAO);
+	for (int i = 1; i < 12; i++)
+	{
+		for (int j = 0; j < 11; j++)
+		{
 
-	// 2. copy our vertices array in a buffer for OpenGL to use
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+			Vertex auxVertex{ pos, glm::vec3(0.0f), glm::vec3(0.0f),  glm::vec3(1.0f) };
+			planeVertices.push_back(auxVertex);
 
-	// 3. then set our vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+			pos = pos + glm::vec3(-1.0f, 0.0f, 0.0f);
+		}
+		pos = glm::vec3(5.0f, 0.0f, 5.0f - 1.0f * i);
+	}
+	
+	int lowerPos = 0;
+	int upperPos = 11;
+
+	for (int i = 0; i < 10; i++)
+	{
+		lowerPos = i * 11;
+		upperPos = lowerPos + 11;
+
+		for (int j = 0; j < 10; j++)
+		{
+			planeIndices.push_back(lowerPos);
+			planeIndices.push_back(upperPos);
+			planeIndices.push_back(lowerPos + 1);
+
+			planeIndices.push_back(upperPos);
+			planeIndices.push_back(upperPos + 1);
+			planeIndices.push_back(lowerPos + 1);
+
+			lowerPos++;
+			upperPos++;
+		}
+
+	}
+
+	for (int i = 0; i < planeIndices.size(); ++i)
+	{
+		std::cout << planeIndices[i] << ", ";
+	}
+	std::cout << std::endl;
+
+	Mesh xOzPlane(planeVertices, planeIndices);
+	
 
 	glViewport(0, 0, 800, 600);
 
@@ -148,33 +141,40 @@ int main()
 		processInput(engine.window);
 
 		//rendering commands
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		// 4. draw the object
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
-		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+		shader.use();
+
+		unsigned int transformLoc = glGetUniformLocation(shader.id, "transform");
 		 
 		glm::mat4 view_mat = engine.camera.getViewMatrix(); 
 		glm::mat4 projection = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
-		glm::mat4 transform = projection * view_mat;
+		glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
+		glm::mat4 transform = projection * view_mat * model_mat;
 
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-		glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		//triangle.Draw(shader, GL_TRIANGLES);
+
+		glLineWidth(5.0);
+
+		coordSystem.Draw(shader, GL_LINES);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(1.0);
+
+		xOzPlane.Draw(shader, GL_TRIANGLES);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		// check and call events and swap the buffers
 		glfwSwapBuffers(engine.window);
 		glfwPollEvents();
 	}
 	
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-
-	glDeleteProgram(shaderProgram);
 	engine.Stop();
 	return 0;
-
 }

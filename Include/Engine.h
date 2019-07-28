@@ -13,10 +13,8 @@ public:
 	Camera camera;
 	GLFWwindow* window;
 	
-	
 	int Init();
 	int Update();
 	float getFrameDelta();
 	int Stop();
 };
-
