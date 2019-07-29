@@ -56,7 +56,6 @@ int Engine::Update()
 	this->frameDelta = currentTime - this->lastFrameTime;
 	this->lastFrameTime = currentTime;
 
-	this->camera.key_callback(window);
 	return 0;
 }
 

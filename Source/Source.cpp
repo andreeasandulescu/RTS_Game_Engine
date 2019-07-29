@@ -93,8 +93,7 @@ int main()
 	}
 
 	std::cout << "FragmentShader compiled successfully!\n";
-
-
+	
 	//shader program object
 	unsigned int shaderProgram = glCreateProgram();
 
@@ -110,12 +109,10 @@ int main()
 
 	std::cout << "Shaders sucessfully linked!\n";
 	
-
 	//delete shaders objects
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-
-
+	
 	unsigned int VBO, VAO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
