@@ -1,6 +1,27 @@
-#include "Mesh.h"
+#include <Mesh.h>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Vertex& Vertex::operator=(const Vertex& v)
+{
+	position = v.position;
+	normal = v.normal;
+	texCoords = v.texCoords;
+	auxVars = v.auxVars;
+	return *this;
+}
+
+Texture& Texture::operator=(const Texture& t)
+{
+	id = t.id;
+	type = t.type;
+	path = t.path;
+	return *this;
+}
+
+Mesh::Mesh()
+{
+}
+
+void Mesh::InitMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures)
 {
 	this->vertices = vertices;
 	this->indices = indices;
@@ -9,7 +30,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 	setupMesh();
 }
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
+void Mesh::InitMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 {
 	this->vertices = vertices;
 	this->indices = indices;
@@ -17,11 +38,15 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 	setupMesh();
 }
 
-Mesh::~Mesh()
+Mesh& Mesh::operator=(const Mesh& m)
 {
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
+	VAO = m.VAO;
+	VBO = m.VBO;
+	EBO = m.EBO;
+	vertices = m.vertices;
+	indices = m.indices;
+	textures = m.textures;
+	return *this;
 }
 
 void Mesh::setupMesh()
@@ -53,9 +78,10 @@ void Mesh::setupMesh()
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, auxVars));
 
 	glBindVertexArray(0);
+
 }
 
-void Mesh::Draw(Shader shader, GLenum mode)
+void Mesh::Draw(Shader& shader, GLenum mode)
 {
 	glBindVertexArray(VAO);
 	glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
@@ -63,4 +89,11 @@ void Mesh::Draw(Shader shader, GLenum mode)
 
 	// always good practice to set everything back to defaults once configured.
 	glActiveTexture(GL_TEXTURE0);
+}
+
+void Mesh::Cleanup()
+{
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 }

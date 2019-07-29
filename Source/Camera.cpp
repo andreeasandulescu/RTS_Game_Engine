@@ -24,7 +24,7 @@ void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
-	printf("%f %f\n", yaw, pitch);
+	printf("%f %f\n", xoffset, yoffset);
 
 
 	cameraFront = cameraFront + cameraUp * yoffset;
