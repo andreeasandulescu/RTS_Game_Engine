@@ -12,34 +12,51 @@ glm::mat4 Camera::getViewMatrix()
 	return glm::lookAt(this->cameraPos, this->cameraPos + this->cameraFront, this->cameraUp);
 }
 
-void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void Camera::move_cursor(double xoffset, double yoffset)
 {
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
-	lastX = xpos;
-	lastY = ypos;
-
 	float sensitivity = 0.004f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
+	float xos = sensitivity * (float)xoffset;
+	float yos = sensitivity * (float)yoffset;
 
-	printf("%f %f\n", xoffset, yoffset);
-
-
-	cameraFront = cameraFront + cameraUp * yoffset;
-	cameraFront = cameraFront + glm::normalize(glm::cross(cameraFront, cameraUp)) * xoffset;
+	cameraFront = cameraFront + cameraUp * yos;
+	cameraFront = cameraFront + glm::normalize(glm::cross(cameraFront, cameraUp)) * xos;
 	cameraFront = glm::normalize(cameraFront);
+}
 
-	float cameraSpeed = 0.1f; // adjust accordingly
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPos += cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPos -= cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
+void Camera::receiveMessage(Message *m) {
+	CursorMessage *cm;
+	KeysMessage* km;
+
+	if (m->messageType == MessageType::cursor) {
+		cm = (CursorMessage*)m;
+		move_cursor(cm->xoffset, cm->yoffset);
+	}
+	else if (m->messageType == MessageType::keyspressed) {
+		km = (KeysMessage*)m;
+		
+		// iterate through pressed keys and change camera positions:
+		for (std::vector<unsigned int>::iterator it = km->pressedKeys.begin(); it != km->pressedKeys.end(); ++it) {
+			float cameraSpeed = 0.1f; // adjust accordingly
+			switch (*it) {
+				case GLFW_KEY_W:
+					cameraPos += cameraSpeed * cameraFront;
+					break;
+				case GLFW_KEY_S:
+					cameraPos -= cameraSpeed * cameraFront;
+					break;
+				case GLFW_KEY_A:
+					cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+					break;
+				case GLFW_KEY_D:
+					cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+					break;
+				default:
+					break;
+			}	
+		}
+	}
+	delete m;
 }
 
 Camera::Camera() {
@@ -58,6 +75,7 @@ Camera::Camera() {
 	yaw = 0;
 	pitch = 0;
 }
+
 
 Camera::~Camera()
 {

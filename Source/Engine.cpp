@@ -28,12 +28,26 @@ int Engine::Init()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+	
 
-	// create world camera:
+	// create input manager:
+	this->inputManager = InputManager(window, &mainMessageBus);
+
+	// create world camera and subscribe to input manager:
 	this->camera = Camera();
+	this->mainMessageBus.addSubscriber(&camera);
 
+	// start main bus thread:
+	mainBusThread = std::thread(&MessageBus::sendMessages, &mainMessageBus);
+
+	// start input manager thread:
+	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
+
+	
 	return 0;
 }
+
+
 
 int Engine::Update()
 {
@@ -42,12 +56,6 @@ int Engine::Update()
 	this->frameDelta = currentTime - this->lastFrameTime;
 	this->lastFrameTime = currentTime;
 
-	// update camera:
-	double xpos;
-	double ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-
-	this->camera.mouse_callback(window, xpos, ypos);
 	return 0;
 }
 
@@ -58,8 +66,14 @@ float Engine::getFrameDelta()
 	return this->frameDelta;
 }
 
+
+
 int Engine::Stop()
 {
 	glfwTerminate();
 	return 0;
+}
+
+Engine::Engine() {
+
 }

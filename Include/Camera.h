@@ -4,7 +4,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-class Camera {
+#include <MessageReceiver.h>
+
+#ifndef _CAMERA_H_
+#define _CAMERA_H_
+
+class Camera : public MessageReceiver {
 	float lastX;
 	float lastY;
 	float yaw;
@@ -17,8 +22,11 @@ public:
 
 	glm::mat4 getViewMatrix(glm::vec3 target);
 	glm::mat4 getViewMatrix();
-	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	void move_cursor(double xoffset, double yoffset);
+	void receiveMessage(Message *m);
 
 	Camera();
 	~Camera();
 };
+
+#endif // _CAMERA_H_
