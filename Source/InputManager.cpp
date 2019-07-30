@@ -18,7 +18,7 @@ void InputManager::listening() {
 		this->messageBus->addMessage(m);
 
 		// poll for keys:
-		KeysMessage* keysMessage = new KeysMessage();
+		KeysMessage *keysMessage = new KeysMessage();
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			keysMessage->pressedKeys.push_back(GLFW_KEY_W);
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

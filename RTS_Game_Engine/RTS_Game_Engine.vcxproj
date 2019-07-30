@@ -139,7 +139,11 @@
     <ClCompile Include="..\Source\Camera.cpp" />
     <ClCompile Include="..\Source\Engine.cpp" />
     <ClCompile Include="..\Source\glad.c" />
+    <ClCompile Include="..\Source\InputManager.cpp" />
+    <ClCompile Include="..\Source\MapSquare.cpp" />
     <ClCompile Include="..\Source\Mesh.cpp" />
+    <ClCompile Include="..\Source\Message.cpp" />
+    <ClCompile Include="..\Source\MessageBus.cpp" />
     <ClCompile Include="..\Source\Renderer.cpp" />
     <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
@@ -147,7 +151,14 @@
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h" />
     <ClInclude Include="..\Include\Engine.h" />
+    <ClInclude Include="..\Include\GameMap.h" />
+    <ClInclude Include="..\Include\Header.h" />
+    <ClInclude Include="..\Include\InputManager.h" />
+    <ClInclude Include="..\Include\MapSquare.h" />
     <ClInclude Include="..\Include\Mesh.h" />
+    <ClInclude Include="..\Include\Message.h" />
+    <ClInclude Include="..\Include\MessageBus.h" />
+    <ClInclude Include="..\Include\MessageReceiver.h" />
     <ClInclude Include="..\Include\Renderer.h" />
     <ClInclude Include="..\Include\Shader.h" />
   </ItemGroup>
