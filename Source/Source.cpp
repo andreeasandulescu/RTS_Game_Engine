@@ -66,6 +66,9 @@ int main()
 
 		renderer.RenderXOZPlane();
 
+		glm::vec3 pos = glm::vec3(2.0f, 2.0f, 2.0f);
+		renderer.RenderMapTile(pos, glm::vec3(pos.x + 2, pos.y, pos.z), glm::vec3(pos.x + 2, pos.y, pos.z + 2), glm::vec3(pos.x , pos.y, pos.z + 2));
+
 		// check and call events and swap the buffers
 		glfwSwapBuffers(engine.window);
 		glfwPollEvents();

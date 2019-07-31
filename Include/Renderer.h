@@ -28,10 +28,12 @@ public:
 	void Init();
 	void RenderCoordSystem();
 	void RenderXOZPlane();
+	void RenderMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4);
 
 private:
 	void GenerateCoordSystemMesh();
 	void GeneratePlaneMesh();
+	Mesh GenerateMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4);
 
 };
 #endif // RENDERER_H
