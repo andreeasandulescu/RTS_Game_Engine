@@ -50,9 +50,9 @@ void MapSquare::updateCoordinates(unsigned int i, unsigned int j) {
 }
 
 MapSquare::MapSquare() {
-	this->v0 = glm::vec3(1.0f, 0.0f, 1.0f);
-	this->v1 = glm::vec3(1.0f, 0.0f, 0.0f);
-	this->v2 = glm::vec3(0.0f, 0.0f, 0.0f);
-	this->v3 = glm::vec3(0.0f, 0.0f, 1.0f);
+	this->v0.position = glm::vec3(1.0f, 0.0f, 1.0f);
+	this->v1.position = glm::vec3(1.0f, 0.0f, 0.0f);
+	this->v2.position = glm::vec3(0.0f, 0.0f, 0.0f);
+	this->v3.position = glm::vec3(0.0f, 0.0f, 1.0f);
 }
 

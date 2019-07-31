@@ -151,8 +151,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h" />
+    <ClInclude Include="..\Include\Cursor.h" />
     <ClInclude Include="..\Include\Engine.h" />
     <ClInclude Include="..\Include\GameMap.h" />
+    <ClInclude Include="..\Include\gltext.h" />
+    <ClInclude Include="..\Include\GUI.h" />
     <ClInclude Include="..\Include\InputManager.h" />
     <ClInclude Include="..\Include\MapSquare.h" />
     <ClInclude Include="..\Include\Mesh.h" />
