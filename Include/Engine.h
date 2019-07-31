@@ -7,6 +7,7 @@
 #include <thread>
 #include <InputManager.h>
 #include <MessageBus.h>
+#include <GameMap.h>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
@@ -20,7 +21,8 @@ public:
 	GLFWwindow* window;
 	MessageBus mainMessageBus;
 	InputManager inputManager;
-	
+	GameMap gameMap;
+
 	std::thread mainBusThread;
 	std::thread inputManagerThread;
 

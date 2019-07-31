@@ -1,7 +1,26 @@
 #include <GameMap.h>
 
-GameMap::GameMap() : GameMap::GameMap(10, 10) {
+void GameMap::InitEven(float altitude) {
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
 
+			// remove all previous tiles:
+			if (this->map[i][j] != NULL) {
+				delete this->map[i][j];
+				this->map[i][j] = NULL;
+			}
+
+			// add new map square:
+			this->map[i][j] = new MapSquare();
+			this->map[i][j]->SetAltitude(altitude);
+			this->map[i][j]->updateCoordinates(i, j);
+
+		}
+	}
+}
+
+GameMap::GameMap() : GameMap::GameMap(10, 10) {
+	
 }
 
 GameMap::GameMap(unsigned int width, unsigned int height)

@@ -74,6 +74,6 @@ int Engine::Stop()
 	return 0;
 }
 
-Engine::Engine() {
-
+Engine::Engine() : gameMap(50, 50) {
+	this->gameMap.InitEven(2.0f);
 }

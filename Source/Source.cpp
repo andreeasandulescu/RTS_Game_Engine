@@ -67,7 +67,21 @@ int main()
 		renderer.RenderXOZPlane();
 
 		glm::vec3 pos = glm::vec3(2.0f, 2.0f, 2.0f);
-		renderer.RenderMapTile(pos, glm::vec3(pos.x + 2, pos.y, pos.z), glm::vec3(pos.x + 2, pos.y, pos.z + 2), glm::vec3(pos.x , pos.y, pos.z + 2));
+
+		for (int i = 0; i < engine.gameMap.height; i++) {
+			for (int j = 0; j < engine.gameMap.width; j++) {
+				/*
+				renderer.RenderMapTile(
+					engine.gameMap.map[i][j]->v0,
+					engine.gameMap.map[i][j]->v1,
+					engine.gameMap.map[i][j]->v2,
+					engine.gameMap.map[i][j]->v3
+					);
+				*/
+			}
+		}
+
+		
 
 		// check and call events and swap the buffers
 		glfwSwapBuffers(engine.window);
