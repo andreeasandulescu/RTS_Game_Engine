@@ -70,14 +70,8 @@ int main()
 
 		for (int i = 0; i < engine.gameMap.height; i++) {
 			for (int j = 0; j < engine.gameMap.width; j++) {
-				/*
-				renderer.RenderMapTile(
-					engine.gameMap.map[i][j]->v0,
-					engine.gameMap.map[i][j]->v1,
-					engine.gameMap.map[i][j]->v2,
-					engine.gameMap.map[i][j]->v3
-					);
-				*/
+				
+				
 			}
 		}
 

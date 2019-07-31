@@ -28,31 +28,31 @@ V2(i,0,j) V3(i,0,j + 1) ->z
 */
 
 void MapSquare::SetAltitude(float h) {
-	this->v0.y = h;
-	this->v1.y = h;
-	this->v2.y = h;
-	this->v3.y = h;
+	this->v0.position.y = h;
+	this->v1.position.y = h;
+	this->v2.position.y = h;
+	this->v3.position.y = h;
 }
 
 void MapSquare::updateCoordinates(unsigned int i, unsigned int j) {
-	this->v0.x = i + 1;
-	this->v0.z = j + 1;
+	this->v0.position.x = i + 1;
+	this->v0.position.z = j + 1;
 
-	this->v1.x = i + 1;
-	this->v1.z = j;
+	this->v1.position.x = i + 1;
+	this->v1.position.z = j;
 
-	this->v2.x = i;
-	this->v2.z = j;
+	this->v2.position.x = i;
+	this->v2.position.z = j;
 
-	this->v3.x = i;
-	this->v3.z = j + 1;
+	this->v3.position.x = i;
+	this->v3.position.z = j + 1;
 
 }
 
 MapSquare::MapSquare() {
-	this->v0 = glm::vec3(1.0f, 0.0f, 1.0f);
-	this->v1 = glm::vec3(1.0f, 0.0f, 0.0f);
-	this->v2 = glm::vec3(0.0f, 0.0f, 0.0f);
-	this->v3 = glm::vec3(0.0f, 0.0f, 1.0f);
+	this->v0.position = glm::vec3(1.0f, 0.0f, 1.0f);
+	this->v1.position = glm::vec3(1.0f, 0.0f, 0.0f);
+	this->v2.position = glm::vec3(0.0f, 0.0f, 0.0f);
+	this->v3.position = glm::vec3(0.0f, 0.0f, 1.0f);
 }
 
