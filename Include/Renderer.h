@@ -19,6 +19,7 @@ public:
 	Shader utilitiesShader;
 	Mesh coordSystem;
 	Mesh xOzPlane;
+	Mesh square;
 	glm::mat4 view_matrix;
 	glm::mat4 proj_matrix;
 	

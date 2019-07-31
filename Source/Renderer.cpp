@@ -104,6 +104,13 @@ void Renderer::Init()
 {
 	GenerateCoordSystemMesh();
 	GeneratePlaneMesh();
+
+	this->square = GenerateMapTile(
+		glm::vec3(1.0f, 0.0f, 1.0f),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f)
+	);
 }
 
 void Renderer::RenderCoordSystem()
@@ -142,9 +149,9 @@ void Renderer::RenderXOZPlane()
 void Renderer::RenderMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
 {
 	utilitiesShader.use();
-	Mesh tileMesh = GenerateMapTile(v1, v2, v3, v4);
+	//Mesh tileMesh = GenerateMapTile(v1, v2, v3, v4);
 
-	glm::mat4 model_mat = glm::mat4(1.0f);
+	glm::mat4 model_mat = glm::translate(glm::mat4(1),v1);
 	glm::mat4 transform = proj_matrix * view_matrix * model_mat;
 	
 	glUniformMatrix4fv(glGetUniformLocation(utilitiesShader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
@@ -152,7 +159,7 @@ void Renderer::RenderMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glLineWidth(1.0);
 
-	tileMesh.Draw(utilitiesShader, GL_TRIANGLES);
+	square.Draw(utilitiesShader, GL_TRIANGLES);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
