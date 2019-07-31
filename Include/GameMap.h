@@ -11,9 +11,16 @@ class GameMap {
 	unsigned int height;
 
 	// GAME MAP:
-	MapSquare ** map;
+	MapSquare *** map;
 
+	// init with a default width and height:
 	GameMap();
+	
+	// init with width * height tiles:
+	GameMap(unsigned int width, unsigned int height);
+	
+	// free memory
+	~GameMap();
 };
 
 #endif // GAME_MAP_H

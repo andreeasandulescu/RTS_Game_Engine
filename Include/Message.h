@@ -22,7 +22,7 @@ public:
 
 	virtual Message* clone();
 
-	Message(std::string messageString);
+	Message(const std::string& message);
 };
 
 class CursorMessage : public Message {

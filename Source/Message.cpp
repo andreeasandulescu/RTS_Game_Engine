@@ -10,7 +10,7 @@ Message::Message()
 	this->messageType = MessageType::unkown;
 }
 
-Message::Message(std::string messageString)
+Message::Message(const std::string& messageString)
 {
 	this->id = Message::globalIds;
 	Message::globalIds++;

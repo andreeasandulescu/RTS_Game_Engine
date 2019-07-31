@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClCompile Include="..\Source\Camera.cpp" />
     <ClCompile Include="..\Source\Engine.cpp" />
+    <ClCompile Include="..\Source\GameMap.cpp" />
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\InputManager.cpp" />
     <ClCompile Include="..\Source\MapSquare.cpp" />
