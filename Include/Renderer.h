@@ -22,18 +22,16 @@ public:
 	glm::mat4 view_matrix;
 	glm::mat4 proj_matrix;
 	
-	Renderer(glm::mat4 view_matrix, glm::mat4 proj_matrix);
+	Renderer(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
 	Renderer();
-	void UpdateMatrices(glm::mat4 view_matrix, glm::mat4 proj_matrix);
+	void UpdateMatrices(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
 	void Init();
 	void RenderCoordSystem();
 	void RenderXOZPlane();
-	void RenderMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4);
 
 private:
 	void GenerateCoordSystemMesh();
 	void GeneratePlaneMesh();
-	Mesh GenerateMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4);
 
 };
 #endif // RENDERER_H

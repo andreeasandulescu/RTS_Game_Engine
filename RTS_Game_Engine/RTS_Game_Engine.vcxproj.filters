@@ -71,9 +71,6 @@
     <ClInclude Include="..\Include\GameMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Header.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>

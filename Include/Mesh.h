@@ -36,10 +36,10 @@ public:
 	
 	Mesh();
 	void InitMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures);
-	void InitMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+	void InitMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
 	
 	Mesh& operator=(const Mesh& m);
-	void Draw(Shader& shader, GLenum mode);
+	void Draw(const Shader& shader, GLenum mode);
 	void Cleanup();
 
 private:

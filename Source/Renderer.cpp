@@ -1,6 +1,6 @@
 #include <Renderer.h>
 
-Renderer::Renderer(glm::mat4 view_matrix, glm::mat4 proj_matrix)
+Renderer::Renderer(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
 	Shader shader("..\\Resources\\Shaders\\VertexShader.vs", "..\\Resources\\Shaders\\FragmentShader.fs");
 	
@@ -15,7 +15,7 @@ Renderer::Renderer()
 	this->utilitiesShader = shader;
 }
 
-void Renderer::UpdateMatrices(glm::mat4 view_matrix, glm::mat4 proj_matrix)
+void Renderer::UpdateMatrices(const glm::mat4& view_matrix, const glm::mat4& proj_matrix)
 {
 	this->view_matrix = view_matrix;
 	this->proj_matrix = proj_matrix;
@@ -83,23 +83,6 @@ void Renderer::GeneratePlaneMesh()
 	this->xOzPlane.InitMesh(planeVertices, planeIndices);
 }
 
-Mesh Renderer::GenerateMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
-{
-	std::vector<Vertex> tileVertices;
-	std::vector<unsigned int> tileIndices{0, 1, 2, 2, 3, 0};
-
-	tileVertices.push_back(Vertex{ v1, glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.97f, 0.8f) });
-	tileVertices.push_back(Vertex{ v2, glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.97f, 0.8f) });
-	tileVertices.push_back(Vertex{ v3, glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.97f, 0.8f) });
-	tileVertices.push_back(Vertex{ v4, glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.97f, 0.8f) });
-
-	Mesh tileMesh{};
-	tileMesh.InitMesh(tileVertices, tileIndices);
-
-	return tileMesh;
-}
-
-
 void Renderer::Init()
 {
 	GenerateCoordSystemMesh();
@@ -138,24 +121,3 @@ void Renderer::RenderXOZPlane()
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
-
-void Renderer::RenderMapTile(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 v4)
-{
-	utilitiesShader.use();
-	Mesh tileMesh = GenerateMapTile(v1, v2, v3, v4);
-
-	glm::mat4 model_mat = glm::mat4(1.0f);
-	glm::mat4 transform = proj_matrix * view_matrix * model_mat;
-	
-	glUniformMatrix4fv(glGetUniformLocation(utilitiesShader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(1.0);
-
-	tileMesh.Draw(utilitiesShader, GL_TRIANGLES);
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-
-}
-

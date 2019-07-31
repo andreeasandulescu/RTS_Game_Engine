@@ -30,7 +30,7 @@ void Mesh::InitMesh(const std::vector<Vertex>& vertices, const std::vector<unsig
 	setupMesh();
 }
 
-void Mesh::InitMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
+void Mesh::InitMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
 {
 	this->vertices = vertices;
 	this->indices = indices;
@@ -81,7 +81,7 @@ void Mesh::setupMesh()
 
 }
 
-void Mesh::Draw(Shader& shader, GLenum mode)
+void Mesh::Draw(const Shader& shader, GLenum mode)
 {
 	glBindVertexArray(VAO);
 	glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
