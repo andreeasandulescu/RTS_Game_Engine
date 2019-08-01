@@ -36,62 +36,20 @@ void Renderer::GenerateCoordSystemMesh()
 		axisVertices.push_back(origVertex);
 	}
 
-	this->coordSystem.InitMesh(axisVertices, std::vector<unsigned int>{0, 1, 2, 3, 4, 5});
+	this->coordSystem.InitMesh(axisVertices, utilitiesShader);
 }
 
-void Renderer::GeneratePlaneMesh()
-{
-	std::vector<Vertex> planeVertices;
-	std::vector<unsigned int> planeIndices{};
-	glm::vec3 pos = glm::vec3(5.0f, 0.0f, 5.0f);
 
-	for (int i = 1; i < 12; i++)
-	{
-		for (int j = 0; j < 11; j++)
-		{
-			Vertex vertex{ pos, glm::vec3(0.0f), glm::vec3(0.0f),  glm::vec3(1.0f) };
-			planeVertices.push_back(vertex);
-
-			pos = pos + glm::vec3(-1.0f, 0.0f, 0.0f);
-		}
-		pos = glm::vec3(5.0f, 0.0f, 5.0f - 1.0f * i);
-	}
-
-	int lowerPos = 0;
-	int upperPos = 11;
-
-	for (int i = 0; i < 10; i++)
-	{
-		lowerPos = i * 11;
-		upperPos = lowerPos + 11;
-
-		for (int j = 0; j < 10; j++)
-		{
-			planeIndices.push_back(lowerPos);
-			planeIndices.push_back(upperPos);
-			planeIndices.push_back(lowerPos + 1);
-
-			planeIndices.push_back(upperPos);
-			planeIndices.push_back(upperPos + 1);
-			planeIndices.push_back(lowerPos + 1);
-
-			lowerPos++;
-			upperPos++;
-		}
-	}
-
-	this->xOzPlane.InitMesh(planeVertices, planeIndices);
-}
 
 void Renderer::Init()
 {
 	GenerateCoordSystemMesh();
-	GeneratePlaneMesh();
+	
 }
 
 void Renderer::RenderCoordSystem()
 {
-	utilitiesShader.use();
+	coordSystem.shader.use();
 
 	glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
 	glm::mat4 transform = proj_matrix * view_matrix * model_mat;
@@ -101,23 +59,48 @@ void Renderer::RenderCoordSystem()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glLineWidth(5.0);
 
-	coordSystem.Draw(utilitiesShader, GL_LINES);
+	coordSystem.Draw(GL_LINES);
 }
 
-void Renderer::RenderXOZPlane()
+void Renderer::GenerateTriangleMesh()
 {
-	utilitiesShader.use();
+	glm::vec3 vertices[] = {
+		// positions
+		glm::vec3( 0.5f,  0.5f, 0.0f),
+		glm::vec3(0.5f, -0.5f, 0.0f),
+		glm::vec3(-0.5f,  0.5f, 0.0f),
+	};
 
-	glm::mat4 model_mat = glm::mat4(1.0f);
-	//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(12.5f));
+	glm::vec2 texCoords[] = {
+		glm::vec2(0.0f, 0.0f), // lower-left corner
+		glm::vec2(1.0f, 0.0f), // lower-right corner
+		glm::vec2(0.5f, 1.0f) // top-center corner
+	};
+
+	std::vector<Vertex> auxVertices;
+	glm::vec3 colors[] = { glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f) };
+
+	for (int i = 0; i < 3; i++)
+	{
+		Vertex vert{ vertices[i], glm::vec3(0.0f), texCoords[i],  colors[i] };
+		auxVertices.push_back(vert);
+	}
+
+	Shader shader("..\\Resources\\Shaders\\TextureVertexShader.vs", "..\\Resources\\Shaders\\TextureFragmentShader.fs");
+	this->auxMesh.InitMesh(auxVertices, shader);
+}
+
+void Renderer::RenderTriangle()
+{
+	auxMesh.shader.use();
+
+	glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
 	glm::mat4 transform = proj_matrix * view_matrix * model_mat;
 
 	glUniformMatrix4fv(glGetUniformLocation(utilitiesShader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(1.0);
-
-	xOzPlane.Draw(utilitiesShader, GL_TRIANGLES);
-
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glLineWidth(5.0);
+
+	auxMesh.Draw(GL_TRIANGLES);
 }

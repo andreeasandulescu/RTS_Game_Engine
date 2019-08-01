@@ -148,10 +148,12 @@
     <ClCompile Include="..\Source\Renderer.cpp" />
     <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
+    <ClCompile Include="..\Source\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h" />
     <ClInclude Include="..\Include\Cursor.h" />
+    <ClInclude Include="..\Include\Drawable.h" />
     <ClInclude Include="..\Include\Engine.h" />
     <ClInclude Include="..\Include\GameMap.h" />
     <ClInclude Include="..\Include\gltext.h" />
@@ -164,6 +166,7 @@
     <ClInclude Include="..\Include\MessageReceiver.h" />
     <ClInclude Include="..\Include\Renderer.h" />
     <ClInclude Include="..\Include\Shader.h" />
+    <ClInclude Include="..\Include\stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

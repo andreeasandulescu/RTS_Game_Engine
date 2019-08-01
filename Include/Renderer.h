@@ -18,8 +18,10 @@ class Renderer
 public:
 	Shader utilitiesShader;
 	Mesh coordSystem;
-	Mesh xOzPlane;
-	Mesh square;
+	Mesh auxMesh;					// TODO : REMOVE THIS
+	void GenerateTriangleMesh();	// THIS TOO
+	void RenderTriangle();			// SAME HERE
+
 	glm::mat4 view_matrix;
 	glm::mat4 proj_matrix;
 	
@@ -28,11 +30,8 @@ public:
 	void UpdateMatrices(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
 	void Init();
 	void RenderCoordSystem();
-	void RenderXOZPlane();
 
 private:
 	void GenerateCoordSystemMesh();
-	void GeneratePlaneMesh();
-
 };
 #endif // RENDERER_H

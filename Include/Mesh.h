@@ -33,18 +33,19 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
+	Shader shader;
 	
 	Mesh();
-	void InitMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures);
-	void InitMesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+	void InitMesh(const std::vector<Vertex>& vertices, const std::vector<Texture>& textures, const Shader& shader);
+	void InitMesh(const std::vector<Vertex>& vertices, const Shader& shader);
 	
 	Mesh& operator=(const Mesh& m);
-	void Draw(const Shader& shader, GLenum mode);
+	void UpdateMesh();
+	void Draw(GLenum mode);
 	void Cleanup();
 
+	unsigned int VAO, VBO;
 private:
-	unsigned int VAO, VBO, EBO;
-	
-	void setupMesh();
+	void createNewMesh();
 };
 #endif	// MESH_H
