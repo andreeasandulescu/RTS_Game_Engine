@@ -16,6 +16,9 @@
     <Filter Include="Header Files\GUI">
       <UniqueIdentifier>{7c882b07-1864-4a89-af5c-43ec23f06039}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{2d40758e-78d3-4165-b2da-7bdefcf9ef8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Engine.cpp">
@@ -53,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\GameMap.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI.cpp">
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,11 +98,19 @@
     <ClInclude Include="..\Include\Cursor.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\gltext.h">
-      <Filter>Header Files\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\GUI.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ft2build.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RTS_Game_Engine.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

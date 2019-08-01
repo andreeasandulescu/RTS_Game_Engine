@@ -102,7 +102,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype253_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -140,6 +140,7 @@
     <ClCompile Include="..\Source\Engine.cpp" />
     <ClCompile Include="..\Source\GameMap.cpp" />
     <ClCompile Include="..\Source\glad.c" />
+    <ClCompile Include="..\Source\GUI.cpp" />
     <ClCompile Include="..\Source\InputManager.cpp" />
     <ClCompile Include="..\Source\MapSquare.cpp" />
     <ClCompile Include="..\Source\Mesh.cpp" />
@@ -153,8 +154,8 @@
     <ClInclude Include="..\Include\Camera.h" />
     <ClInclude Include="..\Include\Cursor.h" />
     <ClInclude Include="..\Include\Engine.h" />
+    <ClInclude Include="..\Include\ft2build.h" />
     <ClInclude Include="..\Include\GameMap.h" />
-    <ClInclude Include="..\Include\gltext.h" />
     <ClInclude Include="..\Include\GUI.h" />
     <ClInclude Include="..\Include\InputManager.h" />
     <ClInclude Include="..\Include\MapSquare.h" />
@@ -164,6 +165,10 @@
     <ClInclude Include="..\Include\MessageReceiver.h" />
     <ClInclude Include="..\Include\Renderer.h" />
     <ClInclude Include="..\Include\Shader.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RTS_Game_Engine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
