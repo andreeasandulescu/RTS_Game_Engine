@@ -60,9 +60,6 @@ int main()
 		glClearColor(0.2f, 0.0f, 0.20f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//update engine time:
-		engine.Update();
-
 		//check for user input
 		processInput(engine.window);
 
@@ -87,6 +84,10 @@ int main()
 		//engine.gameMap.Draw(transform);
 
 		// check and call events and swap the buffers
+
+		//update engine time:
+		engine.Update();
+
 		glfwSwapBuffers(engine.window);
 		glfwPollEvents();
 	}

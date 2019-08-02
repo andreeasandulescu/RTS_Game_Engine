@@ -4,10 +4,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-#include <MessageReceiver.h>
-
 #ifndef _CAMERA_H_
 #define _CAMERA_H_
+
+#include <MessageReceiver.h>
+
+
 
 class Camera : public MessageReceiver {
 	float lastX;

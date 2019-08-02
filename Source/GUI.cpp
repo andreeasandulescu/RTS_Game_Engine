@@ -1,20 +1,5 @@
 #include <GUI.h>
 
-void GLAPIENTRY
-MessageCallback(GLenum source,
-	GLenum type,
-	GLuint id,
-	GLenum severity,
-	GLsizei length,
-	const GLchar* message,
-	const void* userParam)
-{
-	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
-		type, severity, message);
-}
-
-
 
 void GUI::guiUpdate(GLFWwindow* window) {
 	
@@ -22,7 +7,6 @@ void GUI::guiUpdate(GLFWwindow* window) {
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
 	projection = glm::ortho(0.0f, (float)width, 0.0f, (float)height);
-	RenderText(window, this->textShader, std::string("NEXT LEVEL!!!!!!!!"), 1, 1, 1, glm::vec3(1.0f, 1.0f, 0.0f));
 
 	// compute fps and draw:
 	double currentTime = glfwGetTime();
@@ -44,11 +28,6 @@ void GUI::initGUI() {
 
 	if (FT_New_Face(ft, "..\\Resources\\fonts\\arial.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-	
-	// enable debugging:
-	// During init, enable debug output
-	glEnable(GL_DEBUG_OUTPUT);
-	glDebugMessageCallback(MessageCallback, 0);
 
 	// use shader for drawing the text:
 	this->textShader = Shader("..\\Resources\\Shaders\\TextVertexShader.vs", "..\\Resources\\Shaders\\TextFragmentShader.fs");
