@@ -37,12 +37,17 @@ int Engine::Init()
 	this->camera = Camera();
 	this->mainMessageBus.addSubscriber(&camera);
 
+	// create GUI:
+	gui = GUI::GUI();
+	gui.initGUI();
+
 	// start main bus thread:
 	mainBusThread = std::thread(&MessageBus::sendMessages, &mainMessageBus);
 
 	// start input manager thread:
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
+	
 	
 	return 0;
 }
@@ -55,6 +60,7 @@ int Engine::Update()
 	double currentTime = glfwGetTime();
 	this->frameDelta = currentTime - this->lastFrameTime;
 	this->lastFrameTime = currentTime;
+	this->gui.guiUpdate(this->window);
 
 	return 0;
 }

@@ -8,6 +8,7 @@
 #include <InputManager.h>
 #include <MessageBus.h>
 #include <GameMap.h>
+#include <GUI.h>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
@@ -22,6 +23,7 @@ public:
 	MessageBus mainMessageBus;
 	InputManager inputManager;
 	GameMap gameMap;
+	GUI gui;
 
 	std::thread mainBusThread;
 	std::thread inputManagerThread;

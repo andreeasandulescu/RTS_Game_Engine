@@ -56,15 +56,16 @@ int main()
 	//render loop
 	while (!glfwWindowShouldClose(engine.window))
 	{		
+		//rendering commands
+		glClearColor(0.2f, 0.0f, 0.20f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		//update engine time:
 		engine.Update();
 
 		//check for user input
 		processInput(engine.window);
 
-		//rendering commands
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 view_mat = engine.camera.getViewMatrix(); 
 		glm::mat4 projection = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
