@@ -87,20 +87,30 @@ void Renderer::GenerateTriangleMesh()
 	}
 
 	Shader shader("..\\Resources\\Shaders\\TextureVertexShader.vs", "..\\Resources\\Shaders\\TextureFragmentShader.fs");
-	this->auxMesh.InitMesh(auxVertices, shader);
+
+
+	Texture triangleTexture{};
+	triangleTexture.LoadTexture("..\\Resources\\Textures\\wall.jpg");
+	std::vector<Texture> textVect{ triangleTexture };
+
+	this->auxMesh.InitMesh(auxVertices, textVect, shader);
 }
 
 void Renderer::RenderTriangle()
 {
+	Texture texture = auxMesh.textures[0];
+	glBindTexture(GL_TEXTURE_2D, texture.id );
+
 	auxMesh.shader.use();
+
+	glUniform1i(glGetUniformLocation(auxMesh.shader.id, "ourTexture"), 0);
 
 	glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
 	glm::mat4 transform = proj_matrix * view_matrix * model_mat;
 
-	glUniformMatrix4fv(glGetUniformLocation(utilitiesShader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+	glUniformMatrix4fv(glGetUniformLocation(auxMesh.shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	//glLineWidth(5.0);
 
 	auxMesh.Draw(GL_TRIANGLES);
 }

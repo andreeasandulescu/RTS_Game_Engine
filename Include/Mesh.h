@@ -25,6 +25,7 @@ struct Texture {
 	std::string type;
 	std::string path;
 	Texture& operator=(const Texture& t);
+	void LoadTexture(const GLchar* texturePath);
 };
 
 class Mesh
