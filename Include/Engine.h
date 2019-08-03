@@ -9,6 +9,7 @@
 #include <MessageBus.h>
 #include <GameMap.h>
 #include <GUI.h>
+#include <stb_image.h>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_

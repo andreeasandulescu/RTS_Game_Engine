@@ -45,6 +45,13 @@ int main()
 	Renderer renderer{};
 	renderer.Init();
 
+	// load game map:
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
+	engine.gameMap.InitEven(0.0f);
+	engine.gameMap.loadHeightMap(data, nrChannels, width, height);
+	engine.gameMap.UpdateMesh();
+
 	glViewport(0, 0, 800, 600);
 
 	//TODO: CHECK IF THIS NEEDS TO BE IN ENGINE::INIT()
@@ -52,6 +59,7 @@ int main()
 	glfwSetFramebufferSizeCallback(engine.window, framebuffer_size_callback);
 
 	renderer.GenerateTriangleMesh();
+	
 
 	//render loop
 	while (!glfwWindowShouldClose(engine.window))
@@ -79,9 +87,9 @@ int main()
 
 		renderer.RenderTriangle();
 
-		//engine.gameMap.UpdateMesh();
-		//glm::mat4 transform = projection * view_mat;
-		//engine.gameMap.Draw(transform);
+		
+		glm::mat4 transform = projection * view_mat;
+		engine.gameMap.Draw(transform);
 
 		// check and call events and swap the buffers
 

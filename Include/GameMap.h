@@ -22,6 +22,15 @@ public:
 	virtual void UpdateMesh();
 	virtual void Draw(const glm::mat4& transform);
 
+	// load from data a height map:
+	void loadHeightMap(unsigned char* data, size_t pixel_size, int width, int height);
+	
+	// set the height of a tile
+	// also sets the same height for the neighbouring
+	// tiles closest vertices:
+	void setHeight(int i, int j, float height);
+
+
 	// init with a default width and height:
 	GameMap();
 	

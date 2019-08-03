@@ -18,23 +18,6 @@ void GameMap::InitEven(float altitude) {
 
 		}
 	}
-
-
-	for (unsigned int i = 0; i < height; i++)
-	{
-		for (unsigned int j = 0; j < width; j++)
-		{
-			//first triangle
-			vertices.push_back(map[i][j]->v0);
-			vertices.push_back(map[i][j]->v1);
-			vertices.push_back(map[i][j]->v2);
-
-			//second triangle
-			vertices.push_back(map[i][j]->v0);
-			vertices.push_back(map[i][j]->v2);
-			vertices.push_back(map[i][j]->v3);
-		}
-	}
 }
 
 
@@ -43,6 +26,7 @@ void GameMap::UpdateMesh()
 	Shader shader("..\\Resources\\Shaders\\VertexShader.vs", "..\\Resources\\Shaders\\FragmentShader.fs");
 	unsigned int index = 0;
 
+	vertices.resize(height * width * 6);
 	for (unsigned int i = 0; i < height; i++)
 	{
 		for (unsigned int j = 0; j < width; j++)
@@ -68,6 +52,16 @@ void GameMap::UpdateMesh()
 	mesh.UpdateMesh();
 }
 
+void GameMap::loadHeightMap(unsigned char* map_data, size_t pixel_size, int width, int height) {
+	this->width = width;
+	this->height = height;
+
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			setHeight(i, j, ((float) (255 - map_data[i * width * 3 + j * 3])) / 10.0f );
+		}
+	}
+}
 
 void GameMap::Draw(const glm::mat4& transform)
 {
@@ -81,6 +75,53 @@ void GameMap::Draw(const glm::mat4& transform)
 	mesh.Draw(GL_TRIANGLES);
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void GameMap::setHeight(int i, int j, float height) {
+	
+	// raise main square by Y axis:
+	this->map[i][j]->SetAltitude(height);
+
+	// raise two vertices neighbours:
+	// North neighbour:
+	if (i + 1 < this->height) {
+		this->map[i + 1][j]->v2.position.y = height;
+		this->map[i + 1][j]->v3.position.y = height;
+	}
+	// East Neighbour:
+	if (j + 1 < this->width) {
+		this->map[i][j + 1]->v1.position.y = height;
+		this->map[i][j + 1]->v2.position.y = height;
+	}
+	// South neighbour:
+	if (i - 1 >= 0) {
+		this->map[i - 1][j]->v1.position.y = height;
+		this->map[i - 1][j]->v0.position.y = height;
+	}
+	// West Neighbour:
+	if (j - 1 >= 0) {
+		this->map[i][j - 1]->v0.position.y = height;
+		this->map[i][j - 1]->v3.position.y = height;
+	}
+
+	// raise diagonal neighbours:
+	// NE:
+	if (i + 1 < this->height && j + 1 < this->width) {
+		this->map[i + 1][j + 1]->v2.position.y = height;
+	}
+	// SE:
+	if (i - 1 >= 0 && j + 1 < this->width) {
+		this->map[i - 1][j + 1]->v1.position.y = height;
+	}
+	// SW:
+	if (i - 1 >= 0 && j - 1 >= 0) {
+		this->map[i - 1][j - 1]->v0.position.y = height;
+	}
+	//NW:
+	if (i + 1 < this->height && j - 1 >= 0) {
+		this->map[i + 1][j - 1]->v3.position.y = height;
+	}
+
 }
 
 GameMap::GameMap() : GameMap::GameMap(10, 10) {
