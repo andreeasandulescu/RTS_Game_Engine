@@ -49,6 +49,7 @@ void Renderer::Init()
 
 void Renderer::RenderCoordSystem()
 {
+
 	coordSystem.shader.use();
 
 	glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
@@ -105,7 +106,7 @@ void Renderer::RenderTriangle()
 
 	glUniform1i(glGetUniformLocation(auxMesh.shader.id, "ourTexture"), 0);
 
-	glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
+	glm::mat4 model_mat =  glm::scale(glm::mat4(1.0f), glm::vec3(3.0f)) * glm::rotate(glm::mat4(1.0f), 1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 transform = proj_matrix * view_matrix * model_mat;
 
 	glUniformMatrix4fv(glGetUniformLocation(auxMesh.shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));

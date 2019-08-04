@@ -13,7 +13,7 @@ void GUI::guiUpdate(GLFWwindow* window) {
 	double delta = currentTime - lastTime;
 	char fps_text[100];
 	lastTime = currentTime;
-	int fps = 1000.0 / delta;
+	int fps = 1.0 / delta;
 	sprintf_s(fps_text, "FPS: %d", fps);
 	RenderText(window, this->textShader, std::string(fps_text), 1, height - 30, 0.3f, glm::vec3(1.0f, 1.0f, 0.0f));
 }

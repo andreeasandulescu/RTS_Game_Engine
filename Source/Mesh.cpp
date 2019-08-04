@@ -49,9 +49,6 @@ void Texture::LoadTexture(const GLchar* texturePath)
 
 }
 
-Mesh::Mesh()
-{
-}
 
 void Mesh::InitMesh(const std::vector<Vertex>& vertices, const std::vector<Texture>& textures, const Shader& shader)
 {
@@ -70,12 +67,34 @@ void Mesh::InitMesh(const std::vector<Vertex>& vertices, const Shader& shader)
 	createNewMesh();
 }
 
+void Mesh::InitMeshEBO(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures, const Shader& shader)
+{
+	this->vertices = vertices;
+	this->textures = textures;
+	this->indices = indices;
+	this->shader = shader;
+
+	createNewMeshEBO();
+}
+
+void Mesh::InitMeshEBO(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Shader& shader)
+{
+	this->vertices = vertices;
+	this->indices = indices;
+	this->shader = shader;
+
+	createNewMeshEBO();
+}
+
 Mesh& Mesh::operator=(const Mesh& m)
 {
 	VAO = m.VAO;
 	VBO = m.VBO;
+	EBO = m.EBO;
 	vertices = m.vertices;
+	indices = m.indices;
 	textures = m.textures;
+	shader = m.shader;
 	return *this;
 }
 
@@ -87,12 +106,95 @@ void Mesh::createNewMesh()
 	UpdateMesh();
 }
 
+void Mesh::createNewMeshEBO()
+{
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	UpdateMeshEBO();
+}
+
 void Mesh::UpdateMesh()
 {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STREAM_DRAW);
+
+	// vertex positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
+	// vertex normals
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	// vertex texture coords
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, auxVars));
+
+	glBindVertexArray(0);
+}
+
+void Mesh::Draw(GLenum mode)
+{
+	if (textures.size() != 0)
+	{
+		//TODO: multiple textures
+		Texture texture = textures[0];
+		glBindTexture(GL_TEXTURE_2D, texture.id);
+	}
+
+	shader.use();
+	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
+
+	glBindVertexArray(VAO);
+	glDrawArrays(mode, 0, vertices.size());
+	glBindVertexArray(0);
+
+	// always good practice to set everything back to defaults once configured.
+	glActiveTexture(GL_TEXTURE0);
+}
+
+void Mesh::Draw(const glm::mat4& transform, GLenum mode)
+{
+	if (textures.size() != 0)
+	{
+		//TODO: multiple textures
+		Texture texture = textures[0];
+		glBindTexture(GL_TEXTURE_2D, texture.id);
+	}
+
+	shader.use();
+	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+
+	glBindVertexArray(VAO);
+	glDrawArrays(mode, 0, vertices.size());
+	glBindVertexArray(0);
+
+	// always good practice to set everything back to defaults once configured.
+	glActiveTexture(GL_TEXTURE0);
+}
+
+void Mesh::Cleanup()
+{
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+}
+
+void Mesh::UpdateMeshEBO()
+{
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 
 	// vertex positions
 	glEnableVertexAttribArray(0);
@@ -110,18 +212,50 @@ void Mesh::UpdateMesh()
 	glBindVertexArray(0);
 }
 
-void Mesh::Draw(GLenum mode)
+void Mesh::DrawEBO(GLenum mode)
 {
+	if (textures.size() != 0)
+	{
+		//TODO: multiple textures
+		Texture texture = textures[0];
+		glBindTexture(GL_TEXTURE_2D, texture.id);
+	}
+
+	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
+
 	glBindVertexArray(VAO);
-	glDrawArrays(mode, 0, vertices.size());
+	glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	// always good practice to set everything back to defaults once configured.
 	glActiveTexture(GL_TEXTURE0);
 }
 
-void Mesh::Cleanup()
+void Mesh::DrawEBO(const glm::mat4& transform, GLenum mode)
+{
+	if (textures.size() != 0)
+	{
+		//TODO: multiple textures
+		glActiveTexture(GL_TEXTURE0);
+		Texture texture = textures[0];
+		glBindTexture(GL_TEXTURE_2D, texture.id);
+	}
+
+	shader.use();
+	glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+
+	glBindVertexArray(VAO);
+	glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	// always good practice to set everything back to defaults once configured.
+	glActiveTexture(GL_TEXTURE0);
+}
+
+void Mesh::CleanupEBO()
 {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 }

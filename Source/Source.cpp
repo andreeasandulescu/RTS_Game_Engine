@@ -2,14 +2,15 @@
 #include <Shader.h>
 #include <Mesh.h>
 #include <Renderer.h>
-
-#include <string>
-#include <fstream>
-#include <streambuf>
+#include <Animation/AnimatedModel.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -36,6 +37,24 @@ MessageCallback(GLenum source,
 		type, severity, message);
 }
 
+Mesh search4Mesh(Joint joint)
+{
+	Mesh myMesh;
+	if (joint.meshes.size() > 0)
+	{
+		myMesh = joint.meshes[0];
+		return myMesh;
+	}
+
+	for (int j = 0; j < joint.children.size(); j++)
+	{
+		myMesh = search4Mesh(joint.children[j]);
+		if (myMesh.indices.size() != 0)
+			return myMesh;
+	}
+	return myMesh;
+}
+
 int main()
 {
 	Engine engine = {};
@@ -45,6 +64,8 @@ int main()
 	Renderer renderer{};
 	renderer.Init();
 
+	//glDebugMessageCallback(MessageCallback, NULL);
+
 	glViewport(0, 0, 800, 600);
 
 	//TODO: CHECK IF THIS NEEDS TO BE IN ENGINE::INIT()
@@ -53,6 +74,17 @@ int main()
 
 	renderer.GenerateTriangleMesh();
 
+	////////////////////////////////////////////////////////////////////////
+	//Animated Model
+	
+	AnimatedModel animModel{};
+	animModel.LoadModel("..\\Resources\\Models\\cowboy.dae");
+
+	Joint joint = animModel.jointHierarchy;
+	Mesh myMesh = search4Mesh(joint);
+
+	////////////////////////////////////////////////////
+	
 	//render loop
 	while (!glfwWindowShouldClose(engine.window))
 	{		
@@ -64,8 +96,8 @@ int main()
 		processInput(engine.window);
 
 
-		glm::mat4 view_mat = engine.camera.getViewMatrix(); 
-		glm::mat4 projection = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
+		glm::mat4 view_matrix = engine.camera.getViewMatrix();
+		glm::mat4 proj_matrix = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
 	
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
@@ -74,13 +106,27 @@ int main()
 			std::cout << std::endl;
 		}
 
-		renderer.UpdateMatrices(view_mat, projection);
+		renderer.UpdateMatrices(view_matrix, proj_matrix);
 		renderer.RenderCoordSystem();
 
 		renderer.RenderTriangle();
+		
+		
+		glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 transform = proj_matrix * view_matrix * model_mat;
+
+		while ((err = glGetError()) != GL_NO_ERROR)
+		{
+			std::cerr << err;
+			std::cout << std::endl;
+		}
+
+		myMesh.DrawEBO(transform, GL_TRIANGLES);
+
+	//	animModel.jointHierarchy.children[0].meshes[0].DrawEBO(transform, GL_TRIANGLES);
 
 		//engine.gameMap.UpdateMesh();
-		//glm::mat4 transform = projection * view_mat;
+		//glm::mat4 transform = proj_matrix * view_matrix;
 		//engine.gameMap.Draw(transform);
 
 		// check and call events and swap the buffers

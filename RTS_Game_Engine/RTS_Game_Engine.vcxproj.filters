@@ -19,6 +19,12 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{2d40758e-78d3-4165-b2da-7bdefcf9ef8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Animation">
+      <UniqueIdentifier>{6575b2ab-e0a1-427e-a28c-71c018fbb9fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Animation">
+      <UniqueIdentifier>{5753552c-a3b2-46ef-b855-f211892c2c6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\Engine.cpp">
@@ -63,6 +69,12 @@
     <ClCompile Include="..\Source\stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Animation\Joint.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Animation\AnimatedModel.cpp">
+      <Filter>Source Files\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Engine.h">
@@ -104,9 +116,6 @@
     <ClInclude Include="..\Include\GUI.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\ft2build.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -116,10 +125,11 @@
     <ClInclude Include="..\Include\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="RTS_Game_Engine.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    <ClInclude Include="..\Include\Animation\AnimatedModel.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Animation\Joint.h">
+      <Filter>Header Files\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
