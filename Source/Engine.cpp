@@ -47,7 +47,14 @@ int Engine::Init()
 	// start input manager thread:
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
-	
+	// load game map:
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
+	gameMap.InitEven(0.0f);
+	gameMap.loadHeightMap(data, nrChannels, width, height);
+	// update normals:
+	gameMap.smoothNormals();
+	gameMap.UpdateMesh();
 	
 	return 0;
 }

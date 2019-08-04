@@ -45,12 +45,8 @@ int main()
 	Renderer renderer{};
 	renderer.Init();
 
-	// load game map:
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
-	engine.gameMap.InitEven(0.0f);
-	engine.gameMap.loadHeightMap(data, nrChannels, width, height);
-	engine.gameMap.UpdateMesh();
+	
+	
 
 	glViewport(0, 0, 800, 600);
 
@@ -70,10 +66,12 @@ int main()
 
 		//check for user input
 		processInput(engine.window);
-
+		
 
 		glm::mat4 view_mat = engine.camera.getViewMatrix(); 
-		glm::mat4 projection = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
+		int w_width, w_height;
+		glfwGetWindowSize(engine.window, &w_width, &w_height);
+		glm::mat4 projection = glm::infinitePerspective(1.5f, (float)w_width / (float)w_height, 0.05f);
 	
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)

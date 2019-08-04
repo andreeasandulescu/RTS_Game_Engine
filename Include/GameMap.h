@@ -25,6 +25,9 @@ public:
 	// load from data a height map:
 	void loadHeightMap(unsigned char* data, size_t pixel_size, int width, int height);
 	
+	// sum normals at square neighbours normals
+	void smoothNormals();
+
 	// set the height of a tile
 	// also sets the same height for the neighbouring
 	// tiles closest vertices:

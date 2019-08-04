@@ -49,6 +49,25 @@ void MapSquare::updateCoordinates(unsigned int i, unsigned int j) {
 
 }
 
+void MapSquare::updateNormals() {
+	// update normals for first triangle:
+	glm::vec3 v1v2 = v2.position - v1.position;
+	glm::vec3 v1v0 = v0.position - v1.position;
+	
+	glm::vec3 normal1 = glm::normalize(glm::cross(v1v2, v1v0));
+	v1.normal = normal1;
+
+	glm::vec3 v3v2 = v2.position - v3.position;
+	glm::vec3 v3v0 = v0.position - v3.position;
+	glm::vec3 normal2 = glm::normalize(glm::cross(v3v0, v3v2));
+	v3.normal = normal2;
+	
+	//sum normals for points common to the triangles:
+	glm::vec3 normal3 = glm::normalize(normal2 + normal1);
+	v2.normal = normal3;
+	v0.normal = normal3;
+}
+
 MapSquare::MapSquare() {
 	this->v0.position = glm::vec3(1.0f, 0.0f, 1.0f);
 	this->v1.position = glm::vec3(1.0f, 0.0f, 0.0f);

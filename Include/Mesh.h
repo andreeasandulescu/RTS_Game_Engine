@@ -13,6 +13,7 @@
 #define MESH_H
 
 struct Vertex {
+public:
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 texCoords;
@@ -21,6 +22,7 @@ struct Vertex {
 };
 
 struct Texture {
+public:
 	unsigned int id;
 	std::string type;
 	std::string path;

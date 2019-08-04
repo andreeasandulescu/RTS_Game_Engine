@@ -30,6 +30,9 @@ public:
 	// set same Y too all map square vertices
 	void SetAltitude(float h);
 
+	// update vertex normals:
+	void updateNormals();
+
 	// update x and z coordinates of map square
 	void updateCoordinates(unsigned int i, unsigned int j);
 
