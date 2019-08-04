@@ -10,6 +10,7 @@
 #include <GameMap.h>
 #include <GUI.h>
 #include <stb_image.h>
+#include <water.h>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
@@ -24,6 +25,7 @@ public:
 	MessageBus mainMessageBus;
 	InputManager inputManager;
 	GameMap gameMap;
+	Water water;
 	GUI gui;
 
 	std::thread mainBusThread;

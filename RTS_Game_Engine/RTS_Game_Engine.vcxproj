@@ -150,6 +150,7 @@
     <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
     <ClCompile Include="..\Source\stb_image.cpp" />
+    <ClCompile Include="..\Source\water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="..\Include\Renderer.h" />
     <ClInclude Include="..\Include\Shader.h" />
     <ClInclude Include="..\Include\stb_image.h" />
+    <ClInclude Include="..\Include\water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

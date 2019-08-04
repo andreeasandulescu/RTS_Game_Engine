@@ -45,9 +45,6 @@ int main()
 	Renderer renderer{};
 	renderer.Init();
 
-	
-	
-
 	glViewport(0, 0, 800, 600);
 
 	//TODO: CHECK IF THIS NEEDS TO BE IN ENGINE::INIT()
@@ -88,6 +85,7 @@ int main()
 		
 		glm::mat4 transform = projection * view_mat;
 		engine.gameMap.Draw(transform);
+		engine.water.Draw(transform);
 
 		// check and call events and swap the buffers
 

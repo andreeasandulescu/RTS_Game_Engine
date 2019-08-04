@@ -56,6 +56,10 @@ int Engine::Init()
 	gameMap.smoothNormals();
 	gameMap.UpdateMesh();
 	
+	// load water map:
+	water.initWater(gameMap.width, gameMap.height, 1.0f);
+	water.UpdateMesh();
+
 	return 0;
 }
 
