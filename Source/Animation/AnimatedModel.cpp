@@ -3,7 +3,7 @@
 void AnimatedModel::LoadModel(std::string path)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate| aiProcess_SortByPType);
+	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate| aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -12,20 +12,33 @@ void AnimatedModel::LoadModel(std::string path)
 	}
 
 	std::cout << "nr children: " << scene->mRootNode->mNumChildren << std::endl;
+	std::cout << "nr animations: " << scene->mNumAnimations << std::endl;
 
 	processNode(scene->mRootNode, scene, jointHierarchy);
+
+
 }
 
 void AnimatedModel::processNode(aiNode* node, const aiScene* scene, Joint& currentJoint)
 {
 	// process all the node’s meshes
 	std::cout << "nr meshes: " << node->mNumMeshes << std::endl;
+	std::cout << "name : " << node->mName.C_Str() << std::endl;
+	
+	glm::mat4 matrix = convertTransfMatrix(node->mTransformation);
+	
+	/*if (matrix != glm::mat4(1.0f))
+		std::cout << "not identity matrix!";
+	std::cout << "elem: " << matrix[0][0] << std::endl;
+	*/
+
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 		currentJoint.meshes.push_back(processMesh(mesh, scene));
 	}
 	// then do the same for each of its children
+	std::cout << "nr children: " << node->mNumChildren << std::endl;
 	for (unsigned int i = 0; i < node->mNumChildren; i++)
 	{
 		Joint newChild{};
@@ -46,9 +59,6 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 		Vertex vertex;
 		glm::vec3 vector; 
 
-		//TODO: REMOVE NEXT LINE!!!
-		//vertex.auxVars = glm::vec3(1.0f);
-
 		// we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class 
 		vector.x = mesh->mVertices[i].x;
 		vector.y = mesh->mVertices[i].y;
@@ -62,12 +72,10 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 			vector.z = mesh->mNormals[i].z;
 			vertex.normal = vector;
 		}
-		
-		
 
 		//TODO multiple textures
 		//with if(mesh->HasTextureCoords(n))
-		if(mesh->HasTextureCoords(0))
+		if (mesh->HasTextureCoords(0))
 		{
 			glm::vec2 vec;
 			// a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
@@ -76,6 +84,7 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 			vec.y = mesh->mTextureCoords[0][i].y;
 			vertex.texCoords = vec;
 		}
+
 		vertices.push_back(vertex);
 
 /*
@@ -120,7 +129,7 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 
 	// 1. diffuse maps
 	std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-	textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+	//textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 	
 	/*
 	// 2. specular maps
@@ -141,6 +150,7 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 	//std::vector<Texture> textVect{ diffuseTexture };
 
 	Shader shader("..\\Resources\\Shaders\\TextureVertexShader.vs", "..\\Resources\\Shaders\\TextureFragmentShader.fs");
+	
 	Mesh newMesh{};
 	newMesh.InitMeshEBO(vertices, indices, diffuseMaps, shader);
 	// return a mesh object created from the extracted mesh data
@@ -151,10 +161,12 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 std::vector<Texture> AnimatedModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
 	std::vector<Texture> textures;
+	unsigned int j = mat->GetTextureCount(type);
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 	{
 		aiString str;
-		mat->GetTexture(type, i, &str);
+		if (mat->GetTexture(type, i, &str) == AI_SUCCESS)
+			std::cout << "success \n";
 		// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
 		bool skip = false;
 	
@@ -179,9 +191,7 @@ std::vector<Texture> AnimatedModel::loadMaterialTextures(aiMaterial* mat, aiText
 		//	filename = this->directory + '/' + filename;
 
 			//texture.LoadTexture(filename.c_str());
-			texture.LoadTexture("..\\Resources\\Textures\\character Texture.png");
-
-
+			texture.LoadTexture("..\\Resources\\Models\\diffuse.png");
 			
 			texture.type = typeName;
 			texture.path = str.C_Str();
@@ -192,4 +202,14 @@ std::vector<Texture> AnimatedModel::loadMaterialTextures(aiMaterial* mat, aiText
 		}
 	}
 	return textures;
+}
+
+glm::mat4 AnimatedModel::convertTransfMatrix(aiMatrix4x4 matrix)
+{
+	glm::vec4 l1(matrix.a1, matrix.a2, matrix.a3, matrix.a4);
+	glm::vec4 l2(matrix.b1, matrix.b2, matrix.b3, matrix.b4);
+	glm::vec4 l3(matrix.c1, matrix.c2, matrix.c3, matrix.c4);
+	glm::vec4 l4(matrix.d1, matrix.d2, matrix.d3, matrix.d4);
+	
+	return glm::mat4(l1, l2, l3, l4);
 }

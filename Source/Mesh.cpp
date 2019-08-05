@@ -22,7 +22,13 @@ void Texture::LoadTexture(const GLchar* texturePath)
 {
 	unsigned int id;
 	int width, height, nrChannels;
+	GLenum format;
 	unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
+
+	if (nrChannels == 4)
+		format = GL_RGBA;
+	else
+		format = GL_RGB;
 
 	if (data)
 	{
@@ -34,7 +40,7 @@ void Texture::LoadTexture(const GLchar* texturePath)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
 		this->id = id;
 		this->path = texturePath;

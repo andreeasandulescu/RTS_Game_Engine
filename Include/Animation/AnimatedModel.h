@@ -19,6 +19,8 @@ private:
 	void processNode(aiNode* node, const aiScene* scene, Joint& currentJoint);
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+
+	glm::mat4 convertTransfMatrix(aiMatrix4x4 matrix);
 	
 };
 #endif	// ANIMATEDMODEL_H

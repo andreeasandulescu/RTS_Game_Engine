@@ -59,7 +59,11 @@ int main()
 {
 	Engine engine = {};
 	engine.Init();
+
+
 	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
 
 	Renderer renderer{};
 	renderer.Init();
@@ -110,6 +114,9 @@ int main()
 		renderer.RenderCoordSystem();
 
 		renderer.RenderTriangle();
+
+		
+
 		
 		
 		glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
