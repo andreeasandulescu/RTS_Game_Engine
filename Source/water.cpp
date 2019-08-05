@@ -1,6 +1,9 @@
 #include <water.h>
 
-void Water::initWater(int width, int height, float altitude) {
+void Water::initWater(int width, int height, float scale, float altitude) {
+	width = width / scale;
+	height = height / scale;
+	
 	this->width = width;
 	this->height = height;
 
@@ -8,7 +11,7 @@ void Water::initWater(int width, int height, float altitude) {
 	for (int i = 0; i < height; i++) {
 		this->verticesMatrix[i].resize(width);
 		for (int j = 0; j < width; j++) {
-			this->verticesMatrix[i][j].position = glm::vec3((float)i, altitude, (float)j);
+			this->verticesMatrix[i][j].position = glm::vec3((float)i * scale, altitude, (float)j * scale);
 		}
 	}
 	/*
@@ -47,7 +50,11 @@ i,j    | -           | i,j+1
 }
 
 void Water::UpdateMesh() {
-	Shader shader("..\\Resources\\Shaders\\WaterVertexShader.vs", "..\\Resources\\Shaders\\WaterFragmentShader.fs");
+	Shader shader(
+		"..\\Resources\\Shaders\\WaterVertexShader.vs",
+		"..\\Resources\\Shaders\\WaterGeometryShader.gs",
+		"..\\Resources\\Shaders\\WaterFragmentShader.fs"
+	);
 	std::vector<Vertex> EBOvertices;
 	
 	for (int i = 0; i < height; i++) {

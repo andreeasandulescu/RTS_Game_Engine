@@ -57,7 +57,7 @@ int Engine::Init()
 	gameMap.UpdateMesh();
 	
 	// load water map:
-	water.initWater(gameMap.width, gameMap.height, 1.0f);
+	water.initWater(gameMap.width, gameMap.height, 0.7f, 2);
 	water.UpdateMesh();
 
 	return 0;

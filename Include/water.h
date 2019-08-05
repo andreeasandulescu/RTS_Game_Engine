@@ -12,7 +12,7 @@ public:
 
 	// create vertices matrix:
 	// populate inidices vector to define triangles
-	void initWater(int width, int height, float altitude);
+	void initWater(int width, int height, float scale, float altitude);
 
 	// create a mesh for renderer to draw:
 	virtual void UpdateMesh();

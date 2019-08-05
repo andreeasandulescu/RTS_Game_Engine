@@ -1,9 +1,17 @@
-#version 330 core
+#version 460 core
+
 out vec4 FragColor;
 
-in vec4 vertexColor;
+in fData
+{
+    vec3 normal;
+    vec4 color;
+}frag;
+
+uniform mat4 transform;
+uniform float time;
 
 void main()
 {
-	FragColor = vertexColor;
+	FragColor = vec4(frag.normal, 1.0f);
 }
