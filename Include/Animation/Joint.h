@@ -6,7 +6,11 @@
 class Joint
 {
 public:
+	int id;
+	glm::mat4 transform;
 	std::vector<Joint> children;
-	std::vector<Mesh> meshes;
+	
+	void Init(int id, glm::mat4 transform);
+
 };
 #endif	// JOINT_H

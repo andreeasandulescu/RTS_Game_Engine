@@ -11,18 +11,11 @@ void AnimatedModel::LoadModel(std::string path)
 		return;
 	}
 
-	std::cout << "nr children: " << scene->mRootNode->mNumChildren << std::endl;
-	std::cout << "nr animations: " << scene->mNumAnimations << std::endl;
-
-	processNode(scene->mRootNode, scene, jointHierarchy);
-
-
+	processNode(scene->mRootNode, scene, rootJoint);
 }
 
 void AnimatedModel::processNode(aiNode* node, const aiScene* scene, Joint& currentJoint)
 {
-	// process all the node’s meshes
-	std::cout << "nr meshes: " << node->mNumMeshes << std::endl;
 	std::cout << "name : " << node->mName.C_Str() << std::endl;
 	
 	glm::mat4 matrix = convertTransfMatrix(node->mTransformation);
@@ -35,7 +28,7 @@ void AnimatedModel::processNode(aiNode* node, const aiScene* scene, Joint& curre
 	for (unsigned int i = 0; i < node->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		currentJoint.meshes.push_back(processMesh(mesh, scene));
+		this->mesh = processMesh(mesh, scene);
 	}
 	// then do the same for each of its children
 	std::cout << "nr children: " << node->mNumChildren << std::endl;
@@ -53,11 +46,10 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 	std::vector<unsigned int> indices;
 	std::vector<Texture> textures;
 
-	// Walk through each of the mesh's vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
-		glm::vec3 vector; 
+		glm::vec3 vector;
 
 		// we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class 
 		vector.x = mesh->mVertices[i].x;
@@ -86,31 +78,14 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 		}
 
 		vertices.push_back(vertex);
-
-/*
-
-		// tangent
-		vector.x = mesh->mTangents[i].x;
-		vector.y = mesh->mTangents[i].y;
-		vector.z = mesh->mTangents[i].z;
-		vertex.Tangent = vector;
-		
-		// bitangent
-		vector.x = mesh->mBitangents[i].x;
-		vector.y = mesh->mBitangents[i].y;
-		vector.z = mesh->mBitangents[i].z;
-		vertex.Bitangent = vector;
-		vertices.push_back(vertex);
-*/
 	}
 
-	
 	// retrieve the vertex indices
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
 		if (face.mNumIndices != 3)
-			std::cout << face.mNumIndices << " nr of indices not 3, cannot draw triangle\n";
+			std::cout << face.mNumIndices << "Primitive is not a triangle! Please use only triangles\n";
 
 		if (face.mNumIndices == 3)
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
@@ -154,54 +129,53 @@ Mesh AnimatedModel::processMesh(aiMesh* mesh, const aiScene* scene)
 	Mesh newMesh{};
 	newMesh.InitMeshEBO(vertices, indices, diffuseMaps, shader);
 	// return a mesh object created from the extracted mesh data
+
+	if (mesh->HasBones())
+		readArmature(mesh, scene);
+
 	return newMesh;
 }
 
-
 std::vector<Texture> AnimatedModel::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
-	std::vector<Texture> textures;
-	unsigned int j = mat->GetTextureCount(type);
+	std::vector<Texture> texturesVect;
+	Texture texture;
+
 	for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
 	{
 		aiString str;
-		if (mat->GetTexture(type, i, &str) == AI_SUCCESS)
-			std::cout << "success \n";
-		// check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
-		bool skip = false;
-	
-		/*
-		for (unsigned int j = 0; j < textures_loaded.size(); j++)
-		{
-			if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
-			{
-				textures.push_back(textures_loaded[j]);
-				skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
-				break;
-			}
-		}
-		*/
+		if (mat->GetTexture(type, i, &str) != AI_SUCCESS)
+			std::cout << "[AnimatedModel] Error in loadMaterialTextures()\n";
+		
 
-		if (!skip)
-		{   // if texture hasn't been loaded already, load it
-			Texture texture;
+		std::string directory = "..\\Resources\\Textures\\";
+		std::string filename = directory + std::string(str.C_Str());
 
-		//	std::string directory = path.substr(0, path.find_last_of('/'));
-			std::string filename = std::string(str.C_Str());
-		//	filename = this->directory + '/' + filename;
+		texture.LoadTexture(filename.c_str());
+		texture.type = typeName;
 
-			//texture.LoadTexture(filename.c_str());
-			texture.LoadTexture("..\\Resources\\Models\\diffuse.png");
-			
-			texture.type = typeName;
-			texture.path = str.C_Str();
-
-
-			textures.push_back(texture);
-			//textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecesery load duplicate textures.
-		}
+		texturesVect.push_back(texture);
 	}
-	return textures;
+
+	return texturesVect;
+}
+
+//read the "skeleton" of the mesh
+void AnimatedModel::readArmature(aiMesh* mesh, const aiScene* scene)
+{
+	if (mesh->HasBones())
+		std::cout << "has bones \n";
+	for (unsigned int i = 0; i < mesh->mNumBones; i++)
+	{
+		Joint currJoint;
+		aiBone* bone = mesh->mBones[i];
+		glm::mat4 transform = convertTransfMatrix(bone->mOffsetMatrix);
+
+		joints.push_back(currJoint);
+
+		currJoint.Init(joints.size() - 1, transform);
+		std::cout << "Bone: " << bone->mName.C_Str() << ", ";
+	}
 }
 
 glm::mat4 AnimatedModel::convertTransfMatrix(aiMatrix4x4 matrix)

@@ -17,6 +17,7 @@ struct Vertex {
 	glm::vec3 normal;
 	glm::vec2 texCoords;
 	glm::vec3 auxVars;
+	glm::ivec3 weights;						//for the animated models
 	Vertex& operator=(const Vertex& v);
 };
 

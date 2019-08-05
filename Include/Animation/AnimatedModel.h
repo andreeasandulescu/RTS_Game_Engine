@@ -11,7 +11,9 @@
 class AnimatedModel
 {
 public:
-	Joint jointHierarchy;
+	Joint rootJoint;
+	Mesh mesh;
+	std::vector<Joint> joints;
 
 	void LoadModel(std::string path);
 
@@ -19,7 +21,7 @@ private:
 	void processNode(aiNode* node, const aiScene* scene, Joint& currentJoint);
 	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
-
+	void readArmature(aiMesh* mesh, const aiScene* scene);
 	glm::mat4 convertTransfMatrix(aiMatrix4x4 matrix);
 	
 };

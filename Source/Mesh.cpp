@@ -7,6 +7,7 @@ Vertex& Vertex::operator=(const Vertex& v)
 	normal = v.normal;
 	texCoords = v.texCoords;
 	auxVars = v.auxVars;
+	weights = v.weights;
 	return *this;
 }
 

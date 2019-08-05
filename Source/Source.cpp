@@ -37,33 +37,14 @@ MessageCallback(GLenum source,
 		type, severity, message);
 }
 
-Mesh search4Mesh(Joint joint)
-{
-	Mesh myMesh;
-	if (joint.meshes.size() > 0)
-	{
-		myMesh = joint.meshes[0];
-		return myMesh;
-	}
-
-	for (int j = 0; j < joint.children.size(); j++)
-	{
-		myMesh = search4Mesh(joint.children[j]);
-		if (myMesh.indices.size() != 0)
-			return myMesh;
-	}
-	return myMesh;
-}
-
 int main()
 {
 	Engine engine = {};
 	engine.Init();
 
-
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
+//	glEnable(GL_CULL_FACE);
 
 	Renderer renderer{};
 	renderer.Init();
@@ -84,8 +65,8 @@ int main()
 	AnimatedModel animModel{};
 	animModel.LoadModel("..\\Resources\\Models\\cowboy.dae");
 
-	Joint joint = animModel.jointHierarchy;
-	Mesh myMesh = search4Mesh(joint);
+	Joint joint = animModel.rootJoint;
+	Mesh myMesh = animModel.mesh;
 
 	////////////////////////////////////////////////////
 	
@@ -98,7 +79,6 @@ int main()
 
 		//check for user input
 		processInput(engine.window);
-
 
 		glm::mat4 view_matrix = engine.camera.getViewMatrix();
 		glm::mat4 proj_matrix = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);

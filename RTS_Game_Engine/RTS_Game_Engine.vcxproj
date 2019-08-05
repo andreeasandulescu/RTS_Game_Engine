@@ -79,6 +79,7 @@
     <IncludePath>$(SolutionDir)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libs;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SolutionDir)\Source;$(SourcePath)</SourcePath>
+    <ExtensionsToDeleteOnClean>*.dll;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -104,6 +105,12 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype253_D.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>XCOPY "$(SolutionDir)"\Libs\*.dll $(SolutionDir)$(Platform)\$(Configuration)\ /D /K /Y</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy DLLs to Target Directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
