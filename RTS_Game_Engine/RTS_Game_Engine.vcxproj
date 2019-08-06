@@ -142,6 +142,7 @@
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\GUI.cpp" />
     <ClCompile Include="..\Source\InputManager.cpp" />
+    <ClCompile Include="..\Source\LightSource.cpp" />
     <ClCompile Include="..\Source\MapSquare.cpp" />
     <ClCompile Include="..\Source\Mesh.cpp" />
     <ClCompile Include="..\Source\Message.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="..\Include\GameMap.h" />
     <ClInclude Include="..\Include\GUI.h" />
     <ClInclude Include="..\Include\InputManager.h" />
+    <ClInclude Include="..\Include\LightSource.h" />
     <ClInclude Include="..\Include\MapSquare.h" />
     <ClInclude Include="..\Include\Mesh.h" />
     <ClInclude Include="..\Include\Message.h" />

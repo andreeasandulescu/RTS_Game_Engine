@@ -11,6 +11,7 @@
 #include <GUI.h>
 #include <stb_image.h>
 #include <water.h>
+#include <LightSource.h>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
@@ -27,6 +28,7 @@ public:
 	GameMap gameMap;
 	Water water;
 	GUI gui;
+	std::vector<LightSource*> lightSources;
 
 	std::thread mainBusThread;
 	std::thread inputManagerThread;

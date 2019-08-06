@@ -15,10 +15,10 @@ void main()
 
 	float g_const = 9.81;
 	float pi = 3.14;
-	float wave_amplitudes[3] = float[](0.5, 0.8, 0.2);
+	float wave_amplitudes[3] = float[](0.3, 0.4, 0.1);
 	float wave_lengths[3] = float[](20, 15, 28);
 	float phases[3] = float[](0.5, 0, 2);
-	vec2 wave_directions[3] = vec2[3](vec2(0.5, 0.5), vec2(0.0, -0.2), vec2(0.0, 0.8));
+	vec2 wave_directions[3] = vec2[3](vec2(0.5f, 0.5f), vec2(0.0f, -0.2f), vec2(0.9f, -0.2f));
 	float magnitudes[3];
 	float frequencies[3];
 	int waves_number = 3;

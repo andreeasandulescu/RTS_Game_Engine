@@ -21,6 +21,7 @@ public:
 
 	virtual void UpdateMesh();
 	virtual void Draw(const glm::mat4& transform);
+	virtual void Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos);
 
 	// load from data a height map:
 	void loadHeightMap(unsigned char* data, size_t pixel_size, int width, int height);

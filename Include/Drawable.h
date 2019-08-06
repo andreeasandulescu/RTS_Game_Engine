@@ -7,8 +7,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include<Shader.h>
-#include<Mesh.h>
+#include <Shader.h>
+#include <Mesh.h>
+#include <LightSource.h>
 
 #ifndef DRAWABLE_H
 #define DRAWABLE_H
@@ -18,6 +19,7 @@ public:
 	Mesh mesh;
 	virtual void UpdateMesh() = 0;
 	virtual void Draw(const glm::mat4& transform) = 0;
+	virtual void Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) = 0;
 };
 
 

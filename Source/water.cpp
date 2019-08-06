@@ -83,3 +83,39 @@ void Water::Draw(const glm::mat4& transform) {
 	glEnable(GL_DEPTH_TEST);
 	mesh.DrawEBO(transform, GL_TRIANGLES);
 }
+
+void Water::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
+	char loc_name[100];
+
+	mesh.shader.use();
+
+	// send time:
+	float time = glfwGetTime();
+	GLint loc = glGetUniformLocation(mesh.shader.id, "time");
+	if (loc != -1) {
+		glUniform1f(loc, time);
+	}
+
+	// send camera position:
+	loc = glGetUniformLocation(mesh.shader.id, "viewerPos");
+	glUniform3fv(loc, 1, value_ptr(cameraPos));
+
+	// send number light sources:
+	loc = glGetUniformLocation(mesh.shader.id, "nrLights");
+	glUniform1i(loc, lightSources.size());
+
+	// send lighting data:
+	for (int i = 0; i < lightSources.size(); i++) {
+		sprintf_s(loc_name, "Light[%d].Position", i);
+		loc = glGetUniformLocation(mesh.shader.id, loc_name);
+		glUniform3fv(loc, 1, value_ptr(lightSources[i]->sourcePosition));
+
+		sprintf_s(loc_name, "Light[%d].Color", i);
+		loc = glGetUniformLocation(mesh.shader.id, loc_name);
+		glUniform3fv(loc, 1, value_ptr(lightSources[i]->color));
+	}
+	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_TEST);
+	mesh.DrawEBO(transform, GL_TRIANGLES);
+}

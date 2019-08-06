@@ -82,7 +82,9 @@ void GameMap::Draw(const glm::mat4& transform)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	mesh.Draw(GL_TRIANGLES);
-	
+}
+
+void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
 	
 }
 

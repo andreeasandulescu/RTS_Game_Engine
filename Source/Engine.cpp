@@ -60,6 +60,14 @@ int Engine::Init()
 	water.initWater(gameMap.width, gameMap.height, 0.7f, 2);
 	water.UpdateMesh();
 
+	// load lighting:
+	this->lightSources = std::vector<LightSource *>();
+	LightSource* sun = new LightSource();
+	sun->sourcePosition = glm::vec3(10, 10, 10);
+	sun->intensity = 1.0f;
+	sun->color = glm::vec3(1.0f, 1.0f, 1.0f);
+	lightSources.push_back(sun);
+
 	return 0;
 }
 
