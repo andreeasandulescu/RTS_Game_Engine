@@ -16,8 +16,8 @@ struct Vertex {
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 texCoords;
-	glm::vec3 auxVars;
-	glm::ivec3 weights;						//for the animated models
+	glm::vec3 auxVars = glm::vec3(-3.0f);			//for the animated model, we will store the weights here
+	glm::ivec3 jointIds;							//the jointIds for the animated models						
 	Vertex& operator=(const Vertex& v);
 };
 

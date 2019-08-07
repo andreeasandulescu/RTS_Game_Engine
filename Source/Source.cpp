@@ -65,7 +65,6 @@ int main()
 	AnimatedModel animModel{};
 	animModel.LoadModel("..\\Resources\\Models\\cowboy.dae");
 
-	Joint joint = animModel.rootJoint;
 	Mesh myMesh = animModel.mesh;
 
 	////////////////////////////////////////////////////
@@ -99,14 +98,18 @@ int main()
 
 		
 		
-		glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::mat4 transform = proj_matrix * view_matrix * model_mat;
+		//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 transform = proj_matrix * view_matrix ;
 
 		while ((err = glGetError()) != GL_NO_ERROR)
 		{
 			std::cerr << err;
 			std::cout << std::endl;
 		}
+
+		glm::mat4* ptr = animModel.jointTransforms.data();
+		myMesh.shader.use();
+		glUniformMatrix4fv(glGetUniformLocation(myMesh.shader.id, "jointTransforms"), 20, GL_FALSE, glm::value_ptr(ptr[0]));
 
 		myMesh.DrawEBO(transform, GL_TRIANGLES);
 

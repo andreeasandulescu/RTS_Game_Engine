@@ -7,7 +7,7 @@ Vertex& Vertex::operator=(const Vertex& v)
 	normal = v.normal;
 	texCoords = v.texCoords;
 	auxVars = v.auxVars;
-	weights = v.weights;
+	jointIds = v.jointIds;
 	return *this;
 }
 
@@ -215,6 +215,9 @@ void Mesh::UpdateMeshEBO()
 
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, auxVars));
+
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 3, GL_INT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, jointIds));
 
 	glBindVertexArray(0);
 }
