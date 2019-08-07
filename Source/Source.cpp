@@ -85,7 +85,7 @@ int main()
 		
 		glm::mat4 transform = projection * view_mat;
 		// draw map:
-		engine.gameMap.Draw(transform);
+		engine.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		// draw water:
 		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 

@@ -141,12 +141,6 @@ void Mesh::UpdateMesh()
 
 void Mesh::Draw(GLenum mode)
 {
-	if (textures.size() != 0)
-	{
-		//TODO: multiple textures
-		Texture texture = textures[0];
-		glBindTexture(GL_TEXTURE_2D, texture.id);
-	}
 
 	shader.use();
 	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);

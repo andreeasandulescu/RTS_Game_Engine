@@ -63,7 +63,7 @@ int Engine::Init()
 	// load lighting:
 	this->lightSources = std::vector<LightSource *>();
 	LightSource* sun = new LightSource();
-	sun->sourcePosition = glm::vec3(10, 10, 10);
+	sun->sourcePosition = glm::vec3(1000, 1000, 1000);
 	sun->intensity = 1.0f;
 	sun->color = glm::vec3(1.0f, 1.0f, 1.0f);
 	lightSources.push_back(sun);

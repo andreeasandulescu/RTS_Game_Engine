@@ -31,8 +31,13 @@ void GameMap::UpdateMesh()
 		for (unsigned int j = 0; j < width; j++)
 		{
 			// set vertex data for the (i, j) square:
+			map[i][j]->v0.texCoords = glm::vec2(map[i][j]->v0.position.x / height, map[i][j]->v0.position.z / width);
+			map[i][j]->v1.texCoords = glm::vec2(map[i][j]->v1.position.x / height, map[i][j]->v1.position.z / width);
+			map[i][j]->v2.texCoords = glm::vec2(map[i][j]->v2.position.x / height, map[i][j]->v2.position.z / width);
+			map[i][j]->v3.texCoords = glm::vec2(map[i][j]->v3.position.x / height, map[i][j]->v3.position.z / width);
 
 			// set real world positions for first triangle
+			
 			vertices[index++] = map[i][j]->v0;
 			vertices[index++] = map[i][j]->v1;
 			vertices[index++] = map[i][j]->v2;
@@ -49,6 +54,25 @@ void GameMap::UpdateMesh()
 	mesh.vertices = vertices;
 	mesh.shader = shader;
 	
+	// load textures:
+
+	// water texture
+	Texture waterBottom{};
+	waterBottom.LoadTexture("..\\Resources\\Textures\\Terrain\\under_water.jpg");
+	mesh.textures.push_back(waterBottom);
+	
+	// sand texture
+	Texture sand{};
+	sand.LoadTexture("..\\Resources\\Textures\\Terrain\\sand.jpg");
+	mesh.textures.push_back(sand);
+	
+	// grass texture
+	Texture grass{};
+	grass.LoadTexture("..\\Resources\\Textures\\Terrain\\grass.jpg");
+	mesh.textures.push_back(grass);
+
+	// rock texture
+
 	mesh.UpdateMesh();
 }
 
@@ -65,7 +89,18 @@ void GameMap::loadHeightMap(unsigned char* map_data, size_t pixel_size, int widt
 
 void GameMap::Draw(const glm::mat4& transform)
 {
+	char textureCName[100];
+
 	mesh.shader.use();
+
+	// bind textures:
+	for (int i = 0; i < mesh.textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
+		// activate texture channel i:
+		sprintf_s(textureCName, "texture%d", i);
+		glUniform1i(glGetUniformLocation(mesh.shader.id, textureCName), i);
+	}
 
 	glUniformMatrix4fv(glGetUniformLocation(mesh.shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
@@ -85,7 +120,54 @@ void GameMap::Draw(const glm::mat4& transform)
 }
 
 void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
-	
+	char textureCName[100];
+
+	mesh.shader.use();
+
+	// send time:
+	float time = glfwGetTime();
+	GLint loc = glGetUniformLocation(mesh.shader.id, "time");
+	if (loc != -1) {
+		glUniform1f(loc, time);
+	}
+
+	// send camera position:
+	loc = glGetUniformLocation(mesh.shader.id, "viewerPos");
+	glUniform3fv(loc, 1, value_ptr(cameraPos));
+
+	// send number light sources:
+	loc = glGetUniformLocation(mesh.shader.id, "nrLights");
+	glUniform1i(loc, lightSources.size());
+
+	// send lighting data:
+	for (int i = 0; i < lightSources.size(); i++) {
+		sprintf_s(textureCName, "Light[%d].Position", i);
+		loc = glGetUniformLocation(mesh.shader.id, textureCName);
+		glUniform3fv(loc, 1, value_ptr(lightSources[i]->sourcePosition));
+
+		sprintf_s(textureCName, "Light[%d].Color", i);
+		loc = glGetUniformLocation(mesh.shader.id, textureCName);
+		glUniform3fv(loc, 1, value_ptr(lightSources[i]->color));
+	}
+
+	// bind textures:
+	for (int i = 0; i < mesh.textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
+		// activate texture channel i:
+		sprintf_s(textureCName, "texture%d", i);
+		glUniform1i(glGetUniformLocation(mesh.shader.id, textureCName), i);
+	}
+
+	glUniformMatrix4fv(glGetUniformLocation(mesh.shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+
+	// Draw wireframe:
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// glLineWidth(1.0);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_TEST);
+	mesh.Draw(GL_TRIANGLES);
 }
 
 void GameMap::setHeight(int i, int j, float height) {
