@@ -16,11 +16,11 @@ Vertex::Vertex()
 	this->position = glm::vec3(0.0f);
 	this->normal = glm::vec3(0.0f);
 	this->texCoords = glm::vec2(0.0f);
-	this->auxVars = glm::vec3(-3.0f);
-	this->jointIds = glm::uvec3(0.0f);
+	this->auxVars = glm::vec4(-3.0f);
+	this->jointIds = glm::uvec4(0.0f);
 }
 
-Vertex::Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texCoords, glm::vec3 auxVars)
+Vertex::Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texCoords, glm::vec4 auxVars)
 {
 	this->position = position;
 	this->normal = normal;
@@ -28,7 +28,7 @@ Vertex::Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texCoords, glm::v
 	this->auxVars = auxVars;
 }
 
-Vertex::Vertex(glm::vec3 position, glm::vec3 auxVars)
+Vertex::Vertex(glm::vec3 position, glm::vec4 auxVars)
 {
 	this->position = position;
 	this->auxVars = auxVars;
@@ -164,10 +164,10 @@ void Mesh::UpdateMesh()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
 
 	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, auxVars));
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, auxVars));
 
 	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 3, GL_UNSIGNED_INT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, jointIds));
+	glVertexAttribPointer(4, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, jointIds));
 
 	glBindVertexArray(0);
 }
@@ -240,10 +240,10 @@ void Mesh::UpdateMeshEBO()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
 
 	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, auxVars));
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, auxVars));
 
 	glEnableVertexAttribArray(4);
-	glVertexAttribIPointer(4, 3, GL_UNSIGNED_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIds));
+	glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIds));
 
 	glBindVertexArray(0);
 }

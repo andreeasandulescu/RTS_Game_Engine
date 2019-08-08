@@ -19,14 +19,17 @@ public:
 	Joint *rootJoint;
 	Mesh mesh;
 	Shader shader;
+
 	std::vector<Joint*> joints;
 	std::vector<glm::mat4> jointTransforms;
 	std::map<std::string, unsigned int> names;
 
+	glm::mat4 m_GlobalInverseTransform;
+
 	void LoadModel(std::string path);
 	void Cleanup();				//TODO!!!!
 
-	glm::mat4 m_GlobalInverseTransform;
+	
 
 private:
 	//TODOOO: method for loading an .obj file (without animations)
@@ -36,7 +39,7 @@ private:
 	std::vector<Joint*> readArmature(aiMesh* mesh, const aiScene* scene, std::map<std::string, unsigned int>& names);
 	
 	void SetVerticesWeights(aiMesh* mesh);
-	unsigned int UpdateVertexInfo(Vertex& vertex, unsigned int jointID, float weight);
+	void UpdateVertexInfo(Vertex& vertex, unsigned int jointID, float weight);
 	void loadAnimations(const aiScene* scene);
 	void generateGlobalAnimationMatrices(Joint* joint);
 

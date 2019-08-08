@@ -55,9 +55,9 @@ MapSquare::MapSquare() {
 	this->v2.position = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->v3.position = glm::vec3(0.0f, 0.0f, 1.0f);
 
-	this->v0.auxVars = glm::vec3(1.0f);
-	this->v1.auxVars = glm::vec3(1.0f);
-	this->v2.auxVars = glm::vec3(1.0f);
-	this->v3.auxVars = glm::vec3(1.0f);
+	this->v0.auxVars = glm::vec4(1.0f);
+	this->v1.auxVars = glm::vec4(1.0f);
+	this->v2.auxVars = glm::vec4(1.0f);
+	this->v3.auxVars = glm::vec4(1.0f);
 }
 

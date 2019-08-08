@@ -16,13 +16,13 @@ struct Vertex {
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 texCoords;
-	glm::vec3 auxVars = glm::vec3(-3.0f);			//for the animated model, we will store the weights here
-	glm::uvec3 jointIds;							//the jointIds for the animated models		
+	glm::vec4 auxVars;			//for the animated model, we will store the weights here
+	glm::uvec4 jointIds;							//the jointIds for the animated models		
 
 	Vertex& operator=(const Vertex& v);
 	Vertex();
-	Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texCoords, glm::vec3 auxVars);
-	Vertex(glm::vec3 position, glm::vec3 auxVars);
+	Vertex(glm::vec3 position, glm::vec3 normal, glm::vec2 texCoords, glm::vec4 auxVars);
+	Vertex(glm::vec3 position, glm::vec4 auxVars);
 };
 
 struct Texture {

@@ -4,8 +4,8 @@ const int MAX_JOINTS = 20;
 
 layout (location = 0) in vec3 inPos;
 layout (location = 2) in vec2 aTexCoord;
-layout (location = 3) in vec3 weights;
-layout (location = 4) in uvec3 jointIds;
+layout (location = 3) in vec4 weights;
+layout (location = 4) in uvec4 jointIds;
 
 uniform mat4 jointTransforms[MAX_JOINTS];
 uniform mat4 transform;
@@ -16,7 +16,7 @@ void main()
 {
 	vec4 newPosition = vec4(0.0f);
 
-	for(int i=0; i < 3; i++)
+	for(int i=0; i < 4; i++)
 	{
 		if(weights[i] > 0.0f)
 		{
@@ -26,7 +26,6 @@ void main()
 		
 	}
 
-	newPosition.w = 1.0f;
 	gl_Position = transform * newPosition;
 	TexCoord = aTexCoord;
 }

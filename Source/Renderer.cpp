@@ -28,11 +28,11 @@ void Renderer::GenerateCoordSystemMesh()
 
 	for (int i = 0; i < 3; i++)
 	{
-		Vertex axisVertex{ colors[i] * 7.0f, colors[i] };
+		Vertex axisVertex{ colors[i] * 7.0f, glm::vec4(colors[i], 1.0f) };
 		axisVertices.push_back(axisVertex);
 
 		//origin vertex
-		Vertex origVertex{ glm::vec3(0.0f), colors[i] };
+		Vertex origVertex{ glm::vec3(0.0f), glm::vec4(colors[i], 1.0f) };
 		axisVertices.push_back(origVertex);
 	}
 
@@ -83,7 +83,7 @@ void Renderer::GenerateTriangleMesh()
 
 	for (int i = 0; i < 3; i++)
 	{
-		Vertex vert{ vertices[i], glm::vec3(0.0f), texCoords[i],  colors[i] };
+		Vertex vert{ vertices[i], glm::vec3(0.0f), texCoords[i],  glm::vec4(colors[i], 1.0f) };
 		auxVertices.push_back(vert);
 	}
 

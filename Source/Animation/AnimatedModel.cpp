@@ -20,13 +20,10 @@ void AnimatedModel::LoadModel(std::string path)
 	m_GlobalInverseTransform = convert4x4matrix(scene->mRootNode->mTransformation);
 	m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
 
-
 	aiMesh* mesh = scene->mMeshes[0];
 	joints = readArmature(mesh, scene, names);
 
-
 	rootJoint = processNode(scene->mRootNode, scene);
-	std::cout << std::endl << "root joint name:" << rootJoint->name << std::endl;
 	
 	SetVerticesWeights(scene->mMeshes[0]);
 	this->mesh.UpdateMeshEBO();
@@ -38,8 +35,6 @@ void AnimatedModel::LoadModel(std::string path)
 	jointTransforms.resize(joints.size());
 
 	generateMatricesForShader();
-
-
 
 }
 
@@ -251,61 +246,37 @@ void AnimatedModel::SetVerticesWeights(aiMesh* mesh)
 			aiVertexWeight var = bone->mWeights[j];
 			unsigned int index = this->mesh.indices[var.mVertexId];
 			//update only for joints with a significant enough value
-			UpdateVertexInfo(this->mesh.vertices[index], id, var.mWeight);
+			if(var.mWeight > 0.01f)
+				UpdateVertexInfo(this->mesh.vertices[index], id, var.mWeight);
 		}
 	}
 }
 
-unsigned int AnimatedModel::UpdateVertexInfo(Vertex& vertex, unsigned int jointID, float weight)
+void AnimatedModel::UpdateVertexInfo(Vertex& vertex, unsigned int jointID, float weight)
 {
 	int x = vertex.auxVars.x;
 
-	if (vertex.auxVars.x < 0.0f)
+	for (unsigned int i = 0; i < 4; i++)
 	{
-		vertex.auxVars.x = weight;
-		vertex.jointIds.x = jointID;
-		return 0;
-	}
-
-	if (vertex.auxVars.y < 0.0f)
-	{
-		vertex.auxVars.y = weight;
-		vertex.jointIds.y = jointID;
-		return 0;
-	}
-
-	if (vertex.auxVars.z < 0.0f)
-	{
-		vertex.auxVars.z = weight;
-		vertex.jointIds.z = jointID;
-		return 0;
-	}
-	std::cout << "[AnimatedModel::UpdateVertexInfo] ERROR, expected other values for auxVars!\n";
-
-	//if the vertex is affected by more than 3 joints, we keep the ones with a greater value (weight value is stored in auxVars)
-	if(weight > vertex.auxVars.x)
-	{
-		vertex.auxVars.x = weight;
-		vertex.jointIds.x = jointID;
-		return 0;
-	}
-
-	if (weight > vertex.auxVars.y)
-	{
-		vertex.auxVars.y = weight;
-		vertex.jointIds.y = jointID;
-		return 0;
-	}
-
-	if (weight > vertex.auxVars.z)
-	{
-		vertex.auxVars.z = weight;
-		vertex.jointIds.z = jointID;
-		return 0;
+		if(vertex.auxVars[i] < 0.0f)
+		{
+			vertex.auxVars[i] = weight;
+			vertex.jointIds[i] = jointID;
+			return;
+		}
 	}
 	
-	std::cout << "[AnimatedModel::UpdateVertexInfo] ERROR, expected other values for auxVars!\n";
-	return 1;
+	//if the vertex is affected by more than 4 joints, we keep the ones with a greater value (weight value is stored in auxVars)
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		if (weight > vertex.auxVars[i])
+		{
+			vertex.auxVars[i] = weight;
+			vertex.jointIds[i] = jointID;
+			return;
+		}
+	}
+	
 }
 
 void AnimatedModel::loadAnimations(const aiScene* scene)
@@ -324,7 +295,6 @@ void AnimatedModel::loadAnimations(const aiScene* scene)
 		std::string jointName = jointAnimation->mNodeName.C_Str();
 
 		unsigned int jointId = names.at(jointName);
-		std::cout << "Joint " << jointName << " has index: " << jointId << std::endl;
 
 //		std::cout << jointAnimation->mNodeName.C_Str() << " animation" << std::endl;
 //		std::cout << jointAnimation->mNumPositionKeys << " mNumPositionKeys" << std::endl;
