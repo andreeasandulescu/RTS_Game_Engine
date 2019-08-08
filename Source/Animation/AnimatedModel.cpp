@@ -16,25 +16,31 @@ void AnimatedModel::LoadModel(std::string path)
 	this->shader = shader;
 	//check if the file also contains info for animations
 	//TODO: ALTER FUNCTION FOR MULTIPLE MESHES
-	if (scene->HasMeshes())
-	{
-		aiMesh* mesh = scene->mMeshes[0];
-		if (mesh->HasBones())
-			joints = readArmature(mesh, scene, names);
-	}
+
+	m_GlobalInverseTransform = convert4x4matrix(scene->mRootNode->mTransformation);
+	m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
+
+
+	aiMesh* mesh = scene->mMeshes[0];
+	joints = readArmature(mesh, scene, names);
 
 
 	rootJoint = processNode(scene->mRootNode, scene);
 	std::cout << std::endl << "root joint name:" << rootJoint->name << std::endl;
 	
 	SetVerticesWeights(scene->mMeshes[0]);
+	this->mesh.UpdateMeshEBO();
 
 	loadAnimations(scene);
 
 	generateGlobalAnimationMatrices(rootJoint);
 
 	jointTransforms.resize(joints.size());
+
 	generateMatricesForShader();
+
+
+
 }
 
 void AnimatedModel::Cleanup()
@@ -70,7 +76,8 @@ Joint* AnimatedModel::processNode(aiNode* node, const aiScene* scene)
 			std::string parentName = node->mParent->mName.C_Str();
 			if (names.count(parentName) > 0)
 			{
-				unsigned int parentId = names.at(name);
+				unsigned int parentId = names.at(parentName);
+
 				joint->parent = joints[parentId];
 			}
 			else
@@ -219,7 +226,7 @@ std::vector<Joint*> AnimatedModel::readArmature(aiMesh* mesh, const aiScene* sce
 		//i is the jointID
 		names.insert(std::pair <std::string, unsigned int> (name, i));
 
-		currJoint->setInvBindPoseM(convert4x4matrix(bone->mOffsetMatrix));
+		currJoint->setInvBindPoseM((convert4x4matrix(bone->mOffsetMatrix)));
 		currJoint->setId(i);
 		currJoint->setName(name);
 		
@@ -227,6 +234,7 @@ std::vector<Joint*> AnimatedModel::readArmature(aiMesh* mesh, const aiScene* sce
 
 		std::cout << currJoint->name << ", ";
 	}
+
 	return joints;
 }
 
@@ -236,15 +244,14 @@ void AnimatedModel::SetVerticesWeights(aiMesh* mesh)
 	{
 		//i is the jointID
 		aiBone* bone = mesh->mBones[i];
+		unsigned int id = names.at(bone->mName.C_Str());
 
 		for (unsigned int j = 0; j < bone->mNumWeights; j++)
 		{
 			aiVertexWeight var = bone->mWeights[j];
 			unsigned int index = this->mesh.indices[var.mVertexId];
 			//update only for joints with a significant enough value
-			if (var.mWeight > 0.1f)
-				UpdateVertexInfo(this->mesh.vertices[index], i, var.mWeight);
-				
+			UpdateVertexInfo(this->mesh.vertices[index], id, var.mWeight);
 		}
 	}
 }
@@ -253,26 +260,27 @@ unsigned int AnimatedModel::UpdateVertexInfo(Vertex& vertex, unsigned int jointI
 {
 	int x = vertex.auxVars.x;
 
-	if (vertex.auxVars.x == -3.0f)
+	if (vertex.auxVars.x < 0.0f)
 	{
 		vertex.auxVars.x = weight;
 		vertex.jointIds.x = jointID;
 		return 0;
 	}
 
-	if (vertex.auxVars.y == -3.0f)
+	if (vertex.auxVars.y < 0.0f)
 	{
 		vertex.auxVars.y = weight;
 		vertex.jointIds.y = jointID;
 		return 0;
 	}
 
-	if (vertex.auxVars.z == -3.0f)
+	if (vertex.auxVars.z < 0.0f)
 	{
 		vertex.auxVars.z = weight;
 		vertex.jointIds.z = jointID;
 		return 0;
 	}
+	std::cout << "[AnimatedModel::UpdateVertexInfo] ERROR, expected other values for auxVars!\n";
 
 	//if the vertex is affected by more than 3 joints, we keep the ones with a greater value (weight value is stored in auxVars)
 	if(weight > vertex.auxVars.x)
@@ -356,9 +364,9 @@ void AnimatedModel::generateGlobalAnimationMatrices(Joint *joint)
 		joint->setGlobalAnimationM(joint->localAnimationM);
 	else
 	{
-		glm::mat4 globalAnimationM = joint->parent->globalAnimationM;
-		globalAnimationM = joint->localAnimationM * globalAnimationM;
+		glm::mat4 globalAnimationM = joint->parent->globalAnimationM * joint->localAnimationM;
 		joint->setGlobalAnimationM(globalAnimationM);
+
 	}
 		
 	unsigned int childCnt = joint->children.size();
@@ -375,10 +383,11 @@ void AnimatedModel::generateMatricesForShader()
 	{
 		glm::mat4 invBindPoseM = joints[i]->invBindPoseM;
 		glm::mat4 globalAnimationM = joints[i]->globalAnimationM;
-		glm::mat4 finalM = glm::transpose(globalAnimationM * invBindPoseM);
-
+		glm::mat4 finalM = m_GlobalInverseTransform * globalAnimationM * glm::transpose(invBindPoseM);
+		
 		jointTransforms[i] = finalM;
 	}
+
 }
 
 glm::mat4 AnimatedModel::convert4x4matrix(aiMatrix4x4 matrix)

@@ -28,11 +28,11 @@ void Renderer::GenerateCoordSystemMesh()
 
 	for (int i = 0; i < 3; i++)
 	{
-		Vertex axisVertex{ colors[i] * 7.0f, glm::vec3(0.0f), glm::vec3(0.0f),  colors[i] };
+		Vertex axisVertex{ colors[i] * 7.0f, colors[i] };
 		axisVertices.push_back(axisVertex);
 
 		//origin vertex
-		Vertex origVertex{ glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f), colors[i] };
+		Vertex origVertex{ glm::vec3(0.0f), colors[i] };
 		axisVertices.push_back(origVertex);
 	}
 

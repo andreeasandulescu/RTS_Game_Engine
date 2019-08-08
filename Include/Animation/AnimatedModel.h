@@ -26,6 +26,8 @@ public:
 	void LoadModel(std::string path);
 	void Cleanup();				//TODO!!!!
 
+	glm::mat4 m_GlobalInverseTransform;
+
 private:
 	//TODOOO: method for loading an .obj file (without animations)
 	Joint* processNode(aiNode* node, const aiScene* scene);

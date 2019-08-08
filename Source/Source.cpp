@@ -65,7 +65,7 @@ int main()
 	AnimatedModel animModel{};
 	animModel.LoadModel("..\\Resources\\Models\\cowboy.dae");
 
-	Mesh myMesh = animModel.mesh;
+	
 
 	////////////////////////////////////////////////////
 	
@@ -107,11 +107,12 @@ int main()
 			std::cout << std::endl;
 		}
 
-		glm::mat4* ptr = animModel.jointTransforms.data();
-		myMesh.shader.use();
-		glUniformMatrix4fv(glGetUniformLocation(myMesh.shader.id, "jointTransforms"), 20, GL_FALSE, glm::value_ptr(ptr[0]));
 
-		myMesh.DrawEBO(transform, GL_TRIANGLES);
+		glm::mat4* ptr = animModel.jointTransforms.data();
+		animModel.mesh.shader.use();
+		glUniformMatrix4fv(glGetUniformLocation(animModel.mesh.shader.id, "jointTransforms"), 20, GL_FALSE, reinterpret_cast<GLfloat*>(&ptr[0]));
+
+		animModel.mesh.DrawEBO(transform, GL_TRIANGLES);
 
 	//	animModel.jointHierarchy.children[0].meshes[0].DrawEBO(transform, GL_TRIANGLES);
 
