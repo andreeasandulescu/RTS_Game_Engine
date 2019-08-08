@@ -81,7 +81,12 @@ int main()
 
 		glm::mat4 view_matrix = engine.camera.getViewMatrix();
 		glm::mat4 proj_matrix = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
-	
+		glm::mat4 transform = proj_matrix * view_matrix;
+
+		// draw WATER and MAP:
+		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+		engine.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
 		{
@@ -99,7 +104,7 @@ int main()
 		
 		
 		//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
-		glm::mat4 transform = proj_matrix * view_matrix ;
+		
 
 		while ((err = glGetError()) != GL_NO_ERROR)
 		{

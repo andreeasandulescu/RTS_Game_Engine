@@ -150,14 +150,7 @@ void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& 
 		glUniform3fv(loc, 1, value_ptr(lightSources[i]->color));
 	}
 
-	// bind textures:
-	for (int i = 0; i < mesh.textures.size(); i++) {
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, mesh.textures[i].id);
-		// activate texture channel i:
-		sprintf_s(textureCName, "texture%d", i);
-		glUniform1i(glGetUniformLocation(mesh.shader.id, textureCName), i);
-	}
+	
 
 	glUniformMatrix4fv(glGetUniformLocation(mesh.shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 

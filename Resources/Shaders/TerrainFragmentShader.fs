@@ -31,7 +31,7 @@ void main()
 		color = texture(texture1, TexCoord);
 	} 
 
-	if (realPosition.y > 3.0f && realPosition.y < 6.0f) {
+	if (realPosition.y >= 3.0f && realPosition.y <= 6.0f) {
 		color =  mix(texture(texture1, TexCoord), texture(texture2, TexCoord), (realPosition.y - 3.0f) / 3.0f );
 	}
 

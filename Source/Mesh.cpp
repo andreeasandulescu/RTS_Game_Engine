@@ -174,14 +174,20 @@ void Mesh::UpdateMesh()
 
 void Mesh::Draw(GLenum mode)
 {
-	if (textures.size() != 0)
-	{
-		//TODO: multiple textures
-		Texture texture = textures[0];
-		glBindTexture(GL_TEXTURE_2D, texture.id);
-	}
+	char textureCName[100];
 
 	shader.use();
+
+	// bind textures:
+	for (int i = 0; i < textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		// activate texture channel i:
+		sprintf_s(textureCName, "texture%d", i);
+		glUniform1i(glGetUniformLocation(shader.id, textureCName), i);
+	}
+
+	
 	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
 
 	glBindVertexArray(VAO);
@@ -194,35 +200,20 @@ void Mesh::Draw(GLenum mode)
 
 void Mesh::Draw(const glm::mat4& transform, GLenum mode)
 {
-	if (textures.size() != 0)
-	{
-		//TODO: multiple textures
-		Texture texture = textures[0];
-		glBindTexture(GL_TEXTURE_2D, texture.id);
-	}
+	char textureCName[100];
 
 	shader.use();
-	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
-	glUniformMatrix4fv(glGetUniformLocation(shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
-	glBindVertexArray(VAO);
-	glDrawArrays(mode, 0, vertices.size());
-	glBindVertexArray(0);
-
-	// always good practice to set everything back to defaults once configured.
-	glActiveTexture(GL_TEXTURE0);
-}
-
-void Mesh::Draw(const glm::mat4& transform, GLenum mode)
-{
-	if (textures.size() != 0)
-	{
-		//TODO: multiple textures
-		Texture texture = textures[0];
-		glBindTexture(GL_TEXTURE_2D, texture.id);
+	// bind textures:
+	for (int i = 0; i < textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		// activate texture channel i:
+		sprintf_s(textureCName, "texture%d", i);
+		glUniform1i(glGetUniformLocation(shader.id, textureCName), i);
 	}
 
-	shader.use();
+	
 	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
 	glUniformMatrix4fv(glGetUniformLocation(shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
@@ -271,11 +262,17 @@ void Mesh::UpdateMeshEBO()
 
 void Mesh::DrawEBO(GLenum mode)
 {
-	if (textures.size() != 0)
-	{
-		//TODO: multiple textures
-		Texture texture = textures[0];
-		glBindTexture(GL_TEXTURE_2D, texture.id);
+	char textureCName[100];
+
+	shader.use();
+
+	// bind textures:
+	for (int i = 0; i < textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		// activate texture channel i:
+		sprintf_s(textureCName, "texture%d", i);
+		glUniform1i(glGetUniformLocation(shader.id, textureCName), i);
 	}
 
 	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
@@ -290,12 +287,17 @@ void Mesh::DrawEBO(GLenum mode)
 
 void Mesh::DrawEBO(const glm::mat4& transform, GLenum mode)
 {
-	if (textures.size() != 0)
-	{
-		//TODO: multiple textures
-		glActiveTexture(GL_TEXTURE0);
-		Texture texture = textures[0];
-		glBindTexture(GL_TEXTURE_2D, texture.id);
+	char textureCName[100];
+
+	shader.use();
+
+	// bind textures:
+	for (int i = 0; i < textures.size(); i++) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		// activate texture channel i:
+		sprintf_s(textureCName, "texture%d", i);
+		glUniform1i(glGetUniformLocation(shader.id, textureCName), i);
 	}
 
 	shader.use();
