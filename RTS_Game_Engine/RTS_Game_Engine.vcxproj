@@ -151,6 +151,7 @@
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\GUI.cpp" />
     <ClCompile Include="..\Source\InputManager.cpp" />
+    <ClCompile Include="..\Source\LightSource.cpp" />
     <ClCompile Include="..\Source\MapSquare.cpp" />
     <ClCompile Include="..\Source\Mesh.cpp" />
     <ClCompile Include="..\Source\Message.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
     <ClCompile Include="..\Source\stb_image.cpp" />
+    <ClCompile Include="..\Source\water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Animation\AnimatedModel.h" />
@@ -171,6 +173,7 @@
     <ClInclude Include="..\Include\GameMap.h" />
     <ClInclude Include="..\Include\GUI.h" />
     <ClInclude Include="..\Include\InputManager.h" />
+    <ClInclude Include="..\Include\LightSource.h" />
     <ClInclude Include="..\Include\MapSquare.h" />
     <ClInclude Include="..\Include\Mesh.h" />
     <ClInclude Include="..\Include\Message.h" />
@@ -179,6 +182,7 @@
     <ClInclude Include="..\Include\Renderer.h" />
     <ClInclude Include="..\Include\Shader.h" />
     <ClInclude Include="..\Include\stb_image.h" />
+    <ClInclude Include="..\Include\water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -47,8 +47,27 @@ int Engine::Init()
 	// start input manager thread:
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
+	// load game map:
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
+	gameMap.InitEven(0.0f);
+	gameMap.loadHeightMap(data, nrChannels, width, height);
+	// update normals:
+	gameMap.smoothNormals();
+	gameMap.UpdateMesh();
 	
-	
+	// load water map:
+	water.initWater(gameMap.width, gameMap.height, 0.7f, 2);
+	water.UpdateMesh();
+
+	// load lighting:
+	this->lightSources = std::vector<LightSource *>();
+	LightSource* sun = new LightSource();
+	sun->sourcePosition = glm::vec3(1000, 1000, 1000);
+	sun->intensity = 1.0f;
+	sun->color = glm::vec3(1.0f, 1.0f, 1.0f);
+	lightSources.push_back(sun);
+
 	return 0;
 }
 

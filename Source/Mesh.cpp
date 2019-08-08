@@ -213,6 +213,27 @@ void Mesh::Draw(const glm::mat4& transform, GLenum mode)
 	glActiveTexture(GL_TEXTURE0);
 }
 
+void Mesh::Draw(const glm::mat4& transform, GLenum mode)
+{
+	if (textures.size() != 0)
+	{
+		//TODO: multiple textures
+		Texture texture = textures[0];
+		glBindTexture(GL_TEXTURE_2D, texture.id);
+	}
+
+	shader.use();
+	//glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+
+	glBindVertexArray(VAO);
+	glDrawArrays(mode, 0, vertices.size());
+	glBindVertexArray(0);
+
+	// always good practice to set everything back to defaults once configured.
+	glActiveTexture(GL_TEXTURE0);
+}
+
 void Mesh::Cleanup()
 {
 	glDeleteVertexArrays(1, &VAO);

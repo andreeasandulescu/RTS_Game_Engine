@@ -21,6 +21,19 @@ public:
 
 	virtual void UpdateMesh();
 	virtual void Draw(const glm::mat4& transform);
+	virtual void Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos);
+
+	// load from data a height map:
+	void loadHeightMap(unsigned char* data, size_t pixel_size, int width, int height);
+	
+	// sum normals at square neighbours normals
+	void smoothNormals();
+
+	// set the height of a tile
+	// also sets the same height for the neighbouring
+	// tiles closest vertices:
+	void setHeight(int i, int j, float height);
+
 
 	// init with a default width and height:
 	GameMap();
