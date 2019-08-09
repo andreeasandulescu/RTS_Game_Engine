@@ -54,6 +54,7 @@ CursorMessage::CursorMessage(const CursorMessage& rhs)
 	this->yoffset = rhs.yoffset;
 	this->lastX = rhs.lastX;
 	this->lastY = rhs.lastY;
+	this->cursorState = rhs.cursorState;
 }
 
 CursorMessage* CursorMessage::clone()

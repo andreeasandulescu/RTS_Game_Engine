@@ -55,6 +55,12 @@
     <ClCompile Include="..\Source\water.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Unit.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Cursor.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h">
@@ -115,6 +121,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Animation\AnimatedModel.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Unit.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

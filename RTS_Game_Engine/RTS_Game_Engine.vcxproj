@@ -146,6 +146,7 @@
     <ClCompile Include="..\Source\Animation\AnimatedModel.cpp" />
     <ClCompile Include="..\Source\Animation\Joint.cpp" />
     <ClCompile Include="..\Source\Camera.cpp" />
+    <ClCompile Include="..\Source\Cursor.cpp" />
     <ClCompile Include="..\Source\Engine.cpp" />
     <ClCompile Include="..\Source\GameMap.cpp" />
     <ClCompile Include="..\Source\glad.c" />
@@ -160,6 +161,7 @@
     <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
     <ClCompile Include="..\Source\stb_image.cpp" />
+    <ClCompile Include="..\Source\Unit.cpp" />
     <ClCompile Include="..\Source\water.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +184,7 @@
     <ClInclude Include="..\Include\Renderer.h" />
     <ClInclude Include="..\Include\Shader.h" />
     <ClInclude Include="..\Include\stb_image.h" />
+    <ClInclude Include="..\Include\Unit.h" />
     <ClInclude Include="..\Include\water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

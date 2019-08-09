@@ -16,7 +16,10 @@ int Engine::Init()
 	}
 
 	// cursor does not leave window:
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	// dont change mouse button state until polling:
+	glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 
 	this->window = window;
 
@@ -36,6 +39,9 @@ int Engine::Init()
 	// create world camera and subscribe to input manager:
 	this->camera = Camera();
 	this->mainMessageBus.addSubscriber(&camera);
+
+	// add engine to the main message bus:
+	this->mainMessageBus.addSubscriber(this);
 
 	// create GUI:
 	gui = GUI::GUI();
@@ -68,18 +74,42 @@ int Engine::Init()
 	sun->color = glm::vec3(1.0f, 1.0f, 1.0f);
 	lightSources.push_back(sun);
 
+	// load unit:
+	testUnit.initUnit();
+	testUnit.position = glm::vec3(10, 10, 10);
+	testUnit.speed = 0.5f;
+
 	return 0;
 }
 
-
+void Engine::receiveMessage(Message* m) {
+	if (m->messageType == MessageType::cursor) {
+		CursorMessage* c = (CursorMessage*)m;
+		if (c->cursorState.left == ButtonStatus::PRESSED) {
+			printf("Left click pressed at: (%d, %d).", c->cursorState.xPos, c->cursorState.yPos);
+		}
+	}
+	delete m;
+}
 
 int Engine::Update()
 {
+	// update proj and view matricies:
+	View = camera.getViewMatrix();
+	int width, height;
+	glfwGetWindowSize(window, &width, &height);
+	Projection = glm::infinitePerspective(1.5f, (float)width / (float)height, 0.05f);
+	transform = Projection * View;
+
 	// calculate time between two updated (frames)
 	double currentTime = glfwGetTime();
 	this->frameDelta = currentTime - this->lastFrameTime;
 	this->lastFrameTime = currentTime;
 	this->gui.guiUpdate(this->window);
+	
+	// update units positions:
+	testUnit.updateUnit(frameDelta);
+
 
 	return 0;
 }
@@ -101,4 +131,5 @@ int Engine::Stop()
 
 Engine::Engine() : gameMap(200, 200) {
 	this->gameMap.InitEven(2.0f);
+	this->transform = glm::mat4(1);
 }

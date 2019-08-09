@@ -38,6 +38,7 @@ void Camera::receiveMessage(Message *m) {
 		// iterate through pressed keys and change camera positions:
 		for (std::vector<unsigned int>::iterator it = km->pressedKeys.begin(); it != km->pressedKeys.end(); ++it) {
 			float cameraSpeed = 0.1f; // adjust accordingly
+
 			switch (*it) {
 				case GLFW_KEY_W:
 					cameraPos += cameraSpeed * cameraFront;

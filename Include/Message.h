@@ -2,6 +2,7 @@
 #include <string>
 #include <atomic>
 #include <vector>
+#include <Cursor.h>
 
 #ifndef _MESSAGE_H_
 #define _MESSAGE_H_
@@ -27,6 +28,8 @@ public:
 
 class CursorMessage : public Message {
 public:
+	Cursor cursorState;
+
 	float xoffset;
 	float yoffset;
 
