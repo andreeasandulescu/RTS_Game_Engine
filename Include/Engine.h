@@ -42,6 +42,13 @@ public:
 	glm::mat4 View;
 	glm::mat4 transform;
 
+	// window width/height:
+	int windowWidth;
+	int windowHeight;
+
+	// frame buffers data:
+	float* depthBuffer;
+
 	int Init();
 	int Update();
 	float getFrameDelta();

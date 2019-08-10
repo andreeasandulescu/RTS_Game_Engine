@@ -2,6 +2,8 @@
 
 int Engine::Init()
 {
+	int width, height, nrChannels;
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -17,11 +19,18 @@ int Engine::Init()
 
 	// cursor does not leave window:
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	
 
 	// dont change mouse button state until polling:
 	glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
 
 	this->window = window;
+
+	// allocate buffer space:
+	glfwGetWindowSize(window, &width, &height);
+	this->windowWidth = width;
+	this->windowHeight = height;
+	depthBuffer = new float[(size_t)width * height];
 
 	///// !!!!!! In order for any OpenGL commands to work, a context must be current  !!!!!!!
 	glfwMakeContextCurrent(window);
@@ -32,7 +41,7 @@ int Engine::Init()
 		return -1;
 	}
 	
-
+	glEnable(GL_DEPTH_TEST);
 	// create input manager:
 	this->inputManager = InputManager(window, &mainMessageBus);
 
@@ -54,10 +63,10 @@ int Engine::Init()
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
 	// load game map:
-	int width, height, nrChannels;
 	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
 	gameMap.InitEven(0.0f);
 	gameMap.loadHeightMap(data, nrChannels, width, height);
+
 	// update normals:
 	gameMap.smoothNormals();
 	gameMap.UpdateMesh();
@@ -79,14 +88,37 @@ int Engine::Init()
 	testUnit.position = glm::vec3(10, 10, 10);
 	testUnit.speed = 0.5f;
 
+	
+
 	return 0;
 }
 
 void Engine::receiveMessage(Message* m) {
 	if (m->messageType == MessageType::cursor) {
 		CursorMessage* c = (CursorMessage*)m;
+
+		// determine clicked position in real world coordinates:
+		glm::vec4 posAux = glm::vec4(1);
+		glm::vec4 pos = glm::vec4(1);
+
+		
+
 		if (c->cursorState.left == ButtonStatus::PRESSED) {
-			printf("Left click pressed at: (%d, %d).", c->cursorState.xPos, c->cursorState.yPos);
+
+			if (c->cursorState.xPos > 0 && c->cursorState.yPos > 0) {
+				posAux.x = (2.0f * ((float)(c->cursorState.xPos) / windowWidth)) - 1.0f,
+				posAux.y = 1.0f - (2.0f * ((float)c->cursorState.yPos / windowHeight));
+				posAux.z = 2.0 * depthBuffer[(windowHeight - (int)c->cursorState.yPos) * windowWidth + (int)c->cursorState.xPos] - 1.0;
+				posAux.w = 1.0f;
+
+				pos = (glm::inverse(transform) * posAux);
+				pos = pos / pos.w;
+			
+
+				printf("Left click pressed at: (%f, %f, %f).\n", pos.x, pos.y, pos.z);
+				testUnit.position = glm::vec3(pos.x, pos.y, pos.z) - glm::vec3(0.5f, 0.0f, 0.5f);
+				//printf("Cube position at: (%f, %f, %f).\n\n", testUnit.position.x, testUnit.position.y, testUnit.position.z);
+			}
 		}
 	}
 	delete m;
@@ -94,11 +126,22 @@ void Engine::receiveMessage(Message* m) {
 
 int Engine::Update()
 {
-	// update proj and view matricies:
-	View = camera.getViewMatrix();
+	
 	int width, height;
 	glfwGetWindowSize(window, &width, &height);
-	Projection = glm::infinitePerspective(1.5f, (float)width / (float)height, 0.05f);
+	if (this->windowHeight != height || this->windowWidth != width) {
+		// window size changed:
+		this->windowHeight = height;
+		this->windowWidth = width;
+
+		// realocate frame buffers:
+		delete this->depthBuffer;
+		this->depthBuffer = new float[(size_t)height * width];
+	}
+
+	// update proj and view matricies:
+	View = camera.getViewMatrix();
+	Projection = glm::perspective(1.5f, (float)width / (float)height, 2.5f, 200.0f);
 	transform = Projection * View;
 
 	// calculate time between two updated (frames)
@@ -109,6 +152,15 @@ int Engine::Update()
 	
 	// update units positions:
 	testUnit.updateUnit(frameDelta);
+
+	// read depth buffer:
+	glReadPixels(
+		0, 0,						// starting corner
+		windowWidth, windowHeight,  // rectangle size
+		GL_DEPTH_COMPONENT,         // buffer type
+		GL_FLOAT,                   // data type
+		depthBuffer               // buffer address
+	);
 
 
 	return 0;
@@ -132,4 +184,6 @@ int Engine::Stop()
 Engine::Engine() : gameMap(200, 200) {
 	this->gameMap.InitEven(2.0f);
 	this->transform = glm::mat4(1);
+	this->windowWidth = 800;
+	this->windowHeight = 600;
 }
