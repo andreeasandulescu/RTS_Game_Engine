@@ -16,6 +16,7 @@ void main()
 {
 	vec4 newPosition = vec4(0.0f);
 
+	
 	for(int i=0; i < 4; i++)
 	{
 		if(weights[i] > 0.0f)
@@ -25,7 +26,7 @@ void main()
 		}
 		
 	}
-
+	
 	gl_Position = transform * newPosition;
 	TexCoord = aTexCoord;
 }

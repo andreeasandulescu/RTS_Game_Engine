@@ -29,13 +29,6 @@ void AnimatedModel::LoadModel(std::string path)
 	this->mesh.UpdateMeshEBO();
 
 	loadAnimations(scene);
-
-	generateGlobalAnimationMatrices(rootJoint);
-
-	jointTransforms.resize(joints.size());
-
-	generateMatricesForShader();
-
 }
 
 void AnimatedModel::Cleanup()
@@ -286,44 +279,32 @@ void AnimatedModel::loadAnimations(const aiScene* scene)
 	std::cout << scene->mNumAnimations << std::endl;
 
 	aiAnimation* animation = scene->mAnimations[0];
-//	std::cout << "Duration:" << animation->mDuration << std::endl;
-//	std::cout << "TicksPerSecond:" << animation->mTicksPerSecond << std::endl;
+	ticksPerSecond = (float) animation->mTicksPerSecond;
+	durationInTicks = (float) animation->mDuration;
 
 	for (unsigned int i = 0; i < animation->mNumChannels; i++)
 	{
 		aiNodeAnim* jointAnimation = animation->mChannels[i];
 		std::string jointName = jointAnimation->mNodeName.C_Str();
-
 		unsigned int jointId = names.at(jointName);
 
-//		std::cout << jointAnimation->mNodeName.C_Str() << " animation" << std::endl;
-//		std::cout << jointAnimation->mNumPositionKeys << " mNumPositionKeys" << std::endl;
-//		std::cout << jointAnimation->mPositionKeys[3].mTime << " mPositionKeys[0].mTime" << std::endl;
+		int keyframeCnt = jointAnimation->mNumPositionKeys;
 
-		glm::mat4 identity = glm::mat4(1.0f);
+		if (jointAnimation->mNumPositionKeys != jointAnimation->mNumRotationKeys || jointAnimation->mNumPositionKeys != jointAnimation->mNumScalingKeys)
+			std::cout << "Error in loadAnimation, mNumPositionKeys != mNumRotationKeys || mNumPositionKeys != mNumScalingKeys\n";
 
-		aiVector3D translationVect = jointAnimation->mPositionKeys[3].mValue;
-		aiVector3D scaleVect = jointAnimation->mScalingKeys[3].mValue;
-		aiQuaternion rotationQuat = jointAnimation->mRotationKeys[3].mValue;
-		glm::quat glmRotationQuat = convertToGLMQuat(rotationQuat);
+		for (unsigned int j = 0; j < keyframeCnt; j++)
+		{
+			float timeInTicks = (float)jointAnimation->mPositionKeys[j].mTime;
 
-		
-		glm::mat4 translationM = glm::translate(identity, convertVec3(translationVect));
-		glm::mat4 scaleM = glm::scale(identity, convertVec3(scaleVect));
-		glm::mat4 rotationM = glm::toMat4(glmRotationQuat);
+			glm::vec3 translationVect = convertVec3(jointAnimation->mPositionKeys[j].mValue);
+			glm::vec3 scaleVect = convertVec3(jointAnimation->mScalingKeys[j].mValue);
+			aiQuaternion rotationQuat = jointAnimation->mRotationKeys[j].mValue;
 
-		glm::mat4 modelM = translationM * rotationM * scaleM;
-		joints[jointId]->setLocalAnimationM(modelM);
-		
-
+			Keyframe *currKeyframe = new Keyframe(translationVect, scaleVect, rotationQuat, timeInTicks);
+			joints[jointId]->keyframes.push_back(currKeyframe);
+		}
 	}
-
-
-	//set local animation matrix
-		//glm::mat4 matrix = convert4x4matrix(node->mTransformation);
-		//joint->setLocalAnimationM(matrix);
-
-	//TODO: MULTIPLE ANIMATIONS SUPPORT
 
 }
 
@@ -360,6 +341,48 @@ void AnimatedModel::generateMatricesForShader()
 
 }
 
+void AnimatedModel::runAnimation()
+{
+	float timeElapsed = (float)glfwGetTime() - startTime;
+	float ticksElapsed = fmod((timeElapsed * ticksPerSecond), durationInTicks);
+	
+	for (unsigned int i = 0; i < joints.size(); i++)
+	{
+		glm::mat4 modelM = joints[i]->getCurrentTransform(ticksElapsed);
+		joints[i]->setLocalAnimationM(modelM);
+	}
+
+	generateGlobalAnimationMatrices(rootJoint);
+
+	jointTransforms.resize(joints.size());
+	generateMatricesForShader();
+
+}
+
+void AnimatedModel::Draw(bool animationActive, glm::mat4 transform)
+{
+	if (this->startTime < 0.0f && !animationActive)
+	{
+		std::cout << "start time set!!!\n";
+		startTime = (float)glfwGetTime();
+	}
+
+	if (!animationActive)
+	{
+		for (unsigned int i = 0; i < joints.size(); i++)
+			jointTransforms[i] = m_GlobalInverseTransform;
+	}
+	else
+		runAnimation();
+
+	glm::mat4* ptr = jointTransforms.data();
+	mesh.shader.use();
+
+	glUniformMatrix4fv(glGetUniformLocation(mesh.shader.id, "jointTransforms"), 20, GL_FALSE, reinterpret_cast<GLfloat*>(&ptr[0]));
+
+	mesh.DrawEBO(transform, GL_TRIANGLES);
+}
+
 glm::mat4 AnimatedModel::convert4x4matrix(aiMatrix4x4 matrix)
 {
 	glm::vec4 l1(matrix.a1, matrix.a2, matrix.a3, matrix.a4);
@@ -373,14 +396,4 @@ glm::mat4 AnimatedModel::convert4x4matrix(aiMatrix4x4 matrix)
 glm::vec3 AnimatedModel::convertVec3(aiVector3D vect)
 {
 	return glm::vec3(vect.x, vect.y, vect.z);
-}
-
-glm::quat AnimatedModel::convertToGLMQuat(const aiQuaternion& from)
-{
-	glm::quat to;
-	to.x = from.x;
-	to.y = from.y;
-	to.z = from.z;
-	to.w = from.w;
-	return to;
 }

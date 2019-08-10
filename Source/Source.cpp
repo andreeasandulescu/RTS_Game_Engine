@@ -12,6 +12,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+bool animationIsActive = true;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -21,6 +23,15 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+	{
+		animationIsActive = true;
+		//std::cout <<"processInput "<< timeElapsed << std::endl;
+	}
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+	{
+		animationIsActive = false;
+	}
 }
 
 void GLAPIENTRY
@@ -64,7 +75,9 @@ int main()
 	
 	AnimatedModel animModel{};
 	animModel.LoadModel("..\\Resources\\Models\\cowboy.dae");
+	float timeElapsed = 0.0f;
 
+	//startTime = (float)glfwGetTime();
 	
 
 	////////////////////////////////////////////////////
@@ -84,8 +97,8 @@ int main()
 		glm::mat4 transform = proj_matrix * view_matrix;
 
 		// draw WATER and MAP:
-		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
-		engine.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+		//engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+		//engine.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
@@ -100,8 +113,6 @@ int main()
 		renderer.RenderTriangle();
 
 		
-
-		
 		
 		//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
 		
@@ -112,23 +123,20 @@ int main()
 			std::cout << std::endl;
 		}
 
+		animModel.Draw(animationIsActive, transform);
+		
 
-		glm::mat4* ptr = animModel.jointTransforms.data();
-		animModel.mesh.shader.use();
-		glUniformMatrix4fv(glGetUniformLocation(animModel.mesh.shader.id, "jointTransforms"), 20, GL_FALSE, reinterpret_cast<GLfloat*>(&ptr[0]));
 
-		animModel.mesh.DrawEBO(transform, GL_TRIANGLES);
-
-	//	animModel.jointHierarchy.children[0].meshes[0].DrawEBO(transform, GL_TRIANGLES);
 
 		//engine.gameMap.UpdateMesh();
-		//glm::mat4 transform = proj_matrix * view_matrix;
+		
 		//engine.gameMap.Draw(transform);
 
 		// check and call events and swap the buffers
 
 		//update engine time:
 		engine.Update();
+
 
 		glfwSwapBuffers(engine.window);
 		glfwPollEvents();
