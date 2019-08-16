@@ -157,6 +157,7 @@
     <ClCompile Include="..\Source\Message.cpp" />
     <ClCompile Include="..\Source\MessageBus.cpp" />
     <ClCompile Include="..\Source\Renderer.cpp" />
+    <ClCompile Include="..\Source\ResourceLoader.cpp" />
     <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
     <ClCompile Include="..\Source\stb_image.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="..\Include\MessageBus.h" />
     <ClInclude Include="..\Include\MessageReceiver.h" />
     <ClInclude Include="..\Include\Renderer.h" />
+    <ClInclude Include="..\Include\ResourceLoader.h" />
     <ClInclude Include="..\Include\Shader.h" />
     <ClInclude Include="..\Include\stb_image.h" />
     <ClInclude Include="..\Include\water.h" />

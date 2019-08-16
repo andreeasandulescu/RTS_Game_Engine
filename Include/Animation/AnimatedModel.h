@@ -38,18 +38,8 @@ public:
 
 private:
 	//TODOOO: method for loading an .obj file (without animations)
-	Joint* processNode(aiNode* node, const aiScene* scene);
-	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
-	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
-	std::vector<Joint*> readArmature(aiMesh* mesh, const aiScene* scene, std::map<std::string, unsigned int>& names);
-	
-	void SetVerticesWeights(aiMesh* mesh);
-	void UpdateVertexInfo(Vertex& vertex, unsigned int jointID, float weight);
-	void loadAnimations(const aiScene* scene);
 	void generateGlobalAnimationMatrices(Joint* joint);
-	void generateMatricesForShader();
+	void setFinalJointTransforms();
 
-	glm::mat4 convert4x4matrix(aiMatrix4x4 matrix);
-	glm::vec3 convertVec3(aiVector3D vect);
 };
 #endif	// ANIMATEDMODEL_H

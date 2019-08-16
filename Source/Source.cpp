@@ -2,7 +2,7 @@
 #include <Shader.h>
 #include <Mesh.h>
 #include <Renderer.h>
-#include <Animation/AnimatedModel.h>
+#include <ResourceLoader.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -26,7 +26,6 @@ void processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 	{
 		animationIsActive = true;
-		//std::cout <<"processInput "<< timeElapsed << std::endl;
 	}
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 	{
@@ -73,12 +72,9 @@ int main()
 	////////////////////////////////////////////////////////////////////////
 	//Animated Model
 	
-	AnimatedModel animModel{};
-	animModel.LoadModel("..\\Resources\\Models\\cowboy.dae");
-	float timeElapsed = 0.0f;
-
-	//startTime = (float)glfwGetTime();
-	
+	Shader animationShader("..\\Resources\\Shaders\\CowboyVertexShader.vs", "..\\Resources\\Shaders\\CowboyFragmentShader.fs");
+	ResourceLoader resLoader{};
+	AnimatedModel* newAnimModel = resLoader.LoadAnimatedModel("..\\Resources\\Models\\cowboy.dae", animationShader);
 
 	////////////////////////////////////////////////////
 	
@@ -123,9 +119,7 @@ int main()
 			std::cout << std::endl;
 		}
 
-		animModel.Draw(animationIsActive, transform);
-		
-
+		newAnimModel->Draw(animationIsActive, transform);
 
 
 		//engine.gameMap.UpdateMesh();

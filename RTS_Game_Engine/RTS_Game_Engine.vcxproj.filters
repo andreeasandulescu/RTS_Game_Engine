@@ -55,6 +55,9 @@
     <ClCompile Include="..\Source\water.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\ResourceLoader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h">
@@ -115,6 +118,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Animation\AnimatedModel.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ResourceLoader.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>
