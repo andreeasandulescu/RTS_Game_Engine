@@ -61,6 +61,9 @@
     <ClCompile Include="..\Source\Cursor.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\GameLogic.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h">
@@ -124,6 +127,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Unit.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameLogic.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

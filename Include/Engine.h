@@ -12,7 +12,8 @@
 #include <stb_image.h>
 #include <water.h>
 #include <LightSource.h>
-#include <Unit.h>
+#include <GameLogic.h>
+#include <exception>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
@@ -30,6 +31,7 @@ public:
 	Water water;
 	GUI gui;
 	Unit testUnit;
+	GameLogic gameLogic;
 
 	std::vector<LightSource*> lightSources;
 	

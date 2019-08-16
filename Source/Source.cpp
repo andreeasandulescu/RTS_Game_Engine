@@ -85,6 +85,9 @@ int main()
 		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		engine.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		engine.testUnit.Draw(transform);
+		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
+			engine.gameLogic.playerUnits[i].Draw(transform);
+		}
 
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)

@@ -56,6 +56,13 @@ int Engine::Init()
 	gui = GUI::GUI();
 	gui.initGUI();
 
+	// load game logic
+	gameLogic = GameLogic();
+
+	// add game logic to the main message bus:
+	gameLogic.messageBus = &mainMessageBus;
+	this->mainMessageBus.addSubscriber(&gameLogic);
+
 	// start main bus thread:
 	mainBusThread = std::thread(&MessageBus::sendMessages, &mainMessageBus);
 
@@ -87,8 +94,9 @@ int Engine::Init()
 	testUnit.initUnit();
 	testUnit.position = glm::vec3(10, 10, 10);
 	testUnit.speed = 0.5f;
-
-	
+	for (int i = 0; i < gameLogic.playerUnits.size(); i++) {
+		gameLogic.playerUnits[i].initUnit();
+	}
 
 	return 0;
 }
@@ -114,10 +122,14 @@ void Engine::receiveMessage(Message* m) {
 				pos = (glm::inverse(transform) * posAux);
 				pos = pos / pos.w;
 			
-
-				printf("Left click pressed at: (%f, %f, %f).\n", pos.x, pos.y, pos.z);
 				testUnit.position = glm::vec3(pos.x, pos.y, pos.z) - glm::vec3(0.5f, 0.0f, 0.5f);
-				//printf("Cube position at: (%f, %f, %f).\n\n", testUnit.position.x, testUnit.position.y, testUnit.position.z);
+				
+				// send back a message:
+				WorldClick* wClick = new WorldClick();
+				wClick->cursorState = c->cursorState;
+				wClick->worldPosition = pos;
+				mainMessageBus.addMessage(wClick);
+
 			}
 		}
 	}
@@ -152,6 +164,7 @@ int Engine::Update()
 	
 	// update units positions:
 	testUnit.updateUnit(frameDelta);
+	gameLogic.update(frameDelta);
 
 	// read depth buffer:
 	glReadPixels(
