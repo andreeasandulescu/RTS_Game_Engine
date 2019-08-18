@@ -41,6 +41,22 @@ void Unit::initUnit() {
 }
 
 void Unit::updateUnit(float deltaFrame) {
+
+	if (currentUnitCommand.cmdType == CommandType::STOP) {
+		speed = 0.0f;
+	}
+	else if (currentUnitCommand.cmdType == CommandType::MOVE) {
+		speed = maxSpeed;
+		direction = normalize(currentUnitCommand.positon - position);
+		
+		// check if unit arrived at the position:
+		if (glm::distance(position, currentUnitCommand.positon) < 1.0f) {
+			currentUnitCommand.cmdType = CommandType::STOP;
+		}
+		
+	} 
+
+
 	position = position + (deltaFrame * speed) * direction;
 }
 
@@ -58,8 +74,11 @@ void Unit::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lig
 }
 
 Unit::Unit() {
-	this->speed = 0;
-	this->direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
-	this->name = std::string("Unnamed_unit");
-	this->position = glm::vec3(0.0f, 0.0f, 0.0f);
+	speed = 0.0f;
+	selectionRadius = 2.0f;
+	direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
+	name = std::string("Unnamed_unit");
+	position = glm::vec3(0.0f, 0.0f, 0.0f);
+	currentUnitCommand = UnitCommand();
+	maxSpeed = 6.0f;
 }

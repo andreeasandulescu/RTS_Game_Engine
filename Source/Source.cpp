@@ -80,13 +80,12 @@ int main()
 		//check for user input
 		processInput(engine.window);
 
-		// draw WATER and MAP and UNIT:
+		// draw WATER and MAP and UNITS:
 		transform = engine.transform;
 		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
-		engine.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
-		engine.testUnit.Draw(transform);
+		engine.gameLogic.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
-			engine.gameLogic.playerUnits[i].Draw(transform);
+			engine.gameLogic.playerUnits[i]->Draw(transform);
 		}
 
 		GLenum err;
@@ -101,9 +100,6 @@ int main()
 
 		renderer.RenderTriangle();
 
-		
-
-		
 		
 		//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
 		

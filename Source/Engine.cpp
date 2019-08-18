@@ -57,7 +57,7 @@ int Engine::Init()
 	gui.initGUI();
 
 	// load game logic
-	gameLogic = GameLogic();
+	gameLogic.initGameLogic();
 
 	// add game logic to the main message bus:
 	gameLogic.messageBus = &mainMessageBus;
@@ -69,17 +69,10 @@ int Engine::Init()
 	// start input manager thread:
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
-	// load game map:
-	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
-	gameMap.InitEven(0.0f);
-	gameMap.loadHeightMap(data, nrChannels, width, height);
-
-	// update normals:
-	gameMap.smoothNormals();
-	gameMap.UpdateMesh();
+	
 	
 	// load water map:
-	water.initWater(gameMap.width, gameMap.height, 0.7f, 2);
+	water.initWater(gameLogic.gameMap.width, gameLogic.gameMap.height, 0.7f, 2);
 	water.UpdateMesh();
 
 	// load lighting:
@@ -91,11 +84,8 @@ int Engine::Init()
 	lightSources.push_back(sun);
 
 	// load unit:
-	testUnit.initUnit();
-	testUnit.position = glm::vec3(10, 10, 10);
-	testUnit.speed = 0.5f;
 	for (int i = 0; i < gameLogic.playerUnits.size(); i++) {
-		gameLogic.playerUnits[i].initUnit();
+		gameLogic.playerUnits[i]->initUnit();
 	}
 
 	return 0;
@@ -111,7 +101,7 @@ void Engine::receiveMessage(Message* m) {
 
 		
 
-		if (c->cursorState.left == ButtonStatus::PRESSED) {
+		if (c->cursorState.left == ButtonStatus::PRESSED || c->cursorState.right == ButtonStatus::PRESSED) {
 
 			if (c->cursorState.xPos > 0 && c->cursorState.yPos > 0) {
 				posAux.x = (2.0f * ((float)(c->cursorState.xPos) / windowWidth)) - 1.0f,
@@ -122,8 +112,7 @@ void Engine::receiveMessage(Message* m) {
 				pos = (glm::inverse(transform) * posAux);
 				pos = pos / pos.w;
 			
-				testUnit.position = glm::vec3(pos.x, pos.y, pos.z) - glm::vec3(0.5f, 0.0f, 0.5f);
-				
+
 				// send back a message:
 				WorldClick* wClick = new WorldClick();
 				wClick->cursorState = c->cursorState;
@@ -163,7 +152,6 @@ int Engine::Update()
 	this->gui.guiUpdate(this->window);
 	
 	// update units positions:
-	testUnit.updateUnit(frameDelta);
 	gameLogic.update(frameDelta);
 
 	// read depth buffer:
@@ -194,8 +182,7 @@ int Engine::Stop()
 	return 0;
 }
 
-Engine::Engine() : gameMap(200, 200) {
-	this->gameMap.InitEven(2.0f);
+Engine::Engine() {
 	this->transform = glm::mat4(1);
 	this->windowWidth = 800;
 	this->windowHeight = 600;

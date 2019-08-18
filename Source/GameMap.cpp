@@ -163,6 +163,17 @@ void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& 
 	mesh.Draw(GL_TRIANGLES);
 }
 
+MapSquare* GameMap::getMapSquare(glm::vec3 position) {
+	int x = floor(position.x); // height
+	int z = floor(position.z); // width
+
+	if (x >= 0 && z >= 0 && x < height && z < width) {
+		return this->map[x][z];
+	}
+
+	return NULL;
+}
+
 void GameMap::setHeight(int i, int j, float height) {
 	
 	// raise main square by Y axis:
@@ -243,25 +254,41 @@ void GameMap::smoothNormals() {
 	}
 }
 
+GameMap& GameMap::operator=(const GameMap& rhs) {
+	this->height = rhs.height;
+	this->width = rhs.width;
+	this->map = rhs.map;
+	this->mesh = rhs.mesh;
+	this->vertices = rhs.vertices;
+	
+	return *this;
+}
+
 GameMap::GameMap() : GameMap::GameMap(10, 10) {
 }
 
 GameMap::GameMap(unsigned int width, unsigned int height)
 {
-	this->width = width;
-	this->height = height;
+	
 
 	this->map = new MapSquare * *[height];
+	if (map == NULL) {
+		printf("Could not allocate map!.");
+	}
+
 	for (int i = 0; i < height; i++) {
 		this->map[i] = new MapSquare * [width];
 		for (int j = 0; j < width; j++) {
 			this->map[i][j] = NULL;
 		}
 	}
+
+	this->width = width;
+	this->height = height;
+	
 }
 
-GameMap::~GameMap() {
-	
+void GameMap::deleteMap() {
 	// delete all map tile entries:
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
@@ -276,4 +303,8 @@ GameMap::~GameMap() {
 	}
 
 	delete this->map;
+}
+
+GameMap::~GameMap() {
+	
 }

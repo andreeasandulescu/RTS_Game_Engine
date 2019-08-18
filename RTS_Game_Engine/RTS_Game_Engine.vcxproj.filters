@@ -64,6 +64,9 @@
     <ClCompile Include="..\Source\GameLogic.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\UnitCommand.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h">
@@ -130,6 +133,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\GameLogic.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\UnitCommand.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

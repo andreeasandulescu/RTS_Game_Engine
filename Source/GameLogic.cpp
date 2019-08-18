@@ -6,38 +6,74 @@ void GameLogic::receiveMessage(Message* m) {
 	if (m->messageType == MessageType::worldclick) {
 		WorldClick* c = (WorldClick*)m;
 
-		// TODO: move selected units:
-		for (int i = 0; i < playerUnits.size(); i++) {
-			glm::vec3 newDir = c->worldPosition - playerUnits[i].position;
-			playerUnits[i].direction = glm::normalize(newDir);
+		// if left click select unit if a unit is in
+		// selection radius:
+		if (c->cursorState.left == ButtonStatus::PRESSED) {
+			for (int i = 0; i < playerUnits.size(); i++) {
+				float selectDistance = glm::distance(c->worldPosition, playerUnits[i]->position);
+				if (selectDistance < playerUnits[i]->selectionRadius) {
+					// unit selected:
+					selectedUnits.clear();
+					selectedUnits.push_back(playerUnits[i]);
+				}
+			}
 		}
+
+		// if right click command unit to move:
+		if (c->cursorState.right == ButtonStatus::PRESSED) {
+			for (int i = 0; i < selectedUnits.size(); i++) {
+				glm::vec3 newDir = c->worldPosition - selectedUnits[i]->position;
+				selectedUnits[i]->currentUnitCommand;
+				selectedUnits[i]->currentUnitCommand.cmdType = CommandType::MOVE;
+				selectedUnits[i]->currentUnitCommand.locationSquare = gameMap.getMapSquare(c->worldPosition);
+				selectedUnits[i]->currentUnitCommand.positon = c->worldPosition;
+			}
+		}
+		
+
 	}
 
 	delete m;
 }
 
+void GameLogic::initGameLogic() {
+	int width, height;
+	int nrChannels;
+
+	// load game map:
+	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
+	gameMap = GameMap(width, height);
+	gameMap.InitEven(0.0f);
+	gameMap.UpdateMesh();
+	gameMap.loadHeightMap(data, nrChannels, width, height);
+
+	// update normals:
+	gameMap.smoothNormals();
+	gameMap.UpdateMesh();
+}
+
 void GameLogic::update(float deltaFrame) {
 	// update all untis:
 	for (int i = 0; i < playerUnits.size(); i++) {
-		playerUnits[i].updateUnit(deltaFrame);
+		playerUnits[i]->updateUnit(deltaFrame);
 	}
 }
 
 GameLogic::GameLogic() {
 	// TODO: add units:
-	Unit u1 = Unit();
-	u1.position = glm::vec3(10, 10, 10);
-	u1.speed = 2.5f;
+	Unit* u1 = new Unit();
+	u1->position = glm::vec3(10, 10, 10);
+	u1->speed = 2.5f;
 	playerUnits.push_back(u1);
 
-	Unit u2 = Unit();
-	u2.position = glm::vec3(10, 15, 10);
-	u2.speed = 3.5f;
+	Unit* u2 = new Unit();
+	u2->position = glm::vec3(10, 15, 10);
+	u2->speed = 3.5f;
 	playerUnits.push_back(u2);
 
-	Unit u3 = Unit();
-	u3.position = glm::vec3(10, 5, 10);
-	u3.speed = 6.5f;
+	Unit* u3 = new Unit();
+	u3->position = glm::vec3(10, 5, 10);
+	u3->speed = 6.5f;
 	playerUnits.push_back(u3);
 	
 }

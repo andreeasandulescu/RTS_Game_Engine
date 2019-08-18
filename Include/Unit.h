@@ -1,4 +1,5 @@
 #include <Drawable.h>
+#include <UnitCommand.h>
 
 #ifndef UNIT_H
 #define UNIT_H
@@ -14,8 +15,20 @@ public:
 	std::string name;
 	glm::vec3 position;
 	glm::vec3 direction;
+	
+	// current unit movement speed
 	float speed;
+
+	// max movement speed
+	float maxSpeed;
+
+	// select the unit within a spherical radius:
+	float selectionRadius;
 	Mesh mesh;
+
+	// unit always has a current command
+	// default current command is STOP:
+	UnitCommand currentUnitCommand;
 
 	// update position by speed and direction:
 	virtual void updateUnit(float deltaFrame);

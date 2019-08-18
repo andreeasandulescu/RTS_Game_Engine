@@ -27,11 +27,11 @@ public:
 	GLFWwindow* window;
 	MessageBus mainMessageBus;
 	InputManager inputManager;
-	GameMap gameMap;
 	Water water;
 	GUI gui;
 	Unit testUnit;
 	GameLogic gameLogic;
+	GameMap gameMap;
 
 	std::vector<LightSource*> lightSources;
 	

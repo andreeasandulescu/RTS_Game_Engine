@@ -163,6 +163,7 @@
     <ClCompile Include="..\Source\Source.cpp" />
     <ClCompile Include="..\Source\stb_image.cpp" />
     <ClCompile Include="..\Source\Unit.cpp" />
+    <ClCompile Include="..\Source\UnitCommand.cpp" />
     <ClCompile Include="..\Source\water.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +188,7 @@
     <ClInclude Include="..\Include\Shader.h" />
     <ClInclude Include="..\Include\stb_image.h" />
     <ClInclude Include="..\Include\Unit.h" />
+    <ClInclude Include="..\Include\UnitCommand.h" />
     <ClInclude Include="..\Include\water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
