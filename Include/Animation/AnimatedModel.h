@@ -24,11 +24,11 @@ public:
 	std::vector<glm::mat4> jointTransforms;
 	std::map<std::string, unsigned int> names;
 
-	float startTime = -1.0f;		//of the animation
+	float startTime = -1.0f;
 	float durationInTicks;
 	float ticksPerSecond;
 
-	glm::mat4 m_GlobalInverseTransform;
+	glm::mat4 globalInverseTransform;
 
 	void LoadModel(std::string path);
 	void runAnimation();					//time elapsed since the first command to run the animation (seconds)
@@ -37,7 +37,6 @@ public:
 
 
 private:
-	//TODOOO: method for loading an .obj file (without animations)
 	void generateGlobalAnimationMatrices(Joint* joint);
 	void setFinalJointTransforms();
 

@@ -29,7 +29,6 @@ public:
 
 	void Cleanup();				//TODO!!!!
 
-
 private:
 	Mesh* processMesh(aiMesh* mesh, const aiScene* scene, Shader& shader);
 	Joint* createJointHierarchy(aiNode* node, const aiScene* scene, AnimatedModel *animModel);

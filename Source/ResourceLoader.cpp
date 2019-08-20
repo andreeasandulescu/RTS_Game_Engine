@@ -267,7 +267,6 @@ void ResourceLoader::loadAnimations(const aiScene* scene, AnimatedModel *animMod
 			animModel->joints[jointId]->keyframes.push_back(currKeyframe);
 		}
 	}
-
 }
 
 AnimatedModel* ResourceLoader::LoadAnimatedModel(std::string path, Shader shader)
@@ -289,8 +288,8 @@ AnimatedModel* ResourceLoader::LoadAnimatedModel(std::string path, Shader shader
 	AnimatedModel* animModel = new AnimatedModel();
 	aiMesh *auxMesh = scene->mMeshes[0];
 
-	glm::mat4 m_GlobalInverseTransform = convert4x4matrix(scene->mRootNode->mTransformation);
-	animModel->m_GlobalInverseTransform = glm::inverse(m_GlobalInverseTransform);
+	glm::mat4 globalInverseTransform = convert4x4matrix(scene->mRootNode->mTransformation);
+	animModel->globalInverseTransform = glm::inverse(globalInverseTransform);
 
 	Mesh *mesh = processMesh(auxMesh, scene, shader);
 	animModel->mesh = *mesh;
