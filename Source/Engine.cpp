@@ -72,7 +72,7 @@ int Engine::Init()
 	
 	
 	// load water map:
-	water.initWater(gameLogic.gameMap.width, gameLogic.gameMap.height, 0.3f, 2);
+	water.initWater(gameLogic.gameMap.width, gameLogic.gameMap.height, 0.7f, 2);
 	water.UpdateMesh();
 
 	// load lighting:

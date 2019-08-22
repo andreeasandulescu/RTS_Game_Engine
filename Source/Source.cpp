@@ -120,7 +120,7 @@ int main()
 			std::cout << std::endl;
 		}
 
-		newAnimModel->Draw(animationIsActive, transform);
+		newAnimModel->Draw(animationIsActive,  transform * glm::translate(glm::mat4(1.0), glm::vec3(10.f)));
 
 
 		//engine.gameMap.UpdateMesh();
