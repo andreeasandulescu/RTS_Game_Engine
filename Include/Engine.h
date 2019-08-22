@@ -12,11 +12,13 @@
 #include <stb_image.h>
 #include <water.h>
 #include <LightSource.h>
+#include <GameLogic.h>
+#include <exception>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
 
-class Engine
+class Engine : public MessageReceiver
 {
 	float lastFrameTime;
 	float frameDelta;
@@ -25,17 +27,37 @@ public:
 	GLFWwindow* window;
 	MessageBus mainMessageBus;
 	InputManager inputManager;
-	GameMap gameMap;
 	Water water;
 	GUI gui;
+	Unit testUnit;
+	GameLogic gameLogic;
+	GameMap gameMap;
+
 	std::vector<LightSource*> lightSources;
+	
 
 	std::thread mainBusThread;
 	std::thread inputManagerThread;
 
+	// contains the Projection * View
+	glm::mat4 Projection;
+	glm::mat4 View;
+	glm::mat4 transform;
+
+	// window width/height:
+	int windowWidth;
+	int windowHeight;
+
+	// frame buffers data:
+	float* depthBuffer;
+
 	int Init();
 	int Update();
 	float getFrameDelta();
+
+	// receive messages from the InputManager key and cursors:
+	void receiveMessage(Message* m);
+	
 	int Stop();
 	Engine();
 };

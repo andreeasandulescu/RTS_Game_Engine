@@ -48,17 +48,32 @@ CursorMessage::CursorMessage(float xoffset, float yoffset, float lastX, float la
 }
 
 CursorMessage::CursorMessage(const CursorMessage& rhs)
-	: Message(rhs)  // calls copy ctor of List class
+	: Message(rhs)  // calls copy ctor
 {
 	this->xoffset = rhs.xoffset;
 	this->yoffset = rhs.yoffset;
 	this->lastX = rhs.lastX;
 	this->lastY = rhs.lastY;
+	this->cursorState = rhs.cursorState;
 }
 
-CursorMessage* CursorMessage::clone()
-{
+
+CursorMessage* CursorMessage::clone() {
 	return new CursorMessage(*this);
+}
+
+WorldClick::WorldClick() {
+	this->messageType = MessageType::worldclick;
+	this->worldPosition = glm::vec3(0);
+}
+
+WorldClick::WorldClick(const WorldClick& rhs) : Message(rhs) {
+	this->cursorState = rhs.cursorState;
+	this->worldPosition = rhs.worldPosition;
+}
+
+WorldClick* WorldClick::clone() {
+	return new WorldClick(*this);
 }
 
 KeysMessage::KeysMessage() : Message()
@@ -68,7 +83,7 @@ KeysMessage::KeysMessage() : Message()
 }
 
 KeysMessage::KeysMessage(const KeysMessage& rhs)
-	: Message(rhs)  // calls copy ctor of List class
+	: Message(rhs)  // calls copy ctor
 {
 	this->pressedKeys = rhs.pressedKeys;
 	

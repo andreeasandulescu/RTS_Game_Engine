@@ -49,6 +49,8 @@ void MapSquare::updateCoordinates(unsigned int i, unsigned int j) {
 
 }
 
+
+
 void MapSquare::updateNormals() {
 	// update normals for first triangle:
 	glm::vec3 v1v2 = v2.position - v1.position;

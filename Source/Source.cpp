@@ -54,7 +54,8 @@ int main()
 
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEPTH_TEST);
-//	glEnable(GL_CULL_FACE);
+	
+	glm::mat4 transform;
 
 	Renderer renderer{};
 	renderer.Init();
@@ -88,13 +89,13 @@ int main()
 		//check for user input
 		processInput(engine.window);
 
-		glm::mat4 view_matrix = engine.camera.getViewMatrix();
-		glm::mat4 proj_matrix = glm::infinitePerspective(1.5f, 800.0f / 600.0f, 0.05f);
-		glm::mat4 transform = proj_matrix * view_matrix;
-
-		// draw WATER and MAP:
-		//engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
-		//engine.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+		// draw WATER and MAP and UNITS:
+		transform = engine.transform;
+		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+		engine.gameLogic.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
+			engine.gameLogic.playerUnits[i]->Draw(transform);
+		}
 
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
@@ -103,7 +104,7 @@ int main()
 			std::cout << std::endl;
 		}
 
-		renderer.UpdateMatrices(view_matrix, proj_matrix);
+		renderer.UpdateMatrices(engine.Projection, engine.View);
 		renderer.RenderCoordSystem();
 
 		renderer.RenderTriangle();

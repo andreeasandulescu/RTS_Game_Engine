@@ -300,8 +300,6 @@ void Mesh::DrawEBO(const glm::mat4& transform, GLenum mode)
 		glUniform1i(glGetUniformLocation(shader.id, textureCName), i);
 	}
 
-	shader.use();
-	glUniform1i(glGetUniformLocation(shader.id, "ourTexture"), 0);
 	glUniformMatrix4fv(glGetUniformLocation(shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
 	glBindVertexArray(VAO);

@@ -34,6 +34,10 @@ public:
 	// tiles closest vertices:
 	void setHeight(int i, int j, float height);
 
+	// retrieve the nearest MapSquare
+	MapSquare* getMapSquare(glm::vec3 position);
+
+	GameMap& operator= (const GameMap& rhs);
 
 	// init with a default width and height:
 	GameMap();
@@ -42,6 +46,7 @@ public:
 	GameMap(unsigned int width, unsigned int height);
 
 	// free memory
+	void deleteMap();
 	~GameMap();
 
 };
