@@ -58,7 +58,7 @@ void main()
 			// compute specular light:
 			R = normalize(2 * LN_dot * N - L);
 			specularComponent = specularComponent + ks * 
-				pow(abs(dot(R, V)), 10) * Light[i].Color;
+				pow(abs(dot(R, V)), 100) * Light[i].Color;
 		}
 		
 	}
