@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <Message.h>
 #include <MessageBus.h>
+#include <Cursor.h>
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::milliseconds
 

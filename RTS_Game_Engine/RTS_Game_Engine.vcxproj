@@ -146,7 +146,9 @@
     <ClCompile Include="..\Source\Animation\AnimatedModel.cpp" />
     <ClCompile Include="..\Source\Animation\Joint.cpp" />
     <ClCompile Include="..\Source\Camera.cpp" />
+    <ClCompile Include="..\Source\Cursor.cpp" />
     <ClCompile Include="..\Source\Engine.cpp" />
+    <ClCompile Include="..\Source\GameLogic.cpp" />
     <ClCompile Include="..\Source\GameMap.cpp" />
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\GUI.cpp" />
@@ -161,6 +163,8 @@
     <ClCompile Include="..\Source\Shader.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
     <ClCompile Include="..\Source\stb_image.cpp" />
+    <ClCompile Include="..\Source\Unit.cpp" />
+    <ClCompile Include="..\Source\UnitCommand.cpp" />
     <ClCompile Include="..\Source\water.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +175,7 @@
     <ClInclude Include="..\Include\Drawable.h" />
     <ClInclude Include="..\Include\Engine.h" />
     <ClInclude Include="..\Include\ft2build.h" />
+    <ClInclude Include="..\Include\GameLogic.h" />
     <ClInclude Include="..\Include\GameMap.h" />
     <ClInclude Include="..\Include\GUI.h" />
     <ClInclude Include="..\Include\InputManager.h" />
@@ -184,6 +189,8 @@
     <ClInclude Include="..\Include\ResourceLoader.h" />
     <ClInclude Include="..\Include\Shader.h" />
     <ClInclude Include="..\Include\stb_image.h" />
+    <ClInclude Include="..\Include\Unit.h" />
+    <ClInclude Include="..\Include\UnitCommand.h" />
     <ClInclude Include="..\Include\water.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -12,7 +12,7 @@ void MessageBus::addMessage(Message *m) {
 	messageQueueLock.unlock();
 
 	// notify messageBus thread a message has been pushed
-	std::unique_lock<std::mutex> lck(mtx);
+	//std::unique_lock<std::mutex> lck(mtx);
 	cv.notify_one();
 }
 

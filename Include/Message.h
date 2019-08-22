@@ -2,11 +2,13 @@
 #include <string>
 #include <atomic>
 #include <vector>
+#include <Cursor.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #ifndef _MESSAGE_H_
 #define _MESSAGE_H_
 
-enum MessageType { unkown, cursor, keyspressed };
+enum MessageType { unkown, cursor, keyspressed, worldclick };
 
 class Message {
 private:
@@ -27,6 +29,8 @@ public:
 
 class CursorMessage : public Message {
 public:
+	Cursor cursorState;
+
 	float xoffset;
 	float yoffset;
 
@@ -51,6 +55,18 @@ public:
 	KeysMessage();
 	KeysMessage(const KeysMessage& rhs);
 	
+};
+
+class WorldClick : public Message {
+public:
+	virtual WorldClick* clone();
+
+	Cursor cursorState;
+	glm::vec3 worldPosition;
+
+	// copy constructor
+	WorldClick();
+	WorldClick(const WorldClick& rhs);
 };
 
 #endif // !_MESSAGE_H_
