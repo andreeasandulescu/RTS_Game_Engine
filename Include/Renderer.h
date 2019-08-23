@@ -18,7 +18,7 @@ class Renderer
 public:
 	Shader utilitiesShader;
 	Mesh coordSystem;
-	Mesh auxMesh;					// TODO : REMOVE THIS
+	std::vector<Mesh> grassObjMesh;
 	void GenerateTriangleMesh();	// THIS TOO
 	void RenderTriangle();			// SAME HERE
 
@@ -30,8 +30,6 @@ public:
 	void UpdateMatrices(const glm::mat4& view_matrix, const glm::mat4& proj_matrix);
 	void Init();
 	void RenderCoordSystem();
-
-private:
 	void GenerateCoordSystemMesh();
 };
 #endif // RENDERER_H

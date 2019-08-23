@@ -52,6 +52,7 @@ int main()
 	Engine engine = {};
 	engine.Init();
 
+	glEnable(GL_BLEND);
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEPTH_TEST);
 	
@@ -91,7 +92,7 @@ int main()
 
 		// draw WATER and MAP and UNITS:
 		transform = engine.transform;
-		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+	//	engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		engine.gameLogic.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
 			engine.gameLogic.playerUnits[i]->Draw(transform);
@@ -104,13 +105,11 @@ int main()
 			std::cout << std::endl;
 		}
 
-		renderer.UpdateMatrices(engine.Projection, engine.View);
+		renderer.UpdateMatrices(engine.View, engine.Projection);
 		renderer.RenderCoordSystem();
 
-		renderer.RenderTriangle();
+		//renderer.RenderTriangle();
 
-		
-		
 		//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
 		
 
@@ -124,7 +123,6 @@ int main()
 
 
 		//engine.gameMap.UpdateMesh();
-		
 		//engine.gameMap.Draw(transform);
 
 		// check and call events and swap the buffers

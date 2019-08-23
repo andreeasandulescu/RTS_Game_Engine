@@ -151,6 +151,7 @@
     <ClCompile Include="..\Source\GameLogic.cpp" />
     <ClCompile Include="..\Source\GameMap.cpp" />
     <ClCompile Include="..\Source\glad.c" />
+    <ClCompile Include="..\Source\Grass.cpp" />
     <ClCompile Include="..\Source\GUI.cpp" />
     <ClCompile Include="..\Source\InputManager.cpp" />
     <ClCompile Include="..\Source\LightSource.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="..\Include\ft2build.h" />
     <ClInclude Include="..\Include\GameLogic.h" />
     <ClInclude Include="..\Include\GameMap.h" />
+    <ClInclude Include="..\Include\Grass.h" />
     <ClInclude Include="..\Include\GUI.h" />
     <ClInclude Include="..\Include\InputManager.h" />
     <ClInclude Include="..\Include\LightSource.h" />

@@ -70,6 +70,9 @@
     <ClCompile Include="..\Source\UnitCommand.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Grass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Camera.h">
@@ -142,6 +145,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\UnitCommand.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Grass.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

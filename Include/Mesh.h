@@ -63,7 +63,6 @@ public:
 	void DrawEBO(const glm::mat4& transform, GLenum mode);
 	void CleanupEBO();
 
-private:
 	void createNewMesh();
 
 	//for the EBO implementation

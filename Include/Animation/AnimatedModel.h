@@ -18,7 +18,6 @@ class AnimatedModel
 public:
 	Joint *rootJoint;
 	Mesh mesh;
-	Shader shader;
 
 	std::vector<Joint*> joints;
 	std::vector<glm::mat4> jointTransforms;

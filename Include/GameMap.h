@@ -1,5 +1,6 @@
 #include <MapSquare.h>
 #include <Drawable.h>
+#include <Grass.h>
 #include <vector>
 
 #ifndef GAME_MAP_H
@@ -12,6 +13,7 @@ public:
 	unsigned int width;
 	unsigned int height;
 	std::vector<Vertex> vertices;
+	std::vector<Grass*> grassTufts;
 
 	// GAME MAP:
 	MapSquare *** map;
@@ -44,6 +46,9 @@ public:
 	
 	// init with width * height NULL tiles:
 	GameMap(unsigned int width, unsigned int height);
+
+	void GenerateGrass();
+	void DrawGrass(const glm::mat4& transform);
 
 	// free memory
 	void deleteMap();

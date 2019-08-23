@@ -18,7 +18,7 @@ int Engine::Init()
 	}
 
 	// cursor does not leave window:
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
 
 	// dont change mouse button state until polling:

@@ -17,6 +17,7 @@ void GameMap::InitEven(float altitude) {
 			this->map[i][j]->updateCoordinates(i, j);
 		}
 	}
+	
 }
 
 
@@ -74,6 +75,9 @@ void GameMap::UpdateMesh()
 	// rock texture
 
 	mesh.UpdateMesh();
+	
+	
+	
 }
 
 void GameMap::loadHeightMap(unsigned char* map_data, size_t pixel_size, int width, int height) {
@@ -85,6 +89,13 @@ void GameMap::loadHeightMap(unsigned char* map_data, size_t pixel_size, int widt
 			setHeight(i, j, ((float) (255 - map_data[i * width * 3 + j * 3])) / 10.0f );
 		}
 	}
+
+	double timeBefore = glfwGetTime();
+	GenerateGrass();
+	double timeAfter = glfwGetTime();
+
+	std::cout << "time = " << timeAfter - timeBefore << std::endl;
+
 }
 
 void GameMap::Draw(const glm::mat4& transform)
@@ -117,6 +128,8 @@ void GameMap::Draw(const glm::mat4& transform)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	mesh.Draw(GL_TRIANGLES);
+
+	DrawGrass(transform);
 }
 
 void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
@@ -161,6 +174,9 @@ void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	mesh.Draw(GL_TRIANGLES);
+
+	DrawGrass(transform);
+
 }
 
 MapSquare* GameMap::getMapSquare(glm::vec3 position) {
@@ -288,6 +304,45 @@ GameMap::GameMap(unsigned int width, unsigned int height)
 	
 }
 
+void GameMap::GenerateGrass()
+{
+
+	for(unsigned int i = 0; i < height/ 3; i++)
+		for (unsigned int j = 0; j < width/ 3; j++)
+		{
+			MapSquare* currMapSquare = map[i][j];
+			if (currMapSquare->v0.position.y > 3.0f)		//if this condition is met, that map square contains grass
+			{
+				int cnt = 1;
+
+				for (int k = 0; k < cnt; k++)
+				{
+					float r_x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);		//get random number between 0.0 and 1.0
+					float r_z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+
+					currMapSquare->grassTufts.push_back(glm::vec2(r_x, r_z));
+					
+					glm::vec3 mapSquarePosition = currMapSquare->v2.position;
+					glm::vec3 grassTuftPosition = glm::vec3(r_x, 0.0f, r_z) + mapSquarePosition;
+
+					Grass *grassObject = new Grass();
+					grassObject->Init(grassTuftPosition);
+
+					grassTufts.push_back(grassObject);
+
+				}
+			}
+		}
+}
+
+void GameMap::DrawGrass(const glm::mat4& transform)
+{
+	for (unsigned int i = 0; i < grassTufts.size(); i++)
+	{
+		grassTufts[i]->Draw(transform);
+	}
+}
+
 void GameMap::deleteMap() {
 	// delete all map tile entries:
 	for (int i = 0; i < height; i++) {
@@ -300,6 +355,11 @@ void GameMap::deleteMap() {
 	// delete rows:
 	for (int i = 0; i < height; i++) {
 		delete this->map[i];
+	}
+
+	int grassTuftsCnt = grassTufts.size();
+	for (int i = 0; i < grassTuftsCnt; i++) {
+		delete this->grassTufts[i];
 	}
 
 	delete this->map;

@@ -27,6 +27,8 @@ public:
 	Vertex v2;
 	Vertex v3;
 
+	std::vector<glm::vec2> grassTufts;		//vector containing the grass tufts' centre
+
 	// set same Y too all map square vertices
 	void SetAltitude(float h);
 
