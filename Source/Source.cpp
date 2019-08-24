@@ -12,6 +12,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <SceneUI.h>
+
 bool animationIsActive = true;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -54,15 +56,17 @@ int main()
 
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEPTH_TEST);
-	
+
 	glm::mat4 transform;
 
 	Renderer renderer{};
 	renderer.Init();
 
-	//glDebugMessageCallback(MessageCallback, NULL);
+	glDebugMessageCallback(MessageCallback, NULL);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1360, 768);
+	
+	
 
 	//TODO: CHECK IF THIS NEEDS TO BE IN ENGINE::INIT()
 	//register the callback function (called on every window resize)
@@ -97,6 +101,8 @@ int main()
 			engine.gameLogic.playerUnits[i]->Draw(transform);
 		}
 
+		
+
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
 		{
@@ -104,15 +110,10 @@ int main()
 			std::cout << std::endl;
 		}
 
-		renderer.UpdateMatrices(engine.Projection, engine.View);
+		renderer.UpdateMatrices(engine.View, engine.Projection);
 		renderer.RenderCoordSystem();
 
 		renderer.RenderTriangle();
-
-		
-		
-		//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
-		
 
 		while ((err = glGetError()) != GL_NO_ERROR)
 		{
@@ -122,17 +123,10 @@ int main()
 
 		newAnimModel->Draw(animationIsActive,  transform * glm::translate(glm::mat4(1.0), glm::vec3(10.f)));
 
-
-		//engine.gameMap.UpdateMesh();
-		
-		//engine.gameMap.Draw(transform);
-
-		// check and call events and swap the buffers
-
 		//update engine time:
 		engine.Update();
 
-
+		// check and call events and swap the buffers
 		glfwSwapBuffers(engine.window);
 		glfwPollEvents();
 	}

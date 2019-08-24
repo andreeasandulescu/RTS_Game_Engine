@@ -93,3 +93,24 @@ KeysMessage* KeysMessage::clone()
 {
 	return new KeysMessage(*this);
 }
+
+
+
+ButtonPressed::ButtonPressed() : Message()
+{
+	this->nextScene = NULL;
+	this->action = ButtonAction::unkownAction;
+	this->messageType = MessageType::buttonpress;
+}
+
+ButtonPressed::ButtonPressed(const ButtonPressed& rhs)
+	: Message(rhs)  // calls copy ctor
+{
+	this->nextScene = rhs.nextScene;
+	this->action = rhs.action;
+}
+
+ButtonPressed* ButtonPressed::clone()
+{
+	return new ButtonPressed(*this);
+}

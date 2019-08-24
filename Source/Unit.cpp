@@ -65,6 +65,7 @@ void Unit::UpdateMesh() {
 }
 
 void Unit::Draw(const glm::mat4& transform) {
+
 	glm::mat4 mvp = transform * glm::translate(glm::mat4(1), position);
 	mesh.DrawEBO(mvp, GL_TRIANGLES);
 }

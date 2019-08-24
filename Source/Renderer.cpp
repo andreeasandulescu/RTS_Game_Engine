@@ -36,6 +36,7 @@ void Renderer::GenerateCoordSystemMesh()
 		axisVertices.push_back(origVertex);
 	}
 
+	
 	this->coordSystem.InitMesh(axisVertices, utilitiesShader);
 }
 
@@ -52,7 +53,7 @@ void Renderer::RenderCoordSystem()
 
 	coordSystem.shader.use();
 
-	glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
+	glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(30.0f));
 	glm::mat4 transform = proj_matrix * view_matrix * model_mat;
 
 	glUniformMatrix4fv(glGetUniformLocation(utilitiesShader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));

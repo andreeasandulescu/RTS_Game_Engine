@@ -4,18 +4,23 @@ int Engine::Init()
 {
 	int width, height, nrChannels;
 
+	width = 1360;
+	height = 768;
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Coolest RTS Game Engine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(width, height, "Coolest RTS Game Engine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
+
+	
 
 	// cursor does not leave window:
 	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -41,6 +46,10 @@ int Engine::Init()
 		return -1;
 	}
 	
+	// black screen:
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glfwSwapBuffers(window);
+
 	glEnable(GL_DEPTH_TEST);
 	// create input manager:
 	this->inputManager = InputManager(window, &mainMessageBus);
@@ -49,12 +58,20 @@ int Engine::Init()
 	this->camera = Camera();
 	this->mainMessageBus.addSubscriber(&camera);
 
+	
+
 	// add engine to the main message bus:
 	this->mainMessageBus.addSubscriber(this);
 
 	// create GUI:
 	gui = GUI::GUI();
 	gui.initGUI();
+
+	// create user interface:
+	userInterface.initUserInterface(window, &gui, &mainMessageBus);
+	userInterface.UpdateMesh();
+	// add user interface to message receiver bus:
+	mainMessageBus.addSubscriber(&userInterface);
 
 	// load game logic
 	gameLogic.initGameLogic();
@@ -122,6 +139,16 @@ void Engine::receiveMessage(Message* m) {
 			}
 		}
 	}
+
+	if (m->messageType == MessageType::buttonpress) {
+		ButtonPressed* buttonMsg = (ButtonPressed*)m;
+		printf("Button pressed: %s\n", buttonMsg->messageString.c_str());
+
+		if (buttonMsg->action == ButtonAction::exitAction) {
+			exit(0);
+		}
+	}
+
 	delete m;
 }
 
@@ -153,6 +180,9 @@ int Engine::Update()
 	
 	// update units positions:
 	gameLogic.update(frameDelta);
+
+	// draw user interface:
+	userInterface.Draw(glm::mat4(1));
 
 	// read depth buffer:
 	glReadPixels(

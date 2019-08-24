@@ -14,6 +14,7 @@
 #include <LightSource.h>
 #include <GameLogic.h>
 #include <exception>
+#include <UserInterface.h>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
@@ -32,6 +33,7 @@ public:
 	Unit testUnit;
 	GameLogic gameLogic;
 	GameMap gameMap;
+	UserInterface userInterface;
 
 	std::vector<LightSource*> lightSources;
 	
