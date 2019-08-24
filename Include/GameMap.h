@@ -13,7 +13,8 @@ public:
 	unsigned int width;
 	unsigned int height;
 	std::vector<Vertex> vertices;
-	std::vector<Grass*> grassTufts;
+	std::vector<glm::vec3> grassTranslVects;		//contains all the translation vectors, each one coresponding to a grass tuft
+	Grass grassObject;
 
 	// GAME MAP:
 	MapSquare *** map;

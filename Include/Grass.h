@@ -10,10 +10,13 @@
 class Grass
 {
 public:
-	std::vector<Mesh> grassMesh;
+	int nrInstances;
+	unsigned int instanceVBO;
+	std::vector<Mesh*> grassMeshes;
 	std::vector<glm::mat4> modelMatrices;
 
-	void Init(const glm::vec3& translationVect);
-	void Draw(const glm::mat4& projectionView);
+	void Init(std::vector<glm::vec3> translationVectors);
+	void Draw(const glm::mat4& transform);
+	void Update();
 };
 #endif // GRASS_H

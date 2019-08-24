@@ -307,14 +307,13 @@ GameMap::GameMap(unsigned int width, unsigned int height)
 void GameMap::GenerateGrass()
 {
 
-	for(unsigned int i = 0; i < height/ 3; i++)
-		for (unsigned int j = 0; j < width/ 3; j++)
+	for(unsigned int i = 0; i < height; i++)
+		for (unsigned int j = 0; j < width; j++)
 		{
 			MapSquare* currMapSquare = map[i][j];
 			if (currMapSquare->v0.position.y > 3.0f)		//if this condition is met, that map square contains grass
 			{
-				int cnt = 1;
-
+				int cnt = 10;
 				for (int k = 0; k < cnt; k++)
 				{
 					float r_x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);		//get random number between 0.0 and 1.0
@@ -323,24 +322,19 @@ void GameMap::GenerateGrass()
 					currMapSquare->grassTufts.push_back(glm::vec2(r_x, r_z));
 					
 					glm::vec3 mapSquarePosition = currMapSquare->v2.position;
-					glm::vec3 grassTuftPosition = glm::vec3(r_x, 0.0f, r_z) + mapSquarePosition;
+					glm::vec3 grassTuftPosition = glm::vec3(r_x, 0.5f, r_z) + mapSquarePosition;
 
-					Grass *grassObject = new Grass();
-					grassObject->Init(grassTuftPosition);
-
-					grassTufts.push_back(grassObject);
-
+					grassTranslVects.push_back(grassTuftPosition);
 				}
 			}
 		}
+
+	grassObject.Init(grassTranslVects);
 }
 
 void GameMap::DrawGrass(const glm::mat4& transform)
 {
-	for (unsigned int i = 0; i < grassTufts.size(); i++)
-	{
-		grassTufts[i]->Draw(transform);
-	}
+	grassObject.Draw(transform);
 }
 
 void GameMap::deleteMap() {
@@ -355,11 +349,6 @@ void GameMap::deleteMap() {
 	// delete rows:
 	for (int i = 0; i < height; i++) {
 		delete this->map[i];
-	}
-
-	int grassTuftsCnt = grassTufts.size();
-	for (int i = 0; i < grassTuftsCnt; i++) {
-		delete this->grassTufts[i];
 	}
 
 	delete this->map;

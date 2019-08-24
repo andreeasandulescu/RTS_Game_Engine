@@ -92,7 +92,7 @@ int main()
 
 		// draw WATER and MAP and UNITS:
 		transform = engine.transform;
-	//	engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
+		engine.water.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		engine.gameLogic.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
 			engine.gameLogic.playerUnits[i]->Draw(transform);
