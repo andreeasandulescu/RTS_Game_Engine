@@ -47,6 +47,12 @@ void GameLogic::initGameLogic() {
 	gameMap.UpdateMesh();
 	gameMap.loadHeightMap(data, nrChannels, width, height);
 
+	// load units animations:
+	animationShader = Shader("..\\Resources\\Shaders\\CowboyVertexShader.vs", "..\\Resources\\Shaders\\CowboyFragmentShader.fs");
+	for (int i = 0; i < playerUnits.size(); i++) {
+		playerUnits[i]->newAnimModel = resLoader->LoadAnimatedModel("..\\Resources\\Models\\cowboy.dae", animationShader);
+	}
+
 	// update normals:
 	gameMap.smoothNormals();
 	gameMap.UpdateMesh();
@@ -55,6 +61,9 @@ void GameLogic::initGameLogic() {
 void GameLogic::update(float deltaFrame) {
 	// update all untis:
 	for (int i = 0; i < playerUnits.size(); i++) {
+		MapSquare* currentSquare = gameMap.getMapSquare(playerUnits[i]->position);
+		glm::vec3 squareCenter = currentSquare->getSquareCenter();
+		playerUnits[i]->position.y = squareCenter.y;
 		playerUnits[i]->updateUnit(deltaFrame);
 	}
 }

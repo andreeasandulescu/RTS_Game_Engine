@@ -11,8 +11,11 @@ class GameLogic : public MessageReceiver {
 public:
 	std::vector<Unit *> selectedUnits;
 	std::vector<Unit *> playerUnits;
+	ResourceLoader* resLoader;
 	GameMap gameMap;
+	Shader animationShader;
 
+	
 	// message bus for receiveing/sending messages:
 	MessageBus* messageBus;
 

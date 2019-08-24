@@ -36,6 +36,9 @@ public:
 	// update x and z coordinates of map square
 	void updateCoordinates(unsigned int i, unsigned int j);
 
+	// get center
+	glm::vec3 getSquareCenter();
+
 	MapSquare();
 };
 

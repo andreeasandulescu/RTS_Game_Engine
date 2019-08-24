@@ -58,7 +58,8 @@ int Engine::Init()
 	this->camera = Camera();
 	this->mainMessageBus.addSubscriber(&camera);
 
-	
+	// create resource loader:
+	resLoader = new ResourceLoader();
 
 	// add engine to the main message bus:
 	this->mainMessageBus.addSubscriber(this);
@@ -74,7 +75,9 @@ int Engine::Init()
 	mainMessageBus.addSubscriber(&userInterface);
 
 	// load game logic
+	gameLogic.resLoader = resLoader;
 	gameLogic.initGameLogic();
+	
 
 	// add game logic to the main message bus:
 	gameLogic.messageBus = &mainMessageBus;
@@ -146,6 +149,10 @@ void Engine::receiveMessage(Message* m) {
 
 		if (buttonMsg->action == ButtonAction::exitAction) {
 			exit(0);
+		}
+
+		if (buttonMsg->action == ButtonAction::playAction) {
+			this->userInterface.currentScene = NULL;
 		}
 	}
 

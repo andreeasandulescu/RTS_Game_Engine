@@ -53,13 +53,14 @@ void AnimatedModel::runAnimation()
 
 	generateGlobalAnimationMatrices(rootJoint);
 
-	jointTransforms.resize(joints.size());
+	
 	setFinalJointTransforms();
 
 }
 
 void AnimatedModel::Draw(bool animationActive, glm::mat4 transform)
 {
+	jointTransforms.resize(joints.size());
 	if (this->startTime < 0.0f && !animationActive)
 	{
 		std::cout << "start time set!!!\n";

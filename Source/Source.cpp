@@ -77,9 +77,7 @@ int main()
 	////////////////////////////////////////////////////////////////////////
 	//Animated Model
 	
-	Shader animationShader("..\\Resources\\Shaders\\CowboyVertexShader.vs", "..\\Resources\\Shaders\\CowboyFragmentShader.fs");
-	ResourceLoader resLoader{};
-	AnimatedModel* newAnimModel = resLoader.LoadAnimatedModel("..\\Resources\\Models\\cowboy.dae", animationShader);
+	
 
 	////////////////////////////////////////////////////
 	
@@ -99,6 +97,7 @@ int main()
 		engine.gameLogic.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
 			engine.gameLogic.playerUnits[i]->Draw(transform);
+			
 		}
 
 		
@@ -121,7 +120,7 @@ int main()
 			std::cout << std::endl;
 		}
 
-		newAnimModel->Draw(animationIsActive,  transform * glm::translate(glm::mat4(1.0), glm::vec3(10.f)));
+		
 
 		//update engine time:
 		engine.Update();

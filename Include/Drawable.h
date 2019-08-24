@@ -10,6 +10,7 @@
 #include <Shader.h>
 #include <Mesh.h>
 #include <LightSource.h>
+#include <ResourceLoader.h>
 
 #ifndef DRAWABLE_H
 #define DRAWABLE_H

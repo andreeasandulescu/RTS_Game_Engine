@@ -12,7 +12,7 @@ void ButtonUI::UpdateMesh() {
 	vertices[2].position = glm::vec3(xPos + width, yPos + height, 0.0f);
 	vertices[3].position = glm::vec3(xPos, yPos + height, 0.0f);
 	
-	glm::vec4 buttonColor = glm::vec4(0.2f, 0.0f, 0.5f, 0.2f);
+	glm::vec4 buttonColor = glm::vec4(0.25f, 0.87f, 0.81f, 0.4f);
 
 	vertices[0].auxVars = buttonColor;
 	vertices[1].auxVars = buttonColor;
