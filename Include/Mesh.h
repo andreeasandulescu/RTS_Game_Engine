@@ -37,35 +37,60 @@ class Mesh
 {
 public:
 	//beware, the EBO is only used in methods containg the word "EBO" (e.g.  InitMeshEBO() )
-	unsigned int VAO, VBO, EBO;
+	unsigned int VAO, VBO, EBO, instanceVBO;
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
+	std::vector<glm::vec3> translationVects;
 	std::vector<Texture> textures;
 	Shader shader;
 	
+	//init functions
+	//------------------
+	
 	void InitMesh(const std::vector<Vertex>& vertices, const std::vector<Texture>& textures, const Shader& shader);
 	void InitMesh(const std::vector<Vertex>& vertices, const Shader& shader);
-	
+
 	//for the EBO implementation
 	void InitMeshEBO(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const std::vector<Texture>& textures, const Shader& shader);
 	void InitMeshEBO(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, const Shader& shader);
 
-	
-	Mesh& operator=(const Mesh& m);
+	//for instanced rendering, does not use EBO
+	void InitMeshInstanced(const std::vector<Vertex>& vertices, std::vector<glm::vec3> &translationVects, const std::vector<Texture>& textures, const Shader& shader);
+	void InitMeshInstanced(const std::vector<Vertex>& vertices, std::vector<glm::vec3> &translationVects, const Shader& shader);
+
+
+	//create functions
+	//---------------------
+	void createNewMesh();
+	void createNewMeshEBO();
+	void createNewMeshInstanced();
+
+	//update functions
+	//----------------------
 	void UpdateMesh();
+	void UpdateMeshEBO();
+	void UpdateMeshInstanced();
+
+	//draw functions
+	//-----------------------
 	void Draw(GLenum mode);
 	void Draw(const glm::mat4& transform, GLenum mode);
-	void Cleanup();
-
+	
 	//for the EBO implementation
-	void UpdateMeshEBO();
 	void DrawEBO(GLenum mode);
 	void DrawEBO(const glm::mat4& transform, GLenum mode);
+
+	void DrawInstanced(const glm::mat4& transform, GLenum mode);
+
+	//cleanup functions
+	//-------------------------
+	void Cleanup();
 	void CleanupEBO();
 
-	void createNewMesh();
+	//utilities functions
+	//-------------------------------
+	Mesh& operator=(const Mesh& m);
+	void copyFromVBO();
 
-	//for the EBO implementation
-	void createNewMeshEBO();
 };
 #endif	// MESH_H

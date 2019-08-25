@@ -11,7 +11,6 @@ void Grass::Init(std::vector<glm::vec3> translationVectors)
 		glm::vec3(0.5f, -0.5f, 0.0f),
 		glm::vec3(-0.5f, 0.5f, 0.0f),
 		glm::vec3(-0.5f, -0.5f, 0.0f),
-
 	};
 
 	//y is flipped because of stb image loader
@@ -46,7 +45,7 @@ void Grass::Init(std::vector<glm::vec3> translationVectors)
 		}
 
 		Mesh *grassPolygon = new Mesh();
-		grassPolygon->InitMesh(grassPolygonVertices, textVect, shader);
+		grassPolygon->InitMeshInstanced(grassPolygonVertices, translationVectors, textVect, shader);
 		grassMeshes.push_back(grassPolygon);
 	}
 
@@ -67,59 +66,17 @@ void Grass::Init(std::vector<glm::vec3> translationVectors)
 		}
 
 		Mesh *grassPolygon = new Mesh();
-		grassPolygon->InitMesh(grassPolygonVerticesRotated, textVect, shader);
+		grassPolygon->InitMeshInstanced(grassPolygonVertices, translationVectors, textVect, shader);
 		grassMeshes.push_back(grassPolygon);
 	}
-
-	//create VBO for translation vectors (instanced array)
-	unsigned int translationVectorsCnt = translationVectors.size();
-	nrInstances = translationVectorsCnt;
-		
-	glGenBuffers(1, &this->instanceVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, this->instanceVBO);
-	glBufferData(GL_ARRAY_BUFFER, translationVectorsCnt * sizeof(glm::vec3), &translationVectors[0], GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	Update();
 }
 
 
 
 void Grass::Draw(const glm::mat4& transform)
 {
-	glDisable(GL_CULL_FACE);
 	/*
-	
-
-	grassMeshes[0]->shader.use();
-
-
-	for (int i = 0; i < 3; i++)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture.id);
-		glUniform1i(glGetUniformLocation(grassMeshes[0]->shader.id, "ourTexture"), 0);
-
-		glBindVertexArray(grassMeshes[i]->VAO);
-		
-		glDrawArrays(GL_TRIANGLES, 0, grassMeshes[i]->vertices.size());
-		glBindVertexArray(0);
-		glActiveTexture(GL_TEXTURE0);
-	}
-
-	
-
-	// always good practice to set everything back to defaults once configured.
-
-	//////////////
-	for (int i = 0; i < 3; i++)
-	{
-		glUniformMatrix4fv(glGetUniformLocation(grassMeshes[0].shader.id, "modelM"), 1, GL_FALSE, glm::value_ptr(modelMatrices[i]));
-		glUniformMatrix4fv(glGetUniformLocation(grassMeshes[0].shader.id, "projectionViewM"), 1, GL_FALSE, glm::value_ptr(projectionView));
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		grassMeshes[i].Draw(GL_TRIANGLES);
-	}
-	*/
+	glDisable(GL_CULL_FACE);
 	Texture texture = grassMeshes[0]->textures[0];
 
 	grassMeshes[0]->shader.use();
@@ -138,6 +95,9 @@ void Grass::Draw(const glm::mat4& transform)
 		glBindVertexArray(0);
 		glActiveTexture(GL_TEXTURE0);
 	}
+	*/
+	for (int i = 0; i < 3; i++)
+		grassMeshes[i]->DrawInstanced(transform, GL_TRIANGLES);
 }
 
 void Grass::Update()
