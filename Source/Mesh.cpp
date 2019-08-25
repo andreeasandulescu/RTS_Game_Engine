@@ -61,8 +61,8 @@ void Texture::LoadTexture(const GLchar* texturePath)
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 
@@ -149,7 +149,7 @@ Mesh& Mesh::operator=(const Mesh& m)
 void Mesh::copyFromVBO()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
 	// vertex positions
 	glEnableVertexAttribArray(0);
@@ -166,6 +166,7 @@ void Mesh::copyFromVBO()
 	// int values, glVertexAttribIPointer needed instead of glVertexAttribPointer
 	glEnableVertexAttribArray(4);
 	glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, sizeof(Vertex), (void*)offsetof(Vertex, jointIds));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Mesh::createNewMesh()
@@ -217,7 +218,7 @@ void Mesh::UpdateMeshInstanced()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
 	// vertex positions
 	glEnableVertexAttribArray(0);
@@ -347,6 +348,7 @@ void Mesh::DrawEBO(const glm::mat4& transform, GLenum mode)
 void Mesh::DrawInstanced(const glm::mat4& transform, GLenum mode)
 {
 	glDisable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
 
 	char textureCName[100];
 

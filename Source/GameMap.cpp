@@ -313,7 +313,7 @@ void GameMap::GenerateGrass()
 			MapSquare* currMapSquare = map[i][j];
 			if (currMapSquare->v0.position.y > 3.0f)		//if this condition is met, that map square contains grass
 			{
-				int cnt = 10;
+				int cnt = 17;
 				for (int k = 0; k < cnt; k++)
 				{
 					float r_x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);		//get random number between 0.0 and 1.0

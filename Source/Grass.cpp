@@ -31,13 +31,14 @@ void Grass::Init(std::vector<glm::vec3> translationVectors)
 	grassTexture.LoadTexture("..\\Resources\\Textures\\grass.png");
 	std::vector<Texture> textVect{ grassTexture };
 
-	std::vector<Vertex> grassPolygonVertices;
 
 
 	float rotationAngles[3] = { 1.047f, 2.094f };
 
 	// generate mesh for the square containing the grass texture without any rotations
 	{
+		std::vector<Vertex> grassPolygonVertices;
+
 		for (int i = 0; i < 6; i++)
 		{
 			Vertex vert{ vertices[i], glm::vec3(0.0f), texCoords[i],  glm::vec4(0.0f) };
@@ -66,68 +67,14 @@ void Grass::Init(std::vector<glm::vec3> translationVectors)
 		}
 
 		Mesh *grassPolygon = new Mesh();
-		grassPolygon->InitMeshInstanced(grassPolygonVertices, translationVectors, textVect, shader);
+		grassPolygon->InitMeshInstanced(grassPolygonVerticesRotated, translationVectors, textVect, shader);
 		grassMeshes.push_back(grassPolygon);
 	}
 }
 
 
-
 void Grass::Draw(const glm::mat4& transform)
 {
-	/*
-	glDisable(GL_CULL_FACE);
-	Texture texture = grassMeshes[0]->textures[0];
-
-	grassMeshes[0]->shader.use();
-
-
-	for (int i = 0; i < 3; i++)
-	{
-		glBindTexture(GL_TEXTURE_2D, texture.id);
-		glUniformMatrix4fv(glGetUniformLocation(grassMeshes[0]->shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
-
-		
-		glBindVertexArray(grassMeshes[i]->VAO);
-		
-		glDrawArraysInstanced(GL_TRIANGLES, 0, grassMeshes[i]->vertices.size(), nrInstances);
-
-		glBindVertexArray(0);
-		glActiveTexture(GL_TEXTURE0);
-	}
-	*/
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < grassMeshes.size(); i++)
 		grassMeshes[i]->DrawInstanced(transform, GL_TRIANGLES);
-}
-
-void Grass::Update()
-{
-	for (int i = 0; i < 3; i++)
-	{
-		Mesh *polygonMesh = grassMeshes[i];
-		glBindVertexArray(polygonMesh->VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, polygonMesh->VBO);
-		glBufferData(GL_ARRAY_BUFFER, polygonMesh->vertices.size() * sizeof(Vertex), &polygonMesh->vertices[0], GL_STREAM_DRAW);
-
-		// vertex positions
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
-		// vertex normals
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-		// vertex texture coords
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
-
-		//instanced data
-		glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glVertexAttribDivisor(3, 1); // tell OpenGL this is an instanced vertex attribute.
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-	}
 }
