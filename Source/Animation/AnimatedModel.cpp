@@ -32,7 +32,7 @@ void AnimatedModel::setFinalJointTransforms()
 	{
 		glm::mat4 invBindPoseM = joints[i]->invBindPoseM;
 		glm::mat4 globalAnimationM = joints[i]->globalAnimationM;
-		glm::mat4 finalM = globalInverseTransform * globalAnimationM * glm::transpose(invBindPoseM);
+		glm::mat4 finalM = globalInverseTransform * globalAnimationM *  glm::transpose(invBindPoseM);
 		
 		jointTransforms[i] = finalM;
 	}
@@ -51,7 +51,7 @@ void AnimatedModel::runAnimation()
 
 	generateGlobalAnimationMatrices(rootJoint);
 
-
+	jointTransforms.resize(joints.size());
 	setFinalJointTransforms();
 
 }

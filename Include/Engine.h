@@ -14,6 +14,8 @@
 #include <LightSource.h>
 #include <GameLogic.h>
 #include <exception>
+#include <UserInterface.h>
+#include <ResourceLoader.h>
 
 #ifndef _ENGINE_H_
 #define _ENGINE_H_
@@ -29,9 +31,10 @@ public:
 	InputManager inputManager;
 	Water water;
 	GUI gui;
-	Unit testUnit;
 	GameLogic gameLogic;
-	GameMap gameMap;
+	UserInterface userInterface;
+	ResourceLoader* resLoader;
+	std::string iniFileName;
 
 	std::vector<LightSource*> lightSources;
 	

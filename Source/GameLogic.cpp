@@ -36,16 +36,25 @@ void GameLogic::receiveMessage(Message* m) {
 	delete m;
 }
 
-void GameLogic::initGameLogic() {
+void GameLogic::initGameLogic(std::string mapName) {
 	int width, height;
 	int nrChannels;
+	char mapPath[1000];
 
+	sprintf_s(mapPath, 1000, "..\\Resources\\Textures\\%s.jpg", mapName.c_str());
 	// load game map:
-	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
+
+	unsigned char* data = stbi_load(mapPath, &width, &height, &nrChannels, 0);
 	gameMap = GameMap(width, height);
 	gameMap.InitEven(0.0f);
 	gameMap.UpdateMesh();
 	gameMap.loadHeightMap(data, nrChannels, width, height);
+
+	// load units animations:
+	animationShader = Shader("..\\Resources\\Shaders\\CowboyVertexShader.vs", "..\\Resources\\Shaders\\CowboyFragmentShader.fs");
+	for (int i = 0; i < playerUnits.size(); i++) {
+		playerUnits[i]->newAnimModel = resLoader->LoadAnimatedModel("..\\Resources\\Models\\cowboy.dae", animationShader);
+	}
 
 	// update normals:
 	gameMap.smoothNormals();
@@ -55,6 +64,9 @@ void GameLogic::initGameLogic() {
 void GameLogic::update(float deltaFrame) {
 	// update all untis:
 	for (int i = 0; i < playerUnits.size(); i++) {
+		MapSquare* currentSquare = gameMap.getMapSquare(playerUnits[i]->position);
+		glm::vec3 squareCenter = currentSquare->getSquareCenter();
+		playerUnits[i]->position.y = squareCenter.y;
 		playerUnits[i]->updateUnit(deltaFrame);
 	}
 }

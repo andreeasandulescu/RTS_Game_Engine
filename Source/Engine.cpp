@@ -4,18 +4,23 @@ int Engine::Init()
 {
 	int width, height, nrChannels;
 
+	width = 1360;
+	height = 768;
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "Coolest RTS Game Engine", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(width, height, "Coolest RTS Game Engine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
+
+	
 
 	// cursor does not leave window:
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -41,6 +46,10 @@ int Engine::Init()
 		return -1;
 	}
 	
+	// black screen:
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glfwSwapBuffers(window);
+
 	glEnable(GL_DEPTH_TEST);
 	// create input manager:
 	this->inputManager = InputManager(window, &mainMessageBus);
@@ -49,6 +58,9 @@ int Engine::Init()
 	this->camera = Camera();
 	this->mainMessageBus.addSubscriber(&camera);
 
+	// create resource loader:
+	resLoader = new ResourceLoader();
+
 	// add engine to the main message bus:
 	this->mainMessageBus.addSubscriber(this);
 
@@ -56,8 +68,24 @@ int Engine::Init()
 	gui = GUI::GUI();
 	gui.initGUI();
 
+	// create user interface:
+	userInterface.initUserInterface(window, &gui, &mainMessageBus);
+	userInterface.UpdateMesh();
+	// add user interface to message receiver bus:
+	mainMessageBus.addSubscriber(&userInterface);
+
+	// load game config file:
+	FILE* iniFile;
+	fopen_s(&iniFile, iniFileName.c_str(), "r");
+	char mapName[5];
+	fread_s(mapName, 100, sizeof(char), 4, iniFile);
+	mapName[4] = '\0';
+	fclose(iniFile);
+
 	// load game logic
-	gameLogic.initGameLogic();
+	gameLogic.resLoader = resLoader;
+	gameLogic.initGameLogic(std::string(mapName));
+	
 
 	// add game logic to the main message bus:
 	gameLogic.messageBus = &mainMessageBus;
@@ -69,10 +97,8 @@ int Engine::Init()
 	// start input manager thread:
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
-	
-	
 	// load water map:
-	water.initWater(gameLogic.gameMap.width, gameLogic.gameMap.height, 0.7f, 2);
+	water.initWater(gameLogic.gameMap.width * 3, gameLogic.gameMap.height * 3, 0.7f, 2);
 	water.UpdateMesh();
 
 	// load lighting:
@@ -122,6 +148,41 @@ void Engine::receiveMessage(Message* m) {
 			}
 		}
 	}
+
+	if (m->messageType == MessageType::buttonpress) {
+		ButtonPressed* buttonMsg = (ButtonPressed*)m;
+		printf("Button pressed: %s\n", buttonMsg->messageString.c_str());
+
+		if (buttonMsg->action == ButtonAction::exitAction) {
+			exit(0);
+		}
+
+		if (buttonMsg->action == ButtonAction::playAction) {
+			this->userInterface.currentScene = NULL;
+		}
+
+		if (buttonMsg->action == ButtonAction::loadMap1) {
+			FILE* iniFile;
+			fopen_s(&iniFile, iniFileName.c_str(), "w");
+			fprintf_s(iniFile, "map1");
+			fclose(iniFile);
+		}
+
+		if (buttonMsg->action == ButtonAction::loadMap2) {
+			FILE* iniFile;
+			fopen_s(&iniFile, iniFileName.c_str(), "w");
+			fprintf_s(iniFile, "map2");
+			fclose(iniFile);
+		}
+
+		if (buttonMsg->action == ButtonAction::loadMap3) {
+			FILE* iniFile;
+			fopen_s(&iniFile, iniFileName.c_str(), "w");
+			fprintf_s(iniFile, "map3");
+			fclose(iniFile);
+		}
+	}
+
 	delete m;
 }
 
@@ -153,6 +214,9 @@ int Engine::Update()
 	
 	// update units positions:
 	gameLogic.update(frameDelta);
+
+	// draw user interface:
+	userInterface.Draw(glm::mat4(1));
 
 	// read depth buffer:
 	glReadPixels(
@@ -186,4 +250,5 @@ Engine::Engine() {
 	this->transform = glm::mat4(1);
 	this->windowWidth = 800;
 	this->windowHeight = 600;
+	this->iniFileName = std::string("config.ini");
 }

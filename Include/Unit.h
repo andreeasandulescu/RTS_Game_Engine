@@ -15,7 +15,8 @@ public:
 	std::string name;
 	glm::vec3 position;
 	glm::vec3 direction;
-	
+	AnimatedModel* newAnimModel;
+
 	// current unit movement speed
 	float speed;
 

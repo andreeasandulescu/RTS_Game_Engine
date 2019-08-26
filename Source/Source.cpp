@@ -12,6 +12,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <SceneUI.h>
+
 bool animationIsActive = true;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -55,15 +57,17 @@ int main()
 	glEnable(GL_BLEND);
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEPTH_TEST);
-	
+
 	glm::mat4 transform;
 
 	Renderer renderer{};
 	renderer.Init();
 
-	//glDebugMessageCallback(MessageCallback, NULL);
+	glDebugMessageCallback(MessageCallback, NULL);
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 1360, 768);
+	
+	
 
 	//TODO: CHECK IF THIS NEEDS TO BE IN ENGINE::INIT()
 	//register the callback function (called on every window resize)
@@ -74,9 +78,7 @@ int main()
 	////////////////////////////////////////////////////////////////////////
 	//Animated Model
 	
-	Shader animationShader("..\\Resources\\Shaders\\CowboyVertexShader.vs", "..\\Resources\\Shaders\\CowboyFragmentShader.fs");
-	ResourceLoader resLoader{};
-	AnimatedModel* newAnimModel = resLoader.LoadAnimatedModel("..\\Resources\\Models\\cowboy.dae", animationShader);
+	
 
 	////////////////////////////////////////////////////
 	
@@ -96,7 +98,10 @@ int main()
 		engine.gameLogic.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
 			engine.gameLogic.playerUnits[i]->Draw(transform);
+			
 		}
+
+		
 
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
@@ -119,18 +124,12 @@ int main()
 			std::cout << std::endl;
 		}
 
-		newAnimModel->Draw(animationIsActive,  transform * glm::translate(glm::mat4(1.0), glm::vec3(10.f)));
-
-
-		//engine.gameMap.UpdateMesh();
-		//engine.gameMap.Draw(transform);
-
-		// check and call events and swap the buffers
+		
 
 		//update engine time:
 		engine.Update();
 
-
+		// check and call events and swap the buffers
 		glfwSwapBuffers(engine.window);
 		glfwPollEvents();
 	}

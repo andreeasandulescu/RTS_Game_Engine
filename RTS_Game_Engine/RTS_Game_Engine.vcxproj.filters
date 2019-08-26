@@ -7,6 +7,12 @@
     <ClCompile Include="..\Source\Camera.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Cursor.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GameLogic.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Engine.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -14,9 +20,6 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\glad.c">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\GUI.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\InputManager.cpp">
@@ -43,6 +46,9 @@
     <ClCompile Include="..\Source\Renderer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\ResourceLoader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Shader.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -52,29 +58,35 @@
     <ClCompile Include="..\Source\stb_image.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\water.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\ResourceLoader.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="..\Source\Unit.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Cursor.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\GameLogic.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\UnitCommand.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\water.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\GUI.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\UserInterface.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\SceneUI.cpp">
+      <Filter>Source\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Include\ButtonUI.cpp">
+      <Filter>Source\GUI</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Grass.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\Animation\AnimatedModel.h">
+      <Filter>Include</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Camera.h">
       <Filter>Include</Filter>
     </ClInclude>
@@ -90,13 +102,16 @@
     <ClInclude Include="..\Include\ft2build.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\GUI.h">
+    <ClInclude Include="..\Include\GameLogic.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\GameMap.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\InputManager.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Animation\Joint.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\LightSource.h">
@@ -120,32 +135,35 @@
     <ClInclude Include="..\Include\Renderer.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\ResourceLoader.h">
+      <Filter>Include</Filter>
+    </ClInclude>
     <ClInclude Include="..\Include\Shader.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\stb_image.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\water.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Animation\Joint.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\Animation\AnimatedModel.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\ResourceLoader.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Unit.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\GameLogic.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\UnitCommand.h">
       <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\water.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GUI.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\UserInterface.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\SceneUI.h">
+      <Filter>Include\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\ButtonUI.h">
+      <Filter>Include\GUI</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Grass.h">
       <Filter>Include</Filter>
@@ -153,10 +171,16 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Include">
-      <UniqueIdentifier>{7b9f9360-431a-44c4-85b6-39d18bc2d783}</UniqueIdentifier>
+      <UniqueIdentifier>{2b47d499-27c9-431c-bba7-814137c00d4d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source">
-      <UniqueIdentifier>{58488643-5193-4931-88cc-5efcf48195af}</UniqueIdentifier>
+      <UniqueIdentifier>{2ab79fe3-9fbf-4714-af9e-ed0ca8499651}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GUI">
+      <UniqueIdentifier>{4b3c6a4b-a5ae-46d1-b982-c40b8e2344f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\GUI">
+      <UniqueIdentifier>{da9788bd-ecbe-46d2-b3a5-4c2281a2d052}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

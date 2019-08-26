@@ -82,3 +82,7 @@ MapSquare::MapSquare() {
 	this->v3.auxVars = glm::vec4(1.0f);
 }
 
+glm::vec3 MapSquare::getSquareCenter() {
+	return (v0.position + v1.position + v2.position + v3.position) / 4.0f;
+}
+

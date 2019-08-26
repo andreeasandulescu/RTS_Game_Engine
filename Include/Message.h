@@ -8,7 +8,8 @@
 #ifndef _MESSAGE_H_
 #define _MESSAGE_H_
 
-enum MessageType { unkown, cursor, keyspressed, worldclick };
+enum MessageType { unkown, cursor, keyspressed, worldclick, buttonpress };
+enum ButtonAction { unkownAction, playAction, exitAction, loadMap1, loadMap2, loadMap3 };
 
 class Message {
 private:
@@ -67,6 +68,18 @@ public:
 	// copy constructor
 	WorldClick();
 	WorldClick(const WorldClick& rhs);
+};
+
+class ButtonPressed : public Message {
+public:
+	virtual ButtonPressed* clone();
+
+	void* nextScene;
+	ButtonAction action;
+
+	// copy constructor
+	ButtonPressed();
+	ButtonPressed(const ButtonPressed& rhs);
 };
 
 #endif // !_MESSAGE_H_

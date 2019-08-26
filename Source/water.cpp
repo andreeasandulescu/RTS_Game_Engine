@@ -87,6 +87,10 @@ void Water::Draw(const glm::mat4& transform) {
 void Water::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
 	char loc_name[100];
 
+	// translate water to origin:
+	glm::vec3 translation = glm::vec3(width / -3.0f, 0.0f, height / -3.0f);
+	glm::mat4 translationM = glm::translate(glm::mat4(1), translation);
+
 	mesh.shader.use();
 
 	// send time:
@@ -117,5 +121,5 @@ void Water::Draw(const glm::mat4& transform, const std::vector<LightSource*>& li
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
-	mesh.DrawEBO(transform, GL_TRIANGLES);
+	mesh.DrawEBO(transform * translationM, GL_TRIANGLES);
 }
