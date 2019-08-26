@@ -23,7 +23,7 @@ public:
 	void update(float deltaFrame);
 
 	virtual void receiveMessage(Message* m);
-	void initGameLogic();
+	void initGameLogic(std::string mapName);
 
 	GameLogic();
 };

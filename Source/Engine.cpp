@@ -74,9 +74,17 @@ int Engine::Init()
 	// add user interface to message receiver bus:
 	mainMessageBus.addSubscriber(&userInterface);
 
+	// load game config file:
+	FILE* iniFile;
+	fopen_s(&iniFile, iniFileName.c_str(), "r");
+	char mapName[5];
+	fread_s(mapName, 100, sizeof(char), 4, iniFile);
+	mapName[4] = '\0';
+	fclose(iniFile);
+
 	// load game logic
 	gameLogic.resLoader = resLoader;
-	gameLogic.initGameLogic();
+	gameLogic.initGameLogic(std::string(mapName));
 	
 
 	// add game logic to the main message bus:
@@ -89,10 +97,8 @@ int Engine::Init()
 	// start input manager thread:
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
-	
-	
 	// load water map:
-	water.initWater(gameLogic.gameMap.width, gameLogic.gameMap.height, 0.7f, 2);
+	water.initWater(gameLogic.gameMap.width * 3, gameLogic.gameMap.height * 3, 0.7f, 2);
 	water.UpdateMesh();
 
 	// load lighting:
@@ -153,6 +159,27 @@ void Engine::receiveMessage(Message* m) {
 
 		if (buttonMsg->action == ButtonAction::playAction) {
 			this->userInterface.currentScene = NULL;
+		}
+
+		if (buttonMsg->action == ButtonAction::loadMap1) {
+			FILE* iniFile;
+			fopen_s(&iniFile, iniFileName.c_str(), "w");
+			fprintf_s(iniFile, "map1");
+			fclose(iniFile);
+		}
+
+		if (buttonMsg->action == ButtonAction::loadMap2) {
+			FILE* iniFile;
+			fopen_s(&iniFile, iniFileName.c_str(), "w");
+			fprintf_s(iniFile, "map2");
+			fclose(iniFile);
+		}
+
+		if (buttonMsg->action == ButtonAction::loadMap3) {
+			FILE* iniFile;
+			fopen_s(&iniFile, iniFileName.c_str(), "w");
+			fprintf_s(iniFile, "map3");
+			fclose(iniFile);
 		}
 	}
 
@@ -223,4 +250,5 @@ Engine::Engine() {
 	this->transform = glm::mat4(1);
 	this->windowWidth = 800;
 	this->windowHeight = 600;
+	this->iniFileName = std::string("config.ini");
 }

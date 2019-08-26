@@ -39,9 +39,10 @@ public:
 	void setText(std::string text, glm::vec3 textColor, float textScale);
 
 	// message sent on button click:
-	Message* m;
+	ButtonPressed* m;
 	bool buttonClicked(Cursor c);
 	ButtonAction action;
+	void* nextScene;
 
 	void UpdateMesh();
 	void Draw(const glm::mat4& transform);

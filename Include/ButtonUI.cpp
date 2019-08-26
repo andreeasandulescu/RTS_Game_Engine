@@ -70,6 +70,7 @@ ButtonUI::ButtonUI(GLFWwindow* window, ButtonAction action, unsigned int width, 
 
 	xTextPos = 0;
 	yTextPos = 0;
+	nextScene = NULL;
 }
 
 bool ButtonUI::buttonClicked(Cursor c) {

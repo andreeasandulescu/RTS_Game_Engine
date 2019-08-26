@@ -36,12 +36,15 @@ void GameLogic::receiveMessage(Message* m) {
 	delete m;
 }
 
-void GameLogic::initGameLogic() {
+void GameLogic::initGameLogic(std::string mapName) {
 	int width, height;
 	int nrChannels;
+	char mapPath[1000];
 
+	sprintf_s(mapPath, 1000, "..\\Resources\\Textures\\%s.jpg", mapName.c_str());
 	// load game map:
-	unsigned char* data = stbi_load("..\\Resources\\Textures\\terrain_height.jpg", &width, &height, &nrChannels, 0);
+
+	unsigned char* data = stbi_load(mapPath, &width, &height, &nrChannels, 0);
 	gameMap = GameMap(width, height);
 	gameMap.InitEven(0.0f);
 	gameMap.UpdateMesh();

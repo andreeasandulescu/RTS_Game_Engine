@@ -34,6 +34,7 @@ public:
 	GameLogic gameLogic;
 	UserInterface userInterface;
 	ResourceLoader* resLoader;
+	std::string iniFileName;
 
 	std::vector<LightSource*> lightSources;
 	
