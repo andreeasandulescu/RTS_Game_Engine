@@ -25,10 +25,9 @@ void Grass::Init(std::vector<glm::vec3> translationVectors)
 	};
 
 
-	Shader shader("..\\Resources\\Shaders\\Grass\\GrassVertexShader.vs", "..\\Resources\\Shaders\\Grass\\GrassFragmentShader.fs");
+	Shader shader = this->resourceLoader->getShader(std::string("grass"));
 
-	Texture grassTexture{};
-	grassTexture.LoadTexture("..\\Resources\\Textures\\grass.png");
+	Texture grassTexture = resourceLoader->getTexture("grass");
 	std::vector<Texture> textVect{ grassTexture };
 
 
@@ -77,4 +76,12 @@ void Grass::Draw(const glm::mat4& transform)
 {
 	for (int i = 0; i < grassMeshes.size(); i++)
 		grassMeshes[i]->DrawInstanced(transform, GL_TRIANGLES);
+}
+
+void Grass::UpdateMesh(ResourceLoader* resourceLoader) {
+	this->resourceLoader = resourceLoader;
+}
+
+void Grass::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
+
 }

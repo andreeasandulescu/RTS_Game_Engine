@@ -44,7 +44,7 @@ public:
 	ButtonAction action;
 	void* nextScene;
 
-	void UpdateMesh();
+	void UpdateMesh(ResourceLoader* resourceLoader);
 	void Draw(const glm::mat4& transform);
 	void Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos);
 	

@@ -31,9 +31,10 @@ void SceneUI::addButtonAlligned(ButtonAction action, std::string text, glm::vec3
 	buttons.push_back(buttonUI);
 }
 
-void SceneUI::UpdateMesh() {
+void SceneUI::UpdateMesh(ResourceLoader* resourceLoader) {
+	this->resourceLoader = resourceLoader;
 	for (int i = 0; i < buttons.size(); i++) {
-		buttons[i]->UpdateMesh();
+		buttons[i]->UpdateMesh(resourceLoader);
 	}
 }
 

@@ -49,12 +49,11 @@ i,j    | -           | i,j+1
 	
 }
 
-void Water::UpdateMesh() {
-	Shader shader(
-		"..\\Resources\\Shaders\\WaterVertexShader.vs",
-		"..\\Resources\\Shaders\\WaterGeometryShader.gs",
-		"..\\Resources\\Shaders\\WaterFragmentShader.fs"
-	);
+void Water::UpdateMesh(ResourceLoader* resourceLoader) {
+	this->resourceLoader = resourceLoader;
+
+	Shader shader = resourceLoader->getShader(std::string("water"));
+
 	std::vector<Vertex> EBOvertices;
 	
 	for (int i = 0; i < height; i++) {

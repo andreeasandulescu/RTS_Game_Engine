@@ -19,7 +19,7 @@ public:
 	Message* handleClickEvent(Cursor c);
 
 	// update at least once before drawing
-	void UpdateMesh();
+	void UpdateMesh(ResourceLoader* resourceLoader);
 	void Draw(const glm::mat4& transform);
 	void Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos);
 

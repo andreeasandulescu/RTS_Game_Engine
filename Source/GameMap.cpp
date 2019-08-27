@@ -21,9 +21,12 @@ void GameMap::InitEven(float altitude) {
 }
 
 
-void GameMap::UpdateMesh()
+void GameMap::UpdateMesh(ResourceLoader* resourceLoader)
 {
-	Shader shader("..\\Resources\\Shaders\\TerrainVertexShader.vs", "..\\Resources\\Shaders\\TerrainFragmentShader.fs");
+	this->resourceLoader = resourceLoader;
+	grassObject.resourceLoader = resourceLoader;
+
+	Shader shader = resourceLoader->getShader(std::string("terrain"));
 	unsigned int index = 0;
 
 	vertices.resize(height * width * 6);
@@ -58,25 +61,21 @@ void GameMap::UpdateMesh()
 	// load textures:
 
 	// water texture
-	Texture waterBottom{};
-	waterBottom.LoadTexture("..\\Resources\\Textures\\Terrain\\under_water.jpg");
+	Texture waterBottom = resourceLoader->getTexture(std::string("under_water"));
 	mesh.textures.push_back(waterBottom);
 	
 	// sand texture
-	Texture sand{};
-	sand.LoadTexture("..\\Resources\\Textures\\Terrain\\sand.jpg");
+	Texture sand = resourceLoader->getTexture(std::string("sand"));
 	mesh.textures.push_back(sand);
 	
 	// grass texture
-	Texture grass{};
-	grass.LoadTexture("..\\Resources\\Textures\\Terrain\\grass.jpg");
+	Texture grass = resourceLoader->getTexture(std::string("earth"));
 	mesh.textures.push_back(grass);
-
-	// rock texture
 
 	mesh.UpdateMesh();
 	
-	
+	// update skybox:
+	skyBox.UpdateMesh(resourceLoader);
 	
 }
 
@@ -123,13 +122,15 @@ void GameMap::Draw(const glm::mat4& transform)
 		glUniform1f(loc, time);
 	}
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glLineWidth(1.0);
+	// draw terrain surface
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	mesh.Draw(GL_TRIANGLES);
 
+	// draw terrain vegetation:
 	DrawGrass(transform);
+
+	
 }
 
 void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
@@ -171,12 +172,16 @@ void GameMap::Draw(const glm::mat4& transform, const std::vector<LightSource*>& 
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	// glLineWidth(1.0);
 
+	// draw terrain surface
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	mesh.Draw(GL_TRIANGLES);
 
+	// draw vegetation
 	DrawGrass(transform);
 
+	// draw sky
+	skyBox.Draw(transform);
 }
 
 MapSquare* GameMap::getMapSquare(glm::vec3 position) {
@@ -313,18 +318,26 @@ void GameMap::GenerateGrass()
 			MapSquare* currMapSquare = map[i][j];
 			if (currMapSquare->v0.position.y > 3.0f)		//if this condition is met, that map square contains grass
 			{
-				int cnt = 17;
-				for (int k = 0; k < cnt; k++)
+				int cnt = 5;
+
+				// check if square map is steep:
+				if (
+					glm::distance(currMapSquare->v1.normal, glm::vec3(0.0f, 1.0f, 0.0f)) < 0.3 &&
+					glm::distance(currMapSquare->v3.normal, glm::vec3(0.0f, 1.0f, 0.0f)) < 0.3)
 				{
-					float r_x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);		//get random number between 0.0 and 1.0
-					float r_z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 
-					currMapSquare->grassTufts.push_back(glm::vec2(r_x, r_z));
-					
-					glm::vec3 mapSquarePosition = currMapSquare->v2.position;
-					glm::vec3 grassTuftPosition = glm::vec3(r_x, 0.5f, r_z) + mapSquarePosition;
+					for (int k = 0; k < cnt; k++)
+					{
+						float r_x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);		//get random number between 0.0 and 1.0
+						float r_z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 
-					grassTranslVects.push_back(grassTuftPosition);
+						currMapSquare->grassTufts.push_back(glm::vec2(r_x, r_z));
+
+						glm::vec3 mapSquarePosition = currMapSquare->v2.position;
+						glm::vec3 grassTuftPosition = glm::vec3(r_x, 0.5f, r_z) + mapSquarePosition;
+
+						grassTranslVects.push_back(grassTuftPosition);
+					}
 				}
 			}
 		}

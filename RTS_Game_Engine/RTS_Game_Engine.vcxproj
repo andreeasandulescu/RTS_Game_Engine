@@ -164,6 +164,7 @@
     <ClCompile Include="..\Source\ResourceLoader.cpp" />
     <ClCompile Include="..\Source\SceneUI.cpp" />
     <ClCompile Include="..\Source\Shader.cpp" />
+    <ClCompile Include="..\Source\SkyBox.cpp" />
     <ClCompile Include="..\Source\Source.cpp" />
     <ClCompile Include="..\Source\stb_image.cpp" />
     <ClCompile Include="..\Source\Unit.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\Include\ResourceLoader.h" />
     <ClInclude Include="..\Include\SceneUI.h" />
     <ClInclude Include="..\Include\Shader.h" />
+    <ClInclude Include="..\Include\SkyBox.h" />
     <ClInclude Include="..\Include\stb_image.h" />
     <ClInclude Include="..\Include\Unit.h" />
     <ClInclude Include="..\Include\UnitCommand.h" />

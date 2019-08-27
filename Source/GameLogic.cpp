@@ -36,7 +36,7 @@ void GameLogic::receiveMessage(Message* m) {
 	delete m;
 }
 
-void GameLogic::initGameLogic(std::string mapName) {
+void GameLogic::initGameLogic(std::string mapName, ResourceLoader* resourceLoader) {
 	int width, height;
 	int nrChannels;
 	char mapPath[1000];
@@ -47,18 +47,19 @@ void GameLogic::initGameLogic(std::string mapName) {
 	unsigned char* data = stbi_load(mapPath, &width, &height, &nrChannels, 0);
 	gameMap = GameMap(width, height);
 	gameMap.InitEven(0.0f);
-	gameMap.UpdateMesh();
+	gameMap.UpdateMesh(resourceLoader);
 	gameMap.loadHeightMap(data, nrChannels, width, height);
 
 	// load units animations:
-	animationShader = Shader("..\\Resources\\Shaders\\CowboyVertexShader.vs", "..\\Resources\\Shaders\\CowboyFragmentShader.fs");
+	Shader animationShader = resourceLoader->getShader(std::string("cowboy"));
 	for (int i = 0; i < playerUnits.size(); i++) {
+		playerUnits[i]->position = glm::vec3(50.0f + i, 5.0f, 50.0f + i);
 		playerUnits[i]->newAnimModel = resLoader->LoadAnimatedModel("..\\Resources\\Models\\cowboy.dae", animationShader);
 	}
 
 	// update normals:
 	gameMap.smoothNormals();
-	gameMap.UpdateMesh();
+	gameMap.UpdateMesh(resourceLoader);
 }
 
 void GameLogic::update(float deltaFrame) {
@@ -72,20 +73,13 @@ void GameLogic::update(float deltaFrame) {
 }
 
 GameLogic::GameLogic() {
-	// TODO: add units:
-	Unit* u1 = new Unit();
-	u1->position = glm::vec3(10, 10, 10);
-	u1->speed = 2.5f;
-	playerUnits.push_back(u1);
+	// add units to player's command:
 
-	Unit* u2 = new Unit();
-	u2->position = glm::vec3(10, 15, 10);
-	u2->speed = 3.5f;
-	playerUnits.push_back(u2);
-
-	Unit* u3 = new Unit();
-	u3->position = glm::vec3(10, 5, 10);
-	u3->speed = 6.5f;
-	playerUnits.push_back(u3);
+	for (int i = 0; i < 20; i++) {
+		Unit* u3 = new Unit();
+		u3->position = glm::vec3(10, 5, 10);
+		u3->speed = 6.5f;
+		playerUnits.push_back(u3);
+	}
 	
 }

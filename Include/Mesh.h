@@ -75,10 +75,12 @@ public:
 	//-----------------------
 	void Draw(GLenum mode);
 	void Draw(const glm::mat4& transform, GLenum mode);
-	
+	void DrawCube(const glm::mat4& transform, GLenum mode);
+
 	//for the EBO implementation
 	void DrawEBO(GLenum mode);
 	void DrawEBO(const glm::mat4& transform, GLenum mode);
+	
 
 	void DrawInstanced(const glm::mat4& transform, GLenum mode);
 

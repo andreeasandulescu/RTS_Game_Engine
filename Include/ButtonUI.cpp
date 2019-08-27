@@ -1,6 +1,8 @@
 #include <ButtonUI.h>
 
-void ButtonUI::UpdateMesh() {
+void ButtonUI::UpdateMesh(ResourceLoader* resourceLoader) {
+	this->resourceLoader = resourceLoader;
+	
 	// create a screen button:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -28,12 +30,8 @@ void ButtonUI::UpdateMesh() {
 	indices.push_back(3);
 
 
-	Shader shader(
-		"..\\Resources\\Shaders\\VertexShader.vs",
-		"..\\Resources\\Shaders\\FragmentShader.fs"
-	);
-
-	mesh.InitMeshEBO(vertices, indices, shader);
+	Shader s = resourceLoader->getShader(std::string("basic"));
+	mesh.InitMeshEBO(vertices, indices, s);
 }
 
 void ButtonUI::Draw(const glm::mat4& transform) {
@@ -46,7 +44,8 @@ void ButtonUI::Draw(const glm::mat4& transform) {
 	mesh.DrawEBO(GL_TRIANGLES);
 
 	// draw button and text:
-	gui->RenderText(window, gui->textShader, text, xTextPos, yTextPos, textScale, textColor);
+	Shader textShader = resourceLoader->getShader(std::string("text"));
+	gui->RenderText(window, textShader, text, xTextPos, yTextPos, textScale, textColor);
 
 	glEnable(GL_DEPTH_TEST);
 }

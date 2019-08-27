@@ -15,7 +15,7 @@ public:
 	void initWater(int width, int height, float scale, float altitude);
 
 	// create a mesh for renderer to draw:
-	virtual void UpdateMesh();
+	virtual void UpdateMesh(ResourceLoader* resourceLoader);
 
 	// call every frame:
 	virtual void Draw(const glm::mat4& transform);

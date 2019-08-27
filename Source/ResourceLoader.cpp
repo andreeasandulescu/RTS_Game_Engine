@@ -335,3 +335,64 @@ glm::vec3 ResourceLoader::convertVec3(aiVector3D vect)
 {
 	return glm::vec3(vect.x, vect.y, vect.z);
 }
+
+// load all textures
+void  ResourceLoader::loadTextures() {
+	Texture grassTexture{};
+	grassTexture.LoadTexture("..\\Resources\\Textures\\grass.png");
+	textures[std::string("grass")] = grassTexture;
+
+	Texture sandTexture{};
+	sandTexture.LoadTexture("..\\Resources\\Textures\\Terrain\\sand.jpg");
+	textures[std::string("sand")] = sandTexture;
+
+	Texture earthTexture{};
+	earthTexture.LoadTexture("..\\Resources\\Textures\\Terrain\\grass.jpg");
+	textures[std::string("earth")] = earthTexture;
+
+	Texture under_waterTexture{};
+	under_waterTexture.LoadTexture("..\\Resources\\Textures\\Terrain\\under_water.jpg");
+	textures[std::string("under_water")] = under_waterTexture;
+}
+
+// load all shaders
+void  ResourceLoader::loadShaders() {
+	shaders[std::string("grass")] = Shader("..\\Resources\\Shaders\\Grass\\GrassVertexShader.vs", "..\\Resources\\Shaders\\Grass\\GrassFragmentShader.fs");
+	
+	Shader waterShader(
+		"..\\Resources\\Shaders\\WaterVertexShader.vs",
+		"..\\Resources\\Shaders\\WaterGeometryShader.gs",
+		"..\\Resources\\Shaders\\WaterFragmentShader.fs"
+	);
+	shaders[std::string("water")] = waterShader;
+
+	Shader basicShader("..\\Resources\\Shaders\\VertexShader.vs", "..\\Resources\\Shaders\\FragmentShader.fs");
+	shaders[std::string("basic")] = basicShader;
+
+	Shader terrainShader("..\\Resources\\Shaders\\TerrainVertexShader.vs", "..\\Resources\\Shaders\\TerrainFragmentShader.fs");
+	shaders[std::string("terrain")] = terrainShader;
+
+	Shader textShader = Shader("..\\Resources\\Shaders\\TextVertexShader.vs", "..\\Resources\\Shaders\\TextFragmentShader.fs");
+	shaders[std::string("text")] = textShader;
+
+	Shader animationShader = Shader("..\\Resources\\Shaders\\CowboyVertexShader.vs", "..\\Resources\\Shaders\\CowboyFragmentShader.fs");
+	shaders[std::string("cowboy")] = animationShader;
+
+	Shader skyShader = Shader("..\\Resources\\Shaders\\Sky\\VertexShader.vs", "..\\Resources\\Shaders\\Sky\\FragmentShader.fs");
+	shaders[std::string("sky")] = skyShader;
+}
+
+// load all resources
+// (called in opengl context)
+void  ResourceLoader::loadResources() {
+	loadShaders();
+	loadTextures();
+}
+
+Shader ResourceLoader::getShader(std::string name) {
+	return shaders[name];
+}
+
+Texture ResourceLoader::getTexture(std::string name) {
+	return textures[name];
+}

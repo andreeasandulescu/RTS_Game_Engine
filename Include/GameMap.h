@@ -2,6 +2,7 @@
 #include <Drawable.h>
 #include <Grass.h>
 #include <vector>
+#include <SkyBox.h>
 
 #ifndef GAME_MAP_H
 #define GAME_MAP_H
@@ -15,6 +16,7 @@ public:
 	std::vector<Vertex> vertices;
 	std::vector<glm::vec3> grassTranslVects;		//contains all the translation vectors, each one coresponding to a grass tuft
 	Grass grassObject;
+	SkyBox skyBox;
 
 	// GAME MAP:
 	MapSquare *** map;
@@ -22,7 +24,7 @@ public:
 	// init map with even tiles:
 	void InitEven(float altitude);
 
-	virtual void UpdateMesh();
+	virtual void UpdateMesh(ResourceLoader* resourceLoader);
 	virtual void Draw(const glm::mat4& transform);
 	virtual void Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos);
 

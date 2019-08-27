@@ -34,15 +34,18 @@ void UserInterface::receiveMessage(Message* m) {
 	delete m;
 }
 
-void UserInterface::UpdateMesh() {
+void UserInterface::UpdateMesh(ResourceLoader* resourceLoader) {
+	this->resourceLoader = resourceLoader;
 	if (currentScene)
-		currentScene->UpdateMesh();
+		currentScene->UpdateMesh(resourceLoader);
 }
 
 void UserInterface::Draw(const glm::mat4& transform) {
 	// draw current scene
-	if (currentScene)
+	if (currentScene) {
+		currentScene->resourceLoader = resourceLoader;
 		currentScene->Draw(transform);
+	}
 }
 
 void UserInterface::Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos) {
@@ -65,7 +68,7 @@ void UserInterface::initUserInterface(GLFWwindow* window, GUI* gui, MessageBus* 
 	mainScene->addButtonAlligned(ButtonAction::playAction, std::string("Play"), glm::vec3(153, 50, 204) / 300.0f, 1.0f);
 	mainScene->addButtonAlligned(ButtonAction::unkownAction, std::string("Options"), glm::vec3(153, 50, 204) / 300.0f, 1.0f);
 	mainScene->addButtonAlligned(ButtonAction::exitAction, std::string("Quit"), glm::vec3(153, 50, 204) / 300.0f, 1.0f);
-	mainScene->UpdateMesh();
+	mainScene->UpdateMesh(resourceLoader);
 	
 	// create obtions menu:
 	SceneUI* optionsScene = new SceneUI(window, gui);
@@ -73,7 +76,7 @@ void UserInterface::initUserInterface(GLFWwindow* window, GUI* gui, MessageBus* 
 	optionsScene->addButtonAlligned(ButtonAction::loadMap2, std::string("Map 2"), glm::vec3(153, 50, 204) / 300.0f, 0.5f);
 	optionsScene->addButtonAlligned(ButtonAction::loadMap3, std::string("Map 3"), glm::vec3(153, 50, 204) / 300.0f, 0.5f);
 	optionsScene->addButtonAlligned(ButtonAction::unkownAction, std::string("Main Menu"), glm::vec3(153, 50, 204) / 300.0f, 0.5f);
-	optionsScene->UpdateMesh();
+	optionsScene->UpdateMesh(resourceLoader);
 
 	// add next scenes pointers:
 	optionsScene->buttons[3]->m->nextScene = mainScene;

@@ -135,9 +135,11 @@ void Mesh::InitMeshInstanced(const std::vector<Vertex>& vertices, std::vector<gl
 
 Mesh& Mesh::operator=(const Mesh& m)
 {
+
 	VAO = m.VAO;
 	VBO = m.VBO;
 	EBO = m.EBO;
+	instanceVBO = m.instanceVBO;
 	vertices = m.vertices;
 	indices = m.indices;
 	textures = m.textures;
@@ -339,6 +341,28 @@ void Mesh::DrawEBO(const glm::mat4& transform, GLenum mode)
 
 	glBindVertexArray(VAO);
 	glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	// always good practice to set everything back to defaults once configured.
+	glActiveTexture(GL_TEXTURE0);
+}
+
+// for cube drawing:
+void Mesh::DrawCube(const glm::mat4& transform, GLenum mode)
+{
+	shader.use();
+
+	// bind cube texture:
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textures[0].id);
+	glUniform1i(glGetUniformLocation(shader.id, "texture0"), 0);
+	glUniform1i(glGetUniformLocation(shader.id, "texture0"), 0);
+
+
+	glUniformMatrix4fv(glGetUniformLocation(shader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+
+	glBindVertexArray(VAO);
+	glDrawArrays(mode, 0, vertices.size());
 	glBindVertexArray(0);
 
 	// always good practice to set everything back to defaults once configured.

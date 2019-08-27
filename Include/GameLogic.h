@@ -13,7 +13,7 @@ public:
 	std::vector<Unit *> playerUnits;
 	ResourceLoader* resLoader;
 	GameMap gameMap;
-	Shader animationShader;
+	
 
 	
 	// message bus for receiveing/sending messages:
@@ -23,7 +23,7 @@ public:
 	void update(float deltaFrame);
 
 	virtual void receiveMessage(Message* m);
-	void initGameLogic(std::string mapName);
+	void initGameLogic(std::string mapName, ResourceLoader* resourceLoader);
 
 	GameLogic();
 };

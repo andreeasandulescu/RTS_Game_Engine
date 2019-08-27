@@ -23,7 +23,7 @@ int Engine::Init()
 	
 
 	// cursor does not leave window:
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
 
 	// dont change mouse button state until polling:
@@ -60,17 +60,19 @@ int Engine::Init()
 
 	// create resource loader:
 	resLoader = new ResourceLoader();
+	resLoader->loadResources();
 
 	// add engine to the main message bus:
 	this->mainMessageBus.addSubscriber(this);
 
 	// create GUI:
 	gui = GUI::GUI();
-	gui.initGUI();
+	gui.initGUI(resLoader);
 
 	// create user interface:
+	userInterface.resourceLoader = resLoader;
 	userInterface.initUserInterface(window, &gui, &mainMessageBus);
-	userInterface.UpdateMesh();
+	userInterface.UpdateMesh(resLoader);
 	// add user interface to message receiver bus:
 	mainMessageBus.addSubscriber(&userInterface);
 
@@ -84,7 +86,7 @@ int Engine::Init()
 
 	// load game logic
 	gameLogic.resLoader = resLoader;
-	gameLogic.initGameLogic(std::string(mapName));
+	gameLogic.initGameLogic(std::string(mapName), resLoader);
 	
 
 	// add game logic to the main message bus:
@@ -99,12 +101,12 @@ int Engine::Init()
 
 	// load water map:
 	water.initWater(gameLogic.gameMap.width * 3, gameLogic.gameMap.height * 3, 0.7f, 2);
-	water.UpdateMesh();
+	water.UpdateMesh(resLoader);
 
 	// load lighting:
 	this->lightSources = std::vector<LightSource *>();
 	LightSource* sun = new LightSource();
-	sun->sourcePosition = glm::vec3(1000, 1000, 1000);
+	sun->sourcePosition = glm::vec3(-1000, 1000, -1000);
 	sun->intensity = 1.0f;
 	sun->color = glm::vec3(1.0f, 1.0f, 1.0f);
 	lightSources.push_back(sun);
@@ -203,7 +205,7 @@ int Engine::Update()
 
 	// update proj and view matricies:
 	View = camera.getViewMatrix();
-	Projection = glm::perspective(1.5f, (float)width / (float)height, 2.5f, 200.0f);
+	Projection = glm::perspective(1.5f, (float)width / (float)height, 2.5f, 2000.0f);
 	transform = Projection * View;
 
 	// calculate time between two updated (frames)

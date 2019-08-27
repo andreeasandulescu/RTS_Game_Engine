@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <ft2build.h>
 #include <stdlib.h>
+#include <ResourceLoader.h>
 
 #include FT_FREETYPE_H  
 
@@ -27,7 +28,8 @@ public:
 	FT_Library ft;
 	FT_Face face;
 	std::map<GLubyte, Character> bitmap_char;
-	
+	ResourceLoader* resourceLoader;
+
 	// store a quad for glyph rendering:
 	unsigned int VAO;
 	unsigned int VBO;
@@ -35,14 +37,13 @@ public:
 	// needs to be updated when a window resize takes place
 	// used in shader to draw text
 	glm::mat4 projection;
-	Shader textShader;
 
 	// for fps counter:
 	double lastTime;
 	
 	void guiUpdate(GLFWwindow* window);
 	void RenderText(GLFWwindow* window, Shader& shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
-	void initGUI();
+	void initGUI(ResourceLoader* resourceLoader);
 	void exitGUI();
 	GUI();
 	~GUI();

@@ -39,7 +39,7 @@ public:
 	virtual void initUnit();
 
 	// Updates unit Mesh/Animation
-	virtual void UpdateMesh();
+	virtual void UpdateMesh(ResourceLoader* resourceLoader);
 	
 	virtual void Draw(const glm::mat4& transform);
 	virtual void Draw(const glm::mat4& transform, const std::vector<LightSource*>& lightSources, glm::vec3 cameraPos);

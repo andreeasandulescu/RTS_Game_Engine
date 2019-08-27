@@ -15,22 +15,23 @@ void GUI::guiUpdate(GLFWwindow* window) {
 	lastTime = currentTime;
 	int fps = 1.0 / delta;
 	sprintf_s(fps_text, "FPS: %d", fps);
-	RenderText(window, this->textShader, std::string(fps_text), 1, height - 30, 0.3f, glm::vec3(1.0f, 1.0f, 0.0f));
+	Shader s = resourceLoader->getShader(std::string("text"));
+	RenderText(window, s, std::string(fps_text), 1, height - 30, 0.3f, glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
 GUI::GUI() {
 	this->bitmap_char = std::map<GLubyte, Character>();
 }
 
-void GUI::initGUI() {
+void GUI::initGUI(ResourceLoader* resourceLoader) {
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
 	if (FT_New_Face(ft, "..\\Resources\\fonts\\arial.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
-	// use shader for drawing the text:
-	this->textShader = Shader("..\\Resources\\Shaders\\TextVertexShader.vs", "..\\Resources\\Shaders\\TextFragmentShader.fs");
+	this->resourceLoader = resourceLoader;
+
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -127,16 +128,16 @@ void GUI::exitGUI() {
 
 void GUI::RenderText(GLFWwindow* window, Shader& shader, std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
 {
-
+	Shader textShader = resourceLoader->getShader(std::string("text"));
 	// Activate corresponding render state	
-	glUseProgram(this->textShader.id);
+	glUseProgram(textShader.id);
 
 	// send projection matrix to shader
 	// allows us to specify text in screen coordinates
-	glUniformMatrix4fv(glGetUniformLocation(this->textShader.id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(glGetUniformLocation(textShader.id, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	// send the text color to the shader
-	glUniform3f(glGetUniformLocation(this->textShader.id, "textColor"), color.x, color.y, color.z);
+	glUniform3f(glGetUniformLocation(textShader.id, "textColor"), color.x, color.y, color.z);
 	glBindVertexArray(VAO);
 
 	// Iterate through all characters
@@ -163,7 +164,7 @@ void GUI::RenderText(GLFWwindow* window, Shader& shader, std::string text, GLflo
 		// Render glyph texture over quad
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-		glUniform1i(glGetUniformLocation(this->textShader.id, "text"), 0);
+		glUniform1i(glGetUniformLocation(textShader.id, "text"), 0);
 
 		// Update content of VBO memory
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);

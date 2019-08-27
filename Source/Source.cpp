@@ -86,7 +86,7 @@ int main()
 	while (!glfwWindowShouldClose(engine.window))
 	{		
 		//rendering commands
-		glClearColor(0.2f, 0.0f, 0.20f, 0.0f);
+		glClearColor(0.1f, 0.0f, 0.40f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//check for user input
@@ -98,7 +98,6 @@ int main()
 		engine.gameLogic.gameMap.Draw(transform, engine.lightSources, engine.camera.cameraPos);
 		for (int i = 0; i < engine.gameLogic.playerUnits.size(); i++) {
 			engine.gameLogic.playerUnits[i]->Draw(transform);
-			
 		}
 
 		

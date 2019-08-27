@@ -27,7 +27,7 @@ public:
 	void initUserInterface(GLFWwindow* window, GUI* gui, MessageBus* messageBus);
 
 	// update current scene mesh
-	virtual void UpdateMesh();
+	virtual void UpdateMesh(ResourceLoader* resourceLoader);
 
 	// draw current scene:
 	virtual void Draw(const glm::mat4& transform);

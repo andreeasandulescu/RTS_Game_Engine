@@ -18,10 +18,11 @@
 class Drawable {
 public:
 	Mesh mesh;
+	ResourceLoader* resourceLoader;
 
 	// implement this to update the mesh above
 	// update only when necessary
-	virtual void UpdateMesh() = 0;
+	virtual void UpdateMesh(ResourceLoader* resourceLoader) = 0;
 	
 	// draw every frame mesh
 	virtual void Draw(const glm::mat4& transform) = 0;
