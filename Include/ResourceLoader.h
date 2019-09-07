@@ -25,7 +25,7 @@ public:
 	// retrieve texture by name:
 	Texture getTexture(std::string name);
 
-	Mesh* LoadModel(std::string path, Shader shader);
+	std::vector<Mesh*> LoadModel(std::string path, Shader shader);
 	AnimatedModel* LoadAnimatedModel(std::string path, Shader shader);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	

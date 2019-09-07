@@ -3,18 +3,24 @@
 #include <Animation/AnimatedModel.h>
 #include "..\Include\Camera.h"
 
-Mesh* ResourceLoader::LoadModel(std::string path, Shader shader)
+std::vector<Mesh*> ResourceLoader::LoadModel(std::string path, Shader shader)
 {
+	std::vector<Mesh*> meshes;
 	const aiScene* scene = assimpImporter.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		std::cout << "ERROR::ASSIMP::" << assimpImporter.GetErrorString() << std::endl;
-		return nullptr;
+		return meshes;
 	}
 
-	Mesh *mesh = processMesh(scene->mMeshes[0], scene, shader);
-	return mesh;
+	for (int i = 0; i < scene->mNumMeshes; i++)
+	{
+		Mesh* mesh = processMesh(scene->mMeshes[i], scene, shader);
+		meshes.push_back(mesh);
+	}
+
+	return meshes;
 }
 
 Mesh* ResourceLoader::processMesh(aiMesh* mesh, const aiScene* scene, Shader& shader)
@@ -104,7 +110,24 @@ std::vector<Texture> ResourceLoader::loadMaterialTextures(aiMaterial* mat, aiTex
 		if (mat->GetTexture(type, i, &str) != AI_SUCCESS)
 			std::cout << "[ResourceLoader] Error in loadMaterialTextures()\n";
 
-		filename = directory + std::string(str.C_Str());
+		std::string myStdString = str.C_Str();
+
+		if (myStdString.find("/") != std::string::npos) {
+			std::cout << "found!" << '\n';
+
+
+			int pos;
+
+			while ((pos = myStdString.find("/")) != std::string::npos)
+			{
+				myStdString.replace(pos, 1, "\\");
+				//myStdString.insert(pos, "\\");
+			}
+			
+		}
+
+
+		filename = directory + std::string(myStdString);
 		texture.LoadTexture(filename.c_str());
 		texture.type = typeName;
 
@@ -287,6 +310,8 @@ AnimatedModel* ResourceLoader::LoadAnimatedModel(std::string path, Shader shader
 
 	AnimatedModel* animModel = new AnimatedModel();
 	aiMesh *auxMesh = scene->mMeshes[0];
+
+	std::cout << "nr meshes:!!!! " << scene->mNumMeshes << std::endl;
 
 	glm::mat4 globalInverseTransform = convert4x4matrix(scene->mRootNode->mTransformation);
 	animModel->globalInverseTransform = glm::inverse(globalInverseTransform);

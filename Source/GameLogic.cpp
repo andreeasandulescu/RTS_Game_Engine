@@ -117,7 +117,7 @@ void GameLogic::update(float deltaFrame) {
 GameLogic::GameLogic() {
 	// add units to player's command:
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 2; i++) {
 		Unit* u3 = new Unit();
 		u3->position = glm::vec3(10, 5, 10);
 		u3->speed = 6.5f;

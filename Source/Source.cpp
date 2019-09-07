@@ -63,6 +63,15 @@ int main()
 	Renderer renderer{};
 	renderer.Init();
 
+	ResourceLoader resLoader{};
+
+	Shader shader("..\\Resources\\Shaders\\TextureVertexShader.vs", "..\\Resources\\Shaders\\TextureFragmentShader.fs");
+	
+	Shader newShader("..\\Resources\\Shaders\\TextureVertexShader.vs", "..\\Resources\\Shaders\\TextureFragmentShader.fs");
+	AnimatedModel* animModel = resLoader.LoadAnimatedModel("..\\Resources\\Models\\walking.dae", shader);
+
+	std::vector<Mesh*> meshes = resLoader.LoadModel("..\\Resources\\Models\\WoodenCabinObj.obj", newShader);
+
 	glDebugMessageCallback(MessageCallback, NULL);
 
 	glViewport(0, 0, 1360, 768);
@@ -112,17 +121,15 @@ int main()
 		renderer.UpdateMatrices(engine.View, engine.Projection);
 		renderer.RenderCoordSystem();
 
+		animModel->mesh.DrawEBO(engine.Projection * engine.View, GL_TRIANGLES);
+
+		for(int i = 0; i < meshes.size();i++)
+			meshes[i]->DrawEBO(engine.Projection * engine.View, GL_TRIANGLES);
+
+
 		//renderer.RenderTriangle();
 
 		//glm::mat4 model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.35f)) * glm::rotate(glm::mat4(1.0f), -1.57f, glm::vec3(1.0f, 0.0f, 0.0f));
-		
-
-		while ((err = glGetError()) != GL_NO_ERROR)
-		{
-			std::cerr << err;
-			std::cout << std::endl;
-		}
-
 		
 
 		//update engine time:
