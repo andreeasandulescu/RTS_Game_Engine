@@ -63,7 +63,7 @@ void InputManager::listening() {
 		m->cursorState = mouseState;
 		this->messageBus->addMessage(m);
 
-		// poll for keys:
+		// poll for bound keys:
 		KeysMessage *keysMessage = new KeysMessage();
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			keysMessage->pressedKeys.push_back(GLFW_KEY_W);
@@ -73,6 +73,9 @@ void InputManager::listening() {
 			keysMessage->pressedKeys.push_back(GLFW_KEY_A);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			keysMessage->pressedKeys.push_back(GLFW_KEY_D);
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+			keysMessage->pressedKeys.push_back(GLFW_KEY_SPACE);
 
 		this->messageBus->addMessage(keysMessage);
 

@@ -15,7 +15,6 @@ public:
 	GameMap gameMap;
 	
 
-	
 	// message bus for receiveing/sending messages:
 	MessageBus* messageBus;
 

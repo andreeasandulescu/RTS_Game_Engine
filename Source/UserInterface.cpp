@@ -63,24 +63,31 @@ void UserInterface::initUserInterface(GLFWwindow* window, GUI* gui, MessageBus* 
 	this->messageBus = messageBus;
 	this->gui = gui;
 
+	glm::vec3 textColor = glm::vec3(153, 50, 204) / 300.0f;
+
 	// create main menu:
 	SceneUI* mainScene = new SceneUI(window, gui);
-	mainScene->addButtonAlligned(ButtonAction::playAction, std::string("Play"), glm::vec3(153, 50, 204) / 300.0f, 1.0f);
-	mainScene->addButtonAlligned(ButtonAction::unkownAction, std::string("Options"), glm::vec3(153, 50, 204) / 300.0f, 1.0f);
-	mainScene->addButtonAlligned(ButtonAction::exitAction, std::string("Quit"), glm::vec3(153, 50, 204) / 300.0f, 1.0f);
+	mainScene->addButtonAlligned(ButtonAction::playAction, std::string("Play"), textColor, 1.0f);
+	mainScene->addButtonAlligned(ButtonAction::unkownAction, std::string("Options"), textColor, 1.0f);
+	mainScene->addButtonAlligned(ButtonAction::exitAction, std::string("Quit"), textColor, 1.0f);
 	mainScene->UpdateMesh(resourceLoader);
 	
 	// create obtions menu:
 	SceneUI* optionsScene = new SceneUI(window, gui);
-	optionsScene->addButtonAlligned(ButtonAction::loadMap1, std::string("Map 1"), glm::vec3(153, 50, 204) / 300.0f, 0.5f);
-	optionsScene->addButtonAlligned(ButtonAction::loadMap2, std::string("Map 2"), glm::vec3(153, 50, 204) / 300.0f, 0.5f);
-	optionsScene->addButtonAlligned(ButtonAction::loadMap3, std::string("Map 3"), glm::vec3(153, 50, 204) / 300.0f, 0.5f);
-	optionsScene->addButtonAlligned(ButtonAction::unkownAction, std::string("Main Menu"), glm::vec3(153, 50, 204) / 300.0f, 0.5f);
+	optionsScene->addButtonAlligned(ButtonAction::loadMap1, std::string("Map 1"), textColor, 0.5f);
+	optionsScene->addButtonAlligned(ButtonAction::loadMap2, std::string("Map 2"), textColor, 0.5f);
+	optionsScene->addButtonAlligned(ButtonAction::loadMap3, std::string("Map 3"), textColor, 0.5f);
+	optionsScene->addButtonAlligned(ButtonAction::unkownAction, std::string("Main Menu"), textColor, 0.5f);
 	optionsScene->UpdateMesh(resourceLoader);
+
+	// create in-game user interface:
+	SceneUI* playScene = new SceneUI(window, gui);
+	playScene->addButtonBorderAlligned(ButtonAction::unkownAction, std::string("Builder"), textColor, 0.5f);
 
 	// add next scenes pointers:
 	optionsScene->buttons[3]->m->nextScene = mainScene;
 	mainScene->buttons[1]->m->nextScene = optionsScene;
+	mainScene->buttons[0]->m->nextScene = playScene;
 
-	this->currentScene = mainScene;
+	this->currentScene = playScene;
 }

@@ -27,6 +27,9 @@ public:
 	// centered buttons
 	void addButtonAlligned(ButtonAction action, std::string text, glm::vec3 textColor, float textScale);
 
+	// border alligned buttons:
+	void addButtonBorderAlligned(ButtonAction action, std::string text, glm::vec3 textColor, float textScale);
+
 	SceneUI(GLFWwindow* window, GUI* gui);
 };
 

@@ -34,6 +34,7 @@ void GUI::initGUI(ResourceLoader* resourceLoader) {
 
 
 	glEnable(GL_BLEND);
+	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Set size to load glyphs as

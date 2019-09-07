@@ -58,7 +58,7 @@ void Renderer::RenderCoordSystem()
 	glUniformMatrix4fv(glGetUniformLocation(utilitiesShader.id, "transform"), 1, GL_FALSE, glm::value_ptr(transform));
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glLineWidth(5.0);
+
 
 	coordSystem.Draw(transform, GL_LINES);
 }
