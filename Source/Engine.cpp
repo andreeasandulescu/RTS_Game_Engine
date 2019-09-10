@@ -9,7 +9,7 @@ int Engine::Init()
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(width, height, "Coolest RTS Game Engine", NULL, NULL);
@@ -100,7 +100,7 @@ int Engine::Init()
 	inputManagerThread = std::thread(&InputManager::listening, &inputManager);
 
 	// load water map:
-	water.initWater(gameLogic.gameMap.width * 3, gameLogic.gameMap.height * 3, 0.7f, 2);
+	water.initWater(gameLogic.gameMap.width, gameLogic.gameMap.height, 0.2f, 2);
 	water.UpdateMesh(resLoader);
 
 	// load lighting:
@@ -151,6 +151,19 @@ void Engine::receiveMessage(Message* m) {
 		}
 	}
 
+	if (m->messageType == MessageType::keyspressed) {
+		KeysMessage* keyMsg = (KeysMessage*)m;
+		for (int i = 0; i < keyMsg->pressedKeys.size(); i++) {
+			if (keyMsg->pressedKeys[i] == GLFW_KEY_C) {
+				// change camera to strategic camera or free camera:
+				if (this->camera.strategic)
+					this->camera.strategic = false;
+				else
+					this->camera.strategic = true;
+			}
+		}
+	}
+
 	if (m->messageType == MessageType::buttonpress) {
 		ButtonPressed* buttonMsg = (ButtonPressed*)m;
 		printf("Button pressed: %s\n", buttonMsg->messageString.c_str());
@@ -158,6 +171,8 @@ void Engine::receiveMessage(Message* m) {
 		if (buttonMsg->action == ButtonAction::exitAction) {
 			exit(0);
 		}
+
+		
 
 		if (buttonMsg->action == ButtonAction::playAction) {
 			this->userInterface.currentScene = NULL;

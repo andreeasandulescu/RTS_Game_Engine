@@ -83,6 +83,8 @@ void UserInterface::initUserInterface(GLFWwindow* window, GUI* gui, MessageBus* 
 	// create in-game user interface:
 	SceneUI* playScene = new SceneUI(window, gui);
 	playScene->addButtonBorderAlligned(ButtonAction::unkownAction, std::string("Builder"), textColor, 0.5f);
+	playScene->addButtonBorderAlligned(ButtonAction::house1, std::string("House"), textColor, 0.5f);
+	playScene->addButtonBorderAlligned(ButtonAction::woodWall, std::string("Wood Wall"), textColor, 0.5f);
 
 	// add next scenes pointers:
 	optionsScene->buttons[3]->m->nextScene = mainScene;

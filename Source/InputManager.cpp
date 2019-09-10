@@ -74,6 +74,12 @@ void InputManager::listening() {
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			keysMessage->pressedKeys.push_back(GLFW_KEY_D);
 
+		if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+			keysMessage->pressedKeys.push_back(GLFW_KEY_R);
+
+		if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+			keysMessage->pressedKeys.push_back(GLFW_KEY_C);
+
 		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 			keysMessage->pressedKeys.push_back(GLFW_KEY_SPACE);
 

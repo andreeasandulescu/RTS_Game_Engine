@@ -1,4 +1,4 @@
-#version 460 core
+#version 440 core
 layout (location = 0) in vec3 pos;
 layout (location = 2) in vec2 textureCoord;
 layout (location = 3) in vec3 translationV;

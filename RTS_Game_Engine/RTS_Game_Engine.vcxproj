@@ -146,6 +146,7 @@
     <ClCompile Include="..\Include\ButtonUI.cpp" />
     <ClCompile Include="..\Source\Animation\AnimatedModel.cpp" />
     <ClCompile Include="..\Source\Animation\Joint.cpp" />
+    <ClCompile Include="..\Source\Building.cpp" />
     <ClCompile Include="..\Source\Camera.cpp" />
     <ClCompile Include="..\Source\Cursor.cpp" />
     <ClCompile Include="..\Source\Engine.cpp" />
@@ -175,6 +176,7 @@
   <ItemGroup>
     <ClInclude Include="..\Include\Animation\AnimatedModel.h" />
     <ClInclude Include="..\Include\Animation\Joint.h" />
+    <ClInclude Include="..\Include\Building.h" />
     <ClInclude Include="..\Include\ButtonUI.h" />
     <ClInclude Include="..\Include\Camera.h" />
     <ClInclude Include="..\Include\Cursor.h" />

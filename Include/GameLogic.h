@@ -3,6 +3,7 @@
 #include <Unit.h>
 #include <GameMap.h>
 #include <stb_image.h>
+#include <Building.h>
 
 #ifndef GAME_LOGIC_H
 #define GAME_LOGIC_H
@@ -11,9 +12,16 @@ class GameLogic : public MessageReceiver {
 public:
 	std::vector<Unit *> selectedUnits;
 	std::vector<Unit *> playerUnits;
+	std::vector<Building*> playerBuildings;
+
+	bool placementMode;
+	Building* placingBuilding;
+
 	ResourceLoader* resLoader;
 	GameMap gameMap;
 	
+	bool buildingSelected;
+	Building* selectedBuilding;
 
 	// message bus for receiveing/sending messages:
 	MessageBus* messageBus;

@@ -32,8 +32,6 @@ Mesh* ResourceLoader::processMesh(aiMesh* mesh, const aiScene* scene, Shader& sh
 
 		if (mesh->HasNormals())
 			vertex.normal = convertVec3(mesh->mNormals[i]);
-		else
-			std::cout << "Mesh normals not defined in file!" << std::endl;
 
 		if (mesh->HasTextureCoords(0))
 		{
@@ -380,6 +378,18 @@ void  ResourceLoader::loadShaders() {
 
 	Shader skyShader = Shader("..\\Resources\\Shaders\\Sky\\VertexShader.vs", "..\\Resources\\Shaders\\Sky\\FragmentShader.fs");
 	shaders[std::string("sky")] = skyShader;
+
+	Shader textureShader = Shader("..\\Resources\\Shaders\\TextureVertexShader.vs", "..\\Resources\\Shaders\\TextureFragmentShader.fs");
+	shaders[std::string("texture")] = textureShader;
+}
+
+// load all shaders
+void ResourceLoader::loadMeshes() {
+	Mesh* houseMesh = LoadModel("..\\Resources\\Models\\house\\residental_building.obj", shaders[std::string("texture")]);
+	meshes[std::string("house1")] = houseMesh;
+
+	Mesh* treeMesh = LoadModel("..\\Resources\\Models\\tree\\WallLog.obj", shaders[std::string("texture")]);
+	meshes[std::string("tree")] = treeMesh;
 }
 
 // load all resources
@@ -387,6 +397,7 @@ void  ResourceLoader::loadShaders() {
 void  ResourceLoader::loadResources() {
 	loadShaders();
 	loadTextures();
+	loadMeshes();
 }
 
 Shader ResourceLoader::getShader(std::string name) {
@@ -395,4 +406,9 @@ Shader ResourceLoader::getShader(std::string name) {
 
 Texture ResourceLoader::getTexture(std::string name) {
 	return textures[name];
+}
+
+
+Mesh* ResourceLoader::getMesh(std::string name) {
+	return meshes[name];
 }

@@ -120,5 +120,5 @@ void Water::Draw(const glm::mat4& transform, const std::vector<LightSource*>& li
 	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
-	mesh.DrawEBO(transform * translationM, GL_TRIANGLES);
+	mesh.DrawEBO(transform, GL_TRIANGLES);
 }

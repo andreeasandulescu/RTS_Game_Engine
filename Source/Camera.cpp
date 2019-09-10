@@ -18,9 +18,11 @@ void Camera::move_cursor(double xoffset, double yoffset)
 	float xos = sensitivity * (float)xoffset;
 	float yos = sensitivity * (float)yoffset;
 
-	cameraFront = cameraFront + cameraUp * yos;
-	cameraFront = cameraFront + glm::normalize(glm::cross(cameraFront, cameraUp)) * xos;
-	cameraFront = glm::normalize(cameraFront);
+	if (!strategic) {
+		cameraFront = cameraFront + cameraUp * yos;
+		cameraFront = cameraFront + glm::normalize(glm::cross(cameraFront, cameraUp)) * xos;
+		cameraFront = glm::normalize(cameraFront);
+	}
 }
 
 
@@ -41,10 +43,22 @@ void Camera::receiveMessage(Message *m) {
 
 			switch (*it) {
 				case GLFW_KEY_W:
-					cameraPos += cameraSpeed * cameraFront;
+					if (!strategic) {
+						cameraPos += cameraSpeed * cameraFront;
+					}
+					else {
+						glm::vec3 dir = glm::normalize(glm::vec3(cameraFront.x, 0, cameraFront.z));
+						cameraPos += cameraSpeed * dir;
+					}
 					break;
 				case GLFW_KEY_S:
-					cameraPos -= cameraSpeed * cameraFront;
+					if (!strategic) {
+						cameraPos += -cameraSpeed * cameraFront;
+					}
+					else {
+						glm::vec3 dir = glm::normalize(glm::vec3(cameraFront.x, 0, cameraFront.z));
+						cameraPos += -cameraSpeed * dir;
+					}
 					break;
 				case GLFW_KEY_A:
 					cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
@@ -61,11 +75,13 @@ void Camera::receiveMessage(Message *m) {
 }
 
 Camera::Camera() {
+	this->strategic = true;
+
 	// default position
-	this->cameraPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	this->cameraPos = glm::vec3(15.5f, 15.5f, 15.5f);
 	
 	// default direction is pointing toward the center of the scene
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraTarget = glm::vec3(200.0f, 0.0f, 200.0f);
 	this->cameraFront = glm::normalize(cameraPos - cameraTarget);
 
 	// cross product between up and direction will yeld right vector

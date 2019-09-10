@@ -9,7 +9,7 @@
 #define _MESSAGE_H_
 
 enum MessageType { unkown, cursor, keyspressed, worldclick, buttonpress };
-enum ButtonAction { unkownAction, playAction, exitAction, loadMap1, loadMap2, loadMap3 };
+enum ButtonAction { unkownAction, playAction, exitAction, loadMap1, loadMap2, loadMap3, house1, woodWall, strategicCamera};
 
 class Message {
 private:

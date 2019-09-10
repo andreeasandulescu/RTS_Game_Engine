@@ -100,7 +100,9 @@ int main()
 			engine.gameLogic.playerUnits[i]->Draw(transform);
 		}
 
-		
+		for (int i = 0; i < engine.gameLogic.playerBuildings.size(); i++) {
+			engine.gameLogic.playerBuildings[i]->Draw(transform);
+		}
 
 		GLenum err;
 		while ((err = glGetError()) != GL_NO_ERROR)
@@ -110,7 +112,7 @@ int main()
 		}
 
 		renderer.UpdateMatrices(engine.View, engine.Projection);
-		renderer.RenderCoordSystem();
+		//renderer.RenderCoordSystem();
 
 		//renderer.RenderTriangle();
 

@@ -16,11 +16,13 @@ class Camera : public MessageReceiver {
 	float lastY;
 	float yaw;
 	float pitch;
-
+	
 public:
 	glm::vec3 cameraFront;
 	glm::vec3 cameraPos;
 	glm::vec3 cameraUp;
+
+	bool strategic;
 
 	glm::mat4 getViewMatrix(glm::vec3 target);
 	glm::mat4 getViewMatrix();

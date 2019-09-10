@@ -8,17 +8,38 @@ void GameLogic::receiveMessage(Message* m) {
 	if (m->messageType == MessageType::worldclick) {
 		WorldClick* c = (WorldClick*)m;
 
+
+
 		// if left click select unit if a unit is in
 		// selection radius:
-		if (c->cursorState.left == ButtonStatus::PRESSED) {
+		if (c->cursorState.left == ButtonStatus::PRESSED && placementMode == false) {
 			for (int i = 0; i < playerUnits.size(); i++) {
 				float selectDistance = glm::distance(c->worldPosition, playerUnits[i]->position);
 				if (selectDistance < playerUnits[i]->selectionRadius) {
 					// unit selected:
+					selectedBuilding = NULL;
 					selectedUnits.clear();
 					selectedUnits.push_back(playerUnits[i]);
 				}
 			}
+
+			// check if a building is selected instead:
+			for (int i = 0; i < playerBuildings.size(); i++) {
+				float selectDistance = glm::distance(c->worldPosition, playerBuildings[i]->position);
+				if (selectDistance < playerBuildings[i]->selectionRadius) {
+					// unit selected:
+					selectedBuilding = playerBuildings[i];
+					break;
+				}
+			}
+		}
+
+		if (c->cursorState.left == ButtonStatus::PRESSED && placementMode == true) {
+			// place building:
+			placingBuilding->position = c->worldPosition;
+			playerBuildings.push_back(placingBuilding);
+			placingBuilding = NULL;
+			placementMode = false;
 		}
 
 		// if right click command unit to move:
@@ -46,6 +67,31 @@ void GameLogic::receiveMessage(Message* m) {
 
 	}
 
+	if (m->messageType == MessageType::buttonpress) {
+		ButtonPressed* buttonPressedM = (ButtonPressed*)m;
+		if (buttonPressedM->action == ButtonAction::house1) {
+			// create a new house for placing:
+			Building* newHouse = new Building();
+			Shader textureShader = this->resLoader->getShader(std::string("texture"));
+			Mesh* mesh = resLoader->getMesh(std::string("house1"));
+
+			newHouse->mesh = *mesh;
+			placingBuilding = newHouse;
+			placementMode = true;
+		}
+
+		if (buttonPressedM->action == ButtonAction::woodWall) {
+			// create a new wall for placing:
+			Building* woodWall = new Building();
+			Shader textureShader = this->resLoader->getShader(std::string("texture"));
+			Mesh* mesh = resLoader->getMesh(std::string("tree"));
+
+			woodWall->mesh = *mesh;
+			placingBuilding = woodWall;
+			placementMode = true;
+		}
+	}
+
 	if (m->messageType == MessageType::keyspressed) {
 		KeysMessage* keyMessage = (KeysMessage*)m;
 		
@@ -56,8 +102,17 @@ void GameLogic::receiveMessage(Message* m) {
 				for (int i = 0; i < playerUnits.size(); i++) {
 					selectedUnits.push_back(playerUnits[i]);
 				}
+				selectedBuilding = NULL;
+			}
+
+			// rotate building if one is currently selected
+			if (keyMessage->pressedKeys[i] == GLFW_KEY_R) {
+				if (selectedBuilding != NULL) { 
+					selectedBuilding->rotation = glm::rotate(selectedBuilding->rotation, glm::radians(10.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				}
 			}
 		}
+		
 	}
 
 	delete m;
@@ -67,6 +122,9 @@ void GameLogic::initGameLogic(std::string mapName, ResourceLoader* resourceLoade
 	int width, height;
 	int nrChannels;
 	char mapPath[1000];
+
+
+	this->resLoader = resourceLoader;
 
 	sprintf_s(mapPath, 1000, "..\\Resources\\Textures\\%s.jpg", mapName.c_str());
 	// load game map:
@@ -79,6 +137,7 @@ void GameLogic::initGameLogic(std::string mapName, ResourceLoader* resourceLoade
 
 	// load units animations:
 	Shader animationShader = resourceLoader->getShader(std::string("cowboy"));
+	Shader textureShader = resourceLoader->getShader(std::string("texture"));
 	for (int i = 0; i < playerUnits.size(); i++) {
 		playerUnits[i]->position = glm::vec3(50.0f + i, 5.0f, 50.0f + i);
 		playerUnits[i]->newAnimModel = resLoader->LoadAnimatedModel("..\\Resources\\Models\\cowboy.dae", animationShader);
@@ -117,11 +176,13 @@ void GameLogic::update(float deltaFrame) {
 GameLogic::GameLogic() {
 	// add units to player's command:
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 5; i++) {
 		Unit* u3 = new Unit();
 		u3->position = glm::vec3(10, 5, 10);
 		u3->speed = 6.5f;
 		playerUnits.push_back(u3);
 	}
 	
+	placingBuilding = NULL;
+	placementMode = false;
 }

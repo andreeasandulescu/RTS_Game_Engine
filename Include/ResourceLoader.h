@@ -25,6 +25,9 @@ public:
 	// retrieve texture by name:
 	Texture getTexture(std::string name);
 
+	// retrieve texture by name:
+	Mesh* getMesh(std::string name);
+
 	Mesh* LoadModel(std::string path, Shader shader);
 	AnimatedModel* LoadAnimatedModel(std::string path, Shader shader);
 	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
@@ -46,13 +49,17 @@ private:
 	// map with key = name value = shader object
 	std::map<std::string, Shader> shaders;
 
+	// map with key = name value = mesh object
+	std::map<std::string, Mesh*> meshes;
+
 	// load all textures
 	void loadTextures();
 	
 	// load all shaders
 	void loadShaders();
 
-	
+	// load all shaders
+	void loadMeshes();
 
 	Mesh* processMesh(aiMesh* mesh, const aiScene* scene, Shader& shader);
 	Joint* createJointHierarchy(aiNode* node, const aiScene* scene, AnimatedModel *animModel);
