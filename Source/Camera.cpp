@@ -82,7 +82,7 @@ Camera::Camera() {
 	
 	// default direction is pointing toward the center of the scene
 	glm::vec3 cameraTarget = glm::vec3(200.0f, 0.0f, 200.0f);
-	this->cameraFront = glm::normalize(cameraPos - cameraTarget);
+	this->cameraFront = glm::normalize(cameraTarget - cameraPos);
 
 	// cross product between up and direction will yeld right vector
 	this->cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);

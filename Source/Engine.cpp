@@ -172,11 +172,6 @@ void Engine::receiveMessage(Message* m) {
 			exit(0);
 		}
 
-		
-
-		if (buttonMsg->action == ButtonAction::playAction) {
-			this->userInterface.currentScene = NULL;
-		}
 
 		if (buttonMsg->action == ButtonAction::loadMap1) {
 			FILE* iniFile;

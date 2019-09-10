@@ -23,6 +23,7 @@ void UserInterface::receiveMessage(Message* m) {
 					ButtonPressed* btnMsg = (ButtonPressed*)response;
 					if (btnMsg->nextScene != NULL) {
 						currentScene = (SceneUI*)btnMsg->nextScene;
+						currentScene->resourceLoader = resourceLoader;
 					}
 				}
 				messageBus->addMessage(response);
@@ -85,11 +86,12 @@ void UserInterface::initUserInterface(GLFWwindow* window, GUI* gui, MessageBus* 
 	playScene->addButtonBorderAlligned(ButtonAction::unkownAction, std::string("Builder"), textColor, 0.5f);
 	playScene->addButtonBorderAlligned(ButtonAction::house1, std::string("House"), textColor, 0.5f);
 	playScene->addButtonBorderAlligned(ButtonAction::woodWall, std::string("Wood Wall"), textColor, 0.5f);
+	playScene->UpdateMesh(resourceLoader);
 
 	// add next scenes pointers:
 	optionsScene->buttons[3]->m->nextScene = mainScene;
 	mainScene->buttons[1]->m->nextScene = optionsScene;
 	mainScene->buttons[0]->m->nextScene = playScene;
 
-	this->currentScene = playScene;
+	this->currentScene = mainScene;
 }
