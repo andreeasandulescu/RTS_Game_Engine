@@ -7,6 +7,8 @@ water, vegetation, sky, loading resources, communication bus etc. for an open-so
 we present both the theoretical approach and the implementation. In developing the engine, we only used portable open-source libraries 
 with the purpose to allow others to continue our work without licensing restrictions.
 
+![alt text](https://github.com/andreeasandulescu/RTS_Game_Engine/blob/master/rts_engine_screenshot.png)
+
 This engine is written in C++. For rendering it uses OpenGL 4.6 and GLSL for shading.
 Other libraries employed:
   - GLM - math library
