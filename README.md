@@ -9,9 +9,11 @@ with the purpose to allow others to continue our work without licensing restrict
 
 ![alt text](https://github.com/andreeasandulescu/RTS_Game_Engine/blob/master/rts_engine_screenshot.png)
 
-Component diagram:
+## Component diagram:
+
 ![alt text](https://github.com/andreeasandulescu/RTS_Game_Engine/blob/master/component_diagram.png)
 
+## Technologies used
 This engine is written in C++. For rendering it uses OpenGL 4.6 and GLSL for shading.
 Other libraries employed:
   - GLM - math library
